@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - .github/workflows/backend-ci.yaml
-      - components/resc-backend/**
+      - /**
       - '!**.md'
       - '!**.png'
       - '!**.gif'
@@ -14,7 +14,7 @@ on:
     branches: [ "main" ]
     paths:
       - .github/workflows/backend-ci.yaml
-      - components/resc-backend/**
+      - /**
       - '!**.md'
       - '!**.png'
       - '!**.gif'
@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
 
 env:
-  RESC_BACKEND_DIR: components/resc-backend
+  RESC_BACKEND_DIR: /
   CONTAINER_REGISTRY: rescabnamro
   IMAGE_NAME: resc-backend
 
@@ -48,22 +48,18 @@ jobs:
 
     - name: Install test dependencies
       run: |
-        cd ${{ env.RESC_BACKEND_DIR }}
         pip install -r test-requirements.txt
 
     - name: Test with pytest
       run: |
-        cd ${{ env.RESC_BACKEND_DIR }}
         tox -e pytest
 
     - name: Import sorting with isort
       run: |
-        cd ${{ env.RESC_BACKEND_DIR }}
         tox -e sort
     
     - name: Lint with flake8
       run: |
-        cd ${{ env.RESC_BACKEND_DIR }}
         tox -e lint
 
     # This step will only execute if PR is created internally.
@@ -127,7 +123,6 @@ jobs:
 
       - name: Building python package
         run: |
-          cd ${{ env.RESC_BACKEND_DIR }}
           python -m pip install --upgrade pip build
           python -m build
 
@@ -136,13 +131,12 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.__PYPI_TOKEN__ }}
-          packages_dir: ${{ env.RESC_BACKEND_DIR }}/dist
+          packages_dir: ./dist
           skip_existing: true
 
       - id: getversion
         name: Get package version
         run: | 
-          cd ${{ env.RESC_BACKEND_DIR }}
           backend_version=$(python ./setup.py --version)
           echo "backend_version=$backend_version" >> $GITHUB_OUTPUT
 
@@ -158,12 +152,11 @@ jobs:
       - name: Docker Lint
         uses: hadolint/hadolint-action@v2.0.0
         with:
-          dockerfile: ${{ env.RESC_BACKEND_DIR }}/Dockerfile
+          dockerfile: ./Dockerfile
           failure-threshold: error
 
       - name: Build an image from Dockerfile
         run: |
-          cd ${{ env.RESC_BACKEND_DIR }}
           docker build -t ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{needs.python-build-and-publish.outputs.backend_version}} .
 
       - name: Run Trivy vulnerability scanner - RESC-Backend
@@ -178,13 +171,13 @@ jobs:
 
       - name: Running Newman Tests
         run: | 
-            cd ${{ env.RESC_BACKEND_DIR }}/tests/newman_tests
+            cd tests/newman_tests
             ./run_newman_tests.sh -b ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{needs.python-build-and-publish.outputs.backend_version}} 
         shell: bash
 
       - name: Running OWASP ZAP API Security Tests
         run: |
-            cd ${{ env.RESC_BACKEND_DIR }}/tests/zap_tests
+            cd tests/zap_tests
             ./run_zap_api_tests.sh -b ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{needs.python-build-and-publish.outputs.backend_version}}
         shell: bash
 
@@ -218,7 +211,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: ${{ env.RESC_BACKEND_DIR }}/
+          context: ./
           push: ${{ env.PUBLISH_IMAGE }}
           tags: ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest, ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{needs.python-build-and-publish.outputs.backend_version}}
 
