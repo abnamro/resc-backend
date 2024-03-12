@@ -50,7 +50,7 @@ def upgrade():
     op.drop_constraint(get_foreign_key_name(inspector, rule_tag, rules), rule_tag, type_='foreignkey')
     op.drop_constraint(get_foreign_key_name(inspector, rule_tag, tag), rule_tag, type_='foreignkey')
     
-    op.create_foreign_key('fk_'+ finding + '_' + repository, finding, repository, ['repository_id'], ['id'], ondelete='CASCADE', onupdate='CASCADE')
+    op.create_foreign_key('fk_' + finding + '_' + repository, finding, repository, ['repository_id'], ['id'])
     op.create_foreign_key('fk_' + scan + '_' + repository, scan, repository, ['repository_id'], ['id'], ondelete='CASCADE', onupdate='CASCADE')
     op.create_foreign_key('fk_' + repository + '_' + vcs_instance, repository, vcs_instance, ['vcs_instance'], ['id'], ondelete='CASCADE', onupdate='CASCADE')
     op.create_foreign_key('fk_' + rule_pack + '_' + rule_allow_list, rule_pack, rule_allow_list, ['global_allow_list'], ['id'])
