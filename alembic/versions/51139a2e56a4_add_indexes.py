@@ -17,9 +17,9 @@ depends_on = None
 
 
 def upgrade():
-    op.create_index("nci_finding_event_sender", "finding", ["event_sent_on", "author", "column_end", "column_start", "commit_id", "commit_message", "commit_timestamp", "email", "file_path", "line_number", "repository_id", "rule_name"])
+    op.create_index("nci_finding_event_sender", "finding", ["event_sent_on", "author", "column_end", "column_start", "commit_id", "commit_timestamp", "email", "file_path", "line_number", "repository_id", "rule_name"])
     op.create_index("nci_scan_rule_pack_repo_id", "scan", ["rule_pack", "repository_id", "scan_type"])
 
 def downgrade():
     op.create_drop("nci_scan_rule_pack_repo_id", "scan", ["rule_pack", "repository_id", "scan_type"])
-    op.create_drop("nci_finding_event_sender", "finding", ["event_sent_on", "author", "column_end", "column_start", "commit_id", "commit_message", "commit_timestamp", "email", "file_path", "line_number", "repository_id", "rule_name"])
+    op.create_drop("nci_finding_event_sender", "finding", ["event_sent_on", "author", "column_end", "column_start", "commit_id", "commit_timestamp", "email", "file_path", "line_number", "repository_id", "rule_name"])

@@ -44,7 +44,7 @@ def upgrade():
     op.drop_constraint(get_foreign_key_name(inspector, rule_pack, rule_allow_list), rule_pack, type_='foreignkey')
     op.drop_constraint(get_foreign_key_name(inspector, rules, rule_allow_list), rules, type_='foreignkey')
     op.drop_constraint(get_foreign_key_name(inspector, rules, rule_pack), rules, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, scan, rule_tag), scan, type_='foreignkey')
+    op.drop_constraint(get_foreign_key_name(inspector, scan, rule_pack), scan, type_='foreignkey')
     op.drop_constraint(get_foreign_key_name(inspector, scan_finding, finding), scan_finding, type_='foreignkey')
     op.drop_constraint(get_foreign_key_name(inspector, scan_finding, scan), scan_finding, type_='foreignkey')
     op.drop_constraint(get_foreign_key_name(inspector, rule_tag, rules), rule_tag, type_='foreignkey')
