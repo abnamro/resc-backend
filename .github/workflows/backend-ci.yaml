@@ -16,7 +16,6 @@ on:
   workflow_dispatch:
 
 env:
-  RESC_BACKEND_DIR: /
   CONTAINER_REGISTRY: rescabnamro
   IMAGE_NAME: resc-backend
 
@@ -61,7 +60,6 @@ jobs:
       if: ${{ (github.event.pull_request.head.repo.full_name == 'abnamro/repository-scanner') || (github.ref == 'refs/heads/main') }}
       uses: SonarSource/sonarcloud-github-action@master
       with:
-        projectBaseDir: ${{ env.RESC_BACKEND_DIR }}
         args: >
           -Dsonar.organization=abnamro-resc
           -Dsonar.projectKey=abnamro-resc_resc-backend
