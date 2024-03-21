@@ -1,6 +1,7 @@
 # Standard Library
 import logging
 from datetime import datetime, timedelta
+from typing import List
 
 # Third Party
 from sqlalchemy import and_, extract, func, or_
@@ -12,7 +13,7 @@ from resc_backend.constants import (
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     MAX_RECORDS_PER_PAGE_LIMIT,
 )
-from resc_backend.db import model
+from resc_backend.db.model import DBaudit
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.time_period import TimePeriod
 
@@ -25,7 +26,7 @@ def create_audit(
     auditor: str,
     status: FindingStatus,
     comment: str = "",
-) -> model.DBaudit:
+) -> DBaudit:
     """
         Audit finding, updating the status and comment
     :param db_connection:
@@ -41,7 +42,8 @@ def create_audit(
     :return: DBaudit
         The output will contain the audit that was created
     """
-    db_audit = model.audit.DBaudit(
+
+    db_audit = DBaudit(
         finding_id=finding_id,
         auditor=auditor,
         status=status,
@@ -60,7 +62,7 @@ def get_finding_audits(
     finding_id: int,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-) -> [model.DBaudit]:
+) -> List[DBaudit]:
     """
         Get Audit entries for finding
     :param db_connection:
@@ -77,10 +79,8 @@ def get_finding_audits(
     limit_val = (
         MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     )
-    query = db_connection.query(model.DBaudit).filter(
-        model.DBaudit.finding_id == finding_id
-    )
-    query = query.order_by(model.DBaudit.id_.desc()).offset(skip).limit(limit_val)
+    query = db_connection.query(DBaudit).filter(DBaudit.finding_id == finding_id)
+    query = query.order_by(DBaudit.id_.desc()).offset(skip).limit(limit_val)
     finding_audits = query.all()
     return finding_audits
 
@@ -96,8 +96,8 @@ def get_finding_audits_count(db_connection: Session, finding_id: int) -> int:
         count of audit entries
     """
     total_count = (
-        db_connection.query(func.count(model.DBaudit.id_))
-        .filter(model.DBaudit.finding_id == finding_id)
+        db_connection.query(func.count(DBaudit.id_))
+        .filter(DBaudit.finding_id == finding_id)
         .scalar()
     )
     return total_count
@@ -119,32 +119,32 @@ def get_audit_count_by_auditor_over_time(
 
     query = (
         db_connection.query(
-            extract("year", model.DBaudit.timestamp).label("year"),
-            extract("week", model.DBaudit.timestamp).label("week"),
-            model.DBaudit.auditor,
-            func.count(model.DBaudit.id_).label("audit_count"),
+            extract("year", DBaudit.timestamp).label("year"),
+            extract("week", DBaudit.timestamp).label("week"),
+            DBaudit.auditor,
+            func.count(DBaudit.id_).label("audit_count"),
         )
         .filter(
             or_(
-                extract("year", model.DBaudit.timestamp)
+                extract("year", DBaudit.timestamp)
                 > extract("year", last_nth_week_date_time),
                 and_(
-                    extract("year", model.DBaudit.timestamp)
+                    extract("year", DBaudit.timestamp)
                     == extract("year", last_nth_week_date_time),
-                    extract("week", model.DBaudit.timestamp)
+                    extract("week", DBaudit.timestamp)
                     >= extract("week", last_nth_week_date_time),
                 ),
             )
         )
         .group_by(
-            extract("year", model.DBaudit.timestamp).label("year"),
-            extract("week", model.DBaudit.timestamp).label("week"),
-            model.DBaudit.auditor,
+            extract("year", DBaudit.timestamp).label("year"),
+            extract("week", DBaudit.timestamp).label("week"),
+            DBaudit.auditor,
         )
         .order_by(
-            extract("year", model.DBaudit.timestamp).label("year"),
-            extract("week", model.DBaudit.timestamp).label("week"),
-            model.DBaudit.auditor,
+            extract("year", DBaudit.timestamp).label("year"),
+            extract("week", DBaudit.timestamp).label("week"),
+            DBaudit.auditor,
         )
     )
     finding_audits = query.all()
@@ -168,23 +168,21 @@ def get_personal_audit_count(
     """
     date_today = datetime.utcnow()
 
-    total_count = db_connection.query(func.count(model.DBaudit.id_))
+    total_count = db_connection.query(func.count(DBaudit.id_))
 
     if time_period in (time_period.DAY, time_period.MONTH, time_period.YEAR):
         total_count = total_count.filter(
-            extract("year", model.DBaudit.timestamp) == extract("year", date_today)
+            extract("year", DBaudit.timestamp) == extract("year", date_today)
         )
 
         if time_period in (time_period.DAY, time_period.MONTH):
             total_count = total_count.filter(
-                extract("month", model.DBaudit.timestamp)
-                == extract("month", date_today)
+                extract("month", DBaudit.timestamp) == extract("month", date_today)
             )
 
             if time_period == time_period.DAY:
                 total_count = total_count.filter(
-                    extract("day", model.DBaudit.timestamp)
-                    == extract("day", date_today)
+                    extract("day", DBaudit.timestamp) == extract("day", date_today)
                 )
 
     if time_period in (time_period.WEEK, time_period.LAST_WEEK):
@@ -193,11 +191,11 @@ def get_personal_audit_count(
             date_last_week if time_period == time_period.LAST_WEEK else date_today
         )
         total_count = total_count.filter(
-            extract("year", model.DBaudit.timestamp) == extract("year", date_week)
+            extract("year", DBaudit.timestamp) == extract("year", date_week)
         )
         total_count = total_count.filter(
-            extract("week", model.DBaudit.timestamp) == extract("week", date_week)
+            extract("week", DBaudit.timestamp) == extract("week", date_week)
         )
 
-    total_count = total_count.filter(model.DBaudit.auditor == auditor).scalar()
+    total_count = total_count.filter(DBaudit.auditor == auditor).scalar()
     return total_count

@@ -2,9 +2,14 @@
 from typing import List
 
 # First Party
-from resc_backend.db import model
 from resc_backend.db.connection import Session
-from resc_backend.db.model import DBscanFinding
+from resc_backend.db.model import (
+    DBfinding,
+    DBrepository,
+    DBscan,
+    DBscanFinding,
+    DBVcsInstance,
+)
 
 
 def create_scan_findings(
@@ -17,7 +22,7 @@ def create_scan_findings(
     # load existing scan findings for this scan into the session
     scan_id = scan_findings[0].scan_id
     _ = (
-        db_connection.query(model.DBscanFinding)
+        db_connection.query(DBscanFinding)
         .filter(DBscanFinding.scan_id == scan_id)
         .all()
     )
@@ -32,10 +37,8 @@ def create_scan_findings(
 
 
 def get_scan_findings(db_connection: Session, finding_id: int) -> List[DBscanFinding]:
-    scan_findings = db_connection.query(model.DBscanFinding)
-    scan_findings = scan_findings.filter(
-        model.scan_finding.DBscanFinding.finding_id == finding_id
-    ).all()
+    scan_findings = db_connection.query(DBscanFinding)
+    scan_findings = scan_findings.filter(DBscanFinding.finding_id == finding_id).all()
     return scan_findings
 
 
@@ -52,13 +55,11 @@ def delete_scan_finding(
         optional, id of the scan
     """
     if finding_id or scan_id:
-        query = db_connection.query(model.DBscanFinding)
+        query = db_connection.query(DBscanFinding)
         if finding_id:
-            query = query.filter(
-                model.scan_finding.DBscanFinding.finding_id == finding_id
-            )
+            query = query.filter(DBscanFinding.finding_id == finding_id)
         if scan_id:
-            query = query.filter(model.scan_finding.DBscanFinding.scan_id == scan_id)
+            query = query.filter(DBscanFinding.scan_id == scan_id)
         query.delete(synchronize_session=False)
         db_connection.commit()
 
@@ -71,11 +72,11 @@ def delete_scan_finding_by_repository_id(db_connection: Session, repository_id: 
     :param repository_id:
         id of the repository
     """
-    db_connection.query(model.DBscanFinding).filter(
-        model.scan_finding.DBscanFinding.scan_id == model.scan.DBscan.id_,
-        model.scan_finding.DBscanFinding.finding_id == model.finding.DBfinding.id_,
-        model.scan.DBscan.repository_id == model.finding.DBfinding.repository_id,
-        model.scan.DBscan.repository_id == repository_id,
+    db_connection.query(DBscanFinding).filter(
+        DBscanFinding.scan_id == DBscan.id_,
+        DBscanFinding.finding_id == DBfinding.id_,
+        DBscan.repository_id == DBfinding.repository_id,
+        DBscan.repository_id == repository_id,
     ).delete(synchronize_session=False)
     db_connection.commit()
 
@@ -90,12 +91,11 @@ def delete_scan_finding_by_vcs_instance_id(
     :param vcs_instance_id:
         id of the vcs instance
     """
-    db_connection.query(model.DBscanFinding).filter(
-        model.scan_finding.DBscanFinding.scan_id == model.scan.DBscan.id_,
-        model.scan_finding.DBscanFinding.finding_id == model.finding.DBfinding.id_,
-        model.scan.DBscan.repository_id == model.repository.DBrepository.id_,
-        model.repository.DBrepository.vcs_instance
-        == model.vcs_instance.DBVcsInstance.id_,
-        model.vcs_instance.DBVcsInstance.id_ == vcs_instance_id,
+    db_connection.query(DBscanFinding).filter(
+        DBscanFinding.scan_id == DBscan.id_,
+        DBscanFinding.finding_id == DBfinding.id_,
+        DBscan.repository_id == DBrepository.id_,
+        DBrepository.vcs_instance == DBVcsInstance.id_,
+        DBVcsInstance.id_ == vcs_instance_id,
     ).delete(synchronize_session=False)
     db_connection.commit()
