@@ -5,12 +5,12 @@ from typing import List
 from sqlalchemy.orm import Session
 
 # First Party
-from resc_backend.db import model
+from resc_backend.db.model import DBrule, DBruleTag, DBtag
 
 
 def create_rule_tag(
     db_connection: Session, rule_id: int, tags: List[str]
-) -> List[model.DBruleTag]:
+) -> List[DBruleTag]:
     """
     Create rule tag entries, linking / creating tag names to a rule
     :param db_connection:
@@ -26,7 +26,7 @@ def create_rule_tag(
 
     db_rule_tags = []
     for db_tag in db_tags:
-        db_rule_tag = model.DBruleTag(rule_id=rule_id, tag_id=db_tag.id_)
+        db_rule_tag = DBruleTag(rule_id=rule_id, tag_id=db_tag.id_)
         db_rule_tags.append(db_rule_tag)
 
     if db_rule_tags:
@@ -36,9 +36,7 @@ def create_rule_tag(
     return db_rule_tags
 
 
-def create_tags_if_not_exists(
-    db_connection: Session, tags: List[str]
-) -> List[model.DBtag]:
+def create_tags_if_not_exists(db_connection: Session, tags: List[str]) -> List[DBtag]:
     """
     Create tags if they don't exist or select existing
     :param db_connection:
@@ -49,7 +47,7 @@ def create_tags_if_not_exists(
         The output will contain a list of tag objects
     """
     # Query the database to see if the tags objects exists
-    db_tags = db_connection.query(model.DBtag).filter(model.DBtag.name.in_(tags)).all()
+    db_tags = db_connection.query(DBtag).filter(DBtag.name.in_(tags)).all()
     if db_tags is not None:
         if len(db_tags) == len(tags):
             # all tags are in the db no need to create them
@@ -66,7 +64,7 @@ def create_tags_if_not_exists(
     return db_tags
 
 
-def create_tags(db_connection: Session, tags: List[str]) -> List[model.DBtag]:
+def create_tags(db_connection: Session, tags: List[str]) -> List[DBtag]:
     """
     Create tags
     :param db_connection:
@@ -78,7 +76,7 @@ def create_tags(db_connection: Session, tags: List[str]) -> List[model.DBtag]:
     """
     db_create_tags = []
     for tag_name in tags:
-        db_create_tag = model.DBtag(name=tag_name)
+        db_create_tag = DBtag(name=tag_name)
         db_create_tags.append(db_create_tag)
 
     if db_create_tags:
@@ -101,9 +99,9 @@ def get_rule_tag_names_by_rule_pack_version(
         The output will contain a list of each rule and tag occurrence in the rule_pack
     """
     query = (
-        db_connection.query(model.DBrule.rule_name, model.DBtag.name)
-        .join(model.DBruleTag, model.DBruleTag.tag_id == model.DBtag.id_)
-        .join(model.DBrule, model.DBrule.id_ == model.DBruleTag.rule_id)
-        .filter(model.DBrule.rule_pack == rule_pack_version)
+        db_connection.query(DBrule.rule_name, DBtag.name)
+        .join(DBruleTag, DBruleTag.tag_id == DBtag.id_)
+        .join(DBrule, DBrule.id_ == DBruleTag.rule_id)
+        .filter(DBrule.rule_pack == rule_pack_version)
     )
     return query.all()

@@ -2,6 +2,7 @@
 from typing import Generic, TypeVar
 
 # Third Party
+# pylint: disable=no-name-in-module
 from pydantic import BaseModel, conint, conlist
 from pydantic.generics import GenericModel
 

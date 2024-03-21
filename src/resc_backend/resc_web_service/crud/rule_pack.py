@@ -13,7 +13,7 @@ from resc_backend.constants import (
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     MAX_RECORDS_PER_PAGE_LIMIT,
 )
-from resc_backend.db import model
+from resc_backend.db.model import DBrule, DBrulePack, DBruleTag, DBtag
 from resc_backend.resc_web_service.schema import rule_pack as rule_pack_schema
 
 logger = logging.getLogger(__name__)
@@ -31,12 +31,12 @@ def get_rule_pack(
     :return: RulePackRead
         The output returns RulePackRead type object
     """
-    query = db_connection.query(model.rule_pack.DBrulePack)
+    query = db_connection.query(DBrulePack)
     if version:
-        query = query.filter(model.rule_pack.DBrulePack.version == version)
+        query = query.filter(DBrulePack.version == version)
     else:
         logger.debug("rule pack version not specified, fetching currently active one")
-        query = query.filter(model.rule_pack.DBrulePack.active == true())
+        query = query.filter(DBrulePack.active == true())
     rule_pack = query.first()
     return rule_pack
 
@@ -51,7 +51,7 @@ def create_rule_pack_version(
     :param rule_pack:
         RulePackCreate object to be created
     """
-    db_rule_pack = model.rule_pack.DBrulePack(
+    db_rule_pack = DBrulePack(
         version=rule_pack.version,
         global_allow_list=rule_pack.global_allow_list,
         active=rule_pack.active,
@@ -70,7 +70,7 @@ def get_newest_rule_pack(db_connection: Session) -> rule_pack_schema.RulePackRea
     :return: RulePackRead
         The output returns RulePackRead type object
     """
-    rule_packs = db_connection.query(model.DBrulePack).all()
+    rule_packs = db_connection.query(DBrulePack).all()
     newest_rule_pack = None
     if rule_packs:
         newest_rule_pack: rule_pack_schema.RulePackRead = rule_packs[0]
@@ -86,7 +86,7 @@ def get_rule_packs(
     active: bool = None,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-) -> List[model.rule_pack.DBrulePack]:
+) -> List[DBrulePack]:
     """
         Retrieve rule packs from database
     :param db_connection:
@@ -106,24 +106,21 @@ def get_rule_packs(
     limit_val = (
         MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     )
-    query = db_connection.query(model.rule_pack.DBrulePack)
+    query = db_connection.query(DBrulePack)
 
     if version:
-        query = query.filter(model.rule_pack.DBrulePack.version == version)
+        query = query.filter(DBrulePack.version == version)
     if active is not None:
-        query = query.filter(model.rule_pack.DBrulePack.active == active)
+        query = query.filter(DBrulePack.active == active)
     rule_packs = (
-        query.order_by(model.rule_pack.DBrulePack.version.desc())
-        .offset(skip)
-        .limit(limit_val)
-        .all()
+        query.order_by(DBrulePack.version.desc()).offset(skip).limit(limit_val).all()
     )
     return rule_packs
 
 
 def get_current_active_rule_pack(
     db_connection: Session,
-) -> Optional[model.rule_pack.DBrulePack]:
+) -> Optional[DBrulePack]:
     """
         Return the currently active rule_pack, if any.
     :param db_connection:
@@ -131,8 +128,8 @@ def get_current_active_rule_pack(
     :return: DBRulePack
         returns the DBRulePack containing the active rule pack
     """
-    query = db_connection.query(model.rule_pack.DBrulePack)
-    active_rule_pack = query.filter(model.rule_pack.DBrulePack.active == 1).one()
+    query = db_connection.query(DBrulePack)
+    active_rule_pack = query.filter(DBrulePack.active == 1).one()
     return active_rule_pack
 
 
@@ -147,13 +144,13 @@ def get_rule_packs_tags(db_connection: Session, versions: list) -> List[str]:
         The output will contain the list of str that are the tags, or an empty list.
     """
 
-    query = db_connection.query(model.DBtag.name)
-    query = query.join(model.DBruleTag, model.DBruleTag.tag_id == model.DBtag.id_)
+    query = db_connection.query(DBtag.name)
+    query = query.join(DBruleTag, DBruleTag.tag_id == DBtag.id_)
     query = query.join(
-        model.DBrule,
+        DBrule,
         and_(
-            model.DBrule.id_ == model.DBruleTag.rule_id,
-            model.DBrule.rule_pack.in_(versions),
+            DBrule.id_ == DBruleTag.rule_id,
+            DBrule.rule_pack.in_(versions),
         ),
     )
     rule_packs_tags = query.distinct().all()
@@ -175,17 +172,11 @@ def get_total_rule_packs_count(
     :return: int
         The output contains total count of rule packs
     """
-    total_count_query = db_connection.query(
-        func.count(model.rule_pack.DBrulePack.version)
-    )
+    total_count_query = db_connection.query(func.count(DBrulePack.version))
     if version:
-        total_count_query = total_count_query.filter(
-            model.rule_pack.DBrulePack.version == version
-        )
+        total_count_query = total_count_query.filter(DBrulePack.version == version)
     if active is not None:
-        total_count_query = total_count_query.filter(
-            model.rule_pack.DBrulePack.active == active
-        )
+        total_count_query = total_count_query.filter(DBrulePack.active == active)
 
     total_count = total_count_query.scalar()
     return total_count
@@ -202,8 +193,8 @@ def make_older_rule_packs_to_inactive(
         Session of the database connection
     """
     db_connection.execute(
-        update(model.rule_pack.DBrulePack)
-        .where(model.rule_pack.DBrulePack.version != latest_rule_pack_version)
+        update(DBrulePack)
+        .where(DBrulePack.version != latest_rule_pack_version)
         .values(active=False)
     )
     db_connection.commit()

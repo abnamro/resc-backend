@@ -6,7 +6,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 # First Party
-from resc_backend.db import model
+from resc_backend.db.model import DBrule, DBruleAllowList, DBrulePack, DBscan
 from resc_backend.resc_web_service.schema import (
     rule_allow_list as rule_allow_list_schema,
 )
@@ -25,11 +25,9 @@ def get_rules_by_scan_id(db_connection: Session, scan_id: int) -> List[RuleRead]
     :return: List[RuleRead]
         The output contains list of rules
     """
-    rule_query = db_connection.query(model.DBrule)
-    rule_query = rule_query.join(
-        model.DBscan, model.DBscan.rule_pack == model.DBrule.rule_pack
-    )
-    rule_query = rule_query.filter(model.DBscan.id_ == scan_id)
+    rule_query = db_connection.query(DBrule)
+    rule_query = rule_query.join(DBscan, DBscan.rule_pack == DBrule.rule_pack)
+    rule_query = rule_query.filter(DBscan.id_ == scan_id)
     rules: List[RuleRead] = rule_query.all()
     return rules
 
@@ -44,7 +42,7 @@ def create_rule_allow_list(
     :param rule_allow_list:
         RuleAllowList object to be created
     """
-    db_rule_allow_list = model.rule_allow_list.DBruleAllowList(
+    db_rule_allow_list = DBruleAllowList(
         description=rule_allow_list.description,
         regexes=rule_allow_list.regexes,
         paths=rule_allow_list.paths,
@@ -65,7 +63,7 @@ def create_rule(db_connection: Session, rule: RuleCreate):
     :param rule:
         RuleCreate object to be created
     """
-    db_rule = model.rule.DBrule(
+    db_rule = DBrule(
         rule_name=rule.rule_name,
         description=rule.description,
         entropy=rule.entropy,
@@ -96,34 +94,25 @@ def get_rules_by_rule_pack_version(
     """
     query = (
         db_connection.query(
-            model.DBrule.id_,
-            model.DBrule.rule_pack,
-            model.DBrule.rule_name,
-            model.DBrule.entropy,
-            model.DBrule.secret_group,
-            model.DBrule.regex,
-            model.DBrule.path,
-            model.DBrule.keywords,
-            model.rule_allow_list.DBruleAllowList.description,
-            model.rule_allow_list.DBruleAllowList.regexes,
-            model.rule_allow_list.DBruleAllowList.paths,
-            model.rule_allow_list.DBruleAllowList.commits,
-            model.rule_allow_list.DBruleAllowList.stop_words,
+            DBrule.id_,
+            DBrule.rule_pack,
+            DBrule.rule_name,
+            DBrule.entropy,
+            DBrule.secret_group,
+            DBrule.regex,
+            DBrule.path,
+            DBrule.keywords,
+            DBruleAllowList.description,
+            DBruleAllowList.regexes,
+            DBruleAllowList.paths,
+            DBruleAllowList.commits,
+            DBruleAllowList.stop_words,
         )
-        .join(
-            model.rule_pack.DBrulePack,
-            model.rule_pack.DBrulePack.version == model.rule.DBrule.rule_pack,
-        )
-        .join(
-            model.rule_allow_list.DBruleAllowList,
-            model.rule_allow_list.DBruleAllowList.id_ == model.rule.DBrule.allow_list,
-            isouter=True,
-        )
+        .join(DBrulePack, DBrulePack.version == DBrule.rule_pack)
+        .join(DBruleAllowList, DBruleAllowList.id_ == DBrule.allow_list, isouter=True)
     )
     db_rules = (
-        query.filter(model.rule.DBrule.rule_pack == rule_pack_version)
-        .order_by(model.rule.DBrule.id_)
-        .all()
+        query.filter(DBrule.rule_pack == rule_pack_version).order_by(DBrule.id_).all()
     )
     return db_rules
 
@@ -141,20 +130,16 @@ def get_global_allow_list_by_rule_pack_version(
         The output contains list of strings of global allow list
     """
     query = db_connection.query(
-        model.rule_pack.DBrulePack.version,
-        model.rule_allow_list.DBruleAllowList.description,
-        model.rule_allow_list.DBruleAllowList.regexes,
-        model.rule_allow_list.DBruleAllowList.paths,
-        model.rule_allow_list.DBruleAllowList.commits,
-        model.rule_allow_list.DBruleAllowList.stop_words,
-    ).join(
-        model.rule_allow_list.DBruleAllowList,
-        model.rule_allow_list.DBruleAllowList.id_
-        == model.rule_pack.DBrulePack.global_allow_list,
-    )
+        DBrulePack.version,
+        DBruleAllowList.description,
+        DBruleAllowList.regexes,
+        DBruleAllowList.paths,
+        DBruleAllowList.commits,
+        DBruleAllowList.stop_words,
+    ).join(DBruleAllowList, DBruleAllowList.id_ == DBrulePack.global_allow_list)
     db_global_allow_list = (
-        query.filter(model.rule_pack.DBrulePack.version == rule_pack_version)
-        .order_by(model.rule_allow_list.DBruleAllowList.id_)
+        query.filter(DBrulePack.version == rule_pack_version)
+        .order_by(DBruleAllowList.id_)
         .first()
     )
     return db_global_allow_list
