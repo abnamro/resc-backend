@@ -6,9 +6,13 @@ from typing import List
 def remap_dict_keys(input_dict: dict, transformation_map: List):
     new_keys = [val[1] for val in transformation_map]
     for old_key, new_key in transformation_map:
-        create_nested_dictionary(input_dict, new_key,  get_value_from_nested_dictionary(input_dict, *old_key))
+        create_nested_dictionary(
+            input_dict, new_key, get_value_from_nested_dictionary(input_dict, *old_key)
+        )
 
-    output_dict = {k: v for k, v in input_dict.items() if k in [key[0] for key in new_keys]}
+    output_dict = {
+        k: v for k, v in input_dict.items() if k in [key[0] for key in new_keys]
+    }
 
     return output_dict
 

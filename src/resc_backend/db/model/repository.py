@@ -14,10 +14,18 @@ class DBrepository(Base):
     repository_id = Column(String(100), nullable=False)
     repository_name = Column(String(100), nullable=False)
     repository_url = Column(String(200), nullable=False)
-    __table_args__ = (UniqueConstraint("project_key", "repository_id", "vcs_instance",
-                                       name="unique_repository_id_per_project"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "project_key",
+            "repository_id",
+            "vcs_instance",
+            name="unique_repository_id_per_project",
+        ),
+    )
 
-    def __init__(self, project_key, repository_id, repository_name, repository_url, vcs_instance):
+    def __init__(
+        self, project_key, repository_id, repository_name, repository_url, vcs_instance
+    ):
         self.project_key = project_key
         self.repository_id = repository_id
         self.repository_name = repository_name
@@ -31,6 +39,6 @@ class DBrepository(Base):
             repository_id=repository.repository_id,
             repository_name=repository.repository_name,
             repository_url=repository.repository_url,
-            vcs_instance=repository.vcs_instance
+            vcs_instance=repository.vcs_instance,
         )
         return db_repository

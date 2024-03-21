@@ -14,24 +14,28 @@ sys.path.insert(0, "src")
 
 class TestRepository(unittest.TestCase):
     def setUp(self):
-        self.engine = create_engine('sqlite:///:memory:')
+        self.engine = create_engine("sqlite:///:memory:")
         Base.metadata.create_all(self.engine)
         self.session = Session(bind=self.engine)
-        self.vcs_instance = DBVcsInstance(name="name",
-                                          provider_type="provider_type",
-                                          scheme="scheme",
-                                          hostname="hostname",
-                                          port=123,
-                                          organization="organization",
-                                          scope="scope",
-                                          exceptions="exceptions")
+        self.vcs_instance = DBVcsInstance(
+            name="name",
+            provider_type="provider_type",
+            scheme="scheme",
+            hostname="hostname",
+            port=123,
+            organization="organization",
+            scope="scope",
+            exceptions="exceptions",
+        )
         self.session.add(self.vcs_instance)
 
-        self.repository = DBrepository(project_key='TEST',
-                                       repository_id=1,
-                                       repository_name="test_temp",
-                                       repository_url="fake.url.com",
-                                       vcs_instance=1)
+        self.repository = DBrepository(
+            project_key="TEST",
+            repository_id=1,
+            repository_name="test_temp",
+            repository_url="fake.url.com",
+            vcs_instance=1,
+        )
         self.session.add(self.repository)
         self.session.commit()
 

@@ -11,6 +11,5 @@ class DBscanFinding(Base):
     scan_id = Column(Integer, ForeignKey("scan.id"), primary_key=True)
 
     def __init__(self, finding_id: int, scan_id: int):
-
         self.finding_id = finding_id
         self.scan_id = scan_id

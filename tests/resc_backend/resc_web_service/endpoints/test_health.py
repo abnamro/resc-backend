@@ -16,7 +16,7 @@ from resc_backend.constants import (
     X_CONTENT_TYPE_OPTIONS,
     X_FRAME_OPTIONS,
     X_PERMITTED_CROSS_DOMAIN_POLICIES,
-    X_XSS_PROTECTION
+    X_XSS_PROTECTION,
 )
 from resc_backend.resc_web_service.api import app
 from resc_backend.resc_web_service.dependencies import requires_auth, requires_no_auth
@@ -43,7 +43,7 @@ class TestHealth(unittest.TestCase):
             "X-Content-Type-Options": X_CONTENT_TYPE_OPTIONS,
             "X-Frame-Options": X_FRAME_OPTIONS,
             "X-XSS-Protection": X_XSS_PROTECTION,
-            "Content-Security-Policy": CONTENT_SECURITY_POLICY
+            "Content-Security-Policy": CONTENT_SECURITY_POLICY,
         }
         response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_HEALTH}")
         assert response.status_code == 200, response.text

@@ -53,5 +53,5 @@ REQUIRED_ENV_VARS = [
         "Show debug log statements, if set to '0' only INFO logs and above will be shown.",
         required=False,
         default="0",
-    )
+    ),
 ]

@@ -18,6 +18,7 @@ class FindingCountModel(GenericModel, Generic[Model]):
     :param Generic[Model]:
         Type of the object in the data list
     """
+
     data: Optional[Model]
     true_positive: conint(gt=-1)
     false_positive: conint(gt=-1)

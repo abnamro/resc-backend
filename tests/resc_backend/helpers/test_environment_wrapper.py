@@ -6,7 +6,7 @@ from unittest import TestCase, mock
 sys.path.insert(0, "src")
 from resc_backend.helpers.environment_wrapper import (  # noqa: E402  # isort:skip
     EnvironmentVariable,
-    validate_environment
+    validate_environment,
 )
 
 REQUIRED_ENV_VARS = [
@@ -19,7 +19,7 @@ REQUIRED_ENV_VARS = [
         "NOT_REQUIRED_CONFIG",
         "A Sample not required configuration",
         required=False,
-    )
+    ),
 ]
 
 REQUIRED_CONFIG = "value"
@@ -35,5 +35,4 @@ class ErrorTests(TestCase):
     # Make sure to set required env vars to empty first
     @mock.patch.dict(os.environ, {"REQUIRED_CONFIG": ""})
     def test_validate_environment_required(self):
-        self.assertRaises(EnvironmentError, validate_environment,
-                          REQUIRED_ENV_VARS)
+        self.assertRaises(EnvironmentError, validate_environment, REQUIRED_ENV_VARS)

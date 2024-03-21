@@ -64,5 +64,5 @@ class FindingRead(FindingCreate):
             event_sent_on=db_finding.event_sent_on,
             rule_name=db_finding.rule_name,
             repository_id=db_finding.repository_id,
-            scan_ids=scan_ids
+            scan_ids=scan_ids,
         )

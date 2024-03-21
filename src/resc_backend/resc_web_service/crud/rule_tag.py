@@ -9,7 +9,9 @@ from sqlalchemy.orm import Session
 from resc_backend.db import model
 
 
-def create_rule_tag(db_connection: Session, rule_id: int, tags: List[str]) -> List[model.DBruleTag]:
+def create_rule_tag(
+    db_connection: Session, rule_id: int, tags: List[str]
+) -> List[model.DBruleTag]:
     """
     Create rule tag entries, linking / creating tag names to a rule
     :param db_connection:
@@ -25,10 +27,7 @@ def create_rule_tag(db_connection: Session, rule_id: int, tags: List[str]) -> Li
 
     db_rule_tags = []
     for db_tag in db_tags:
-        db_rule_tag = model.DBruleTag(
-            rule_id=rule_id,
-            tag_id=db_tag.id_
-        )
+        db_rule_tag = model.DBruleTag(rule_id=rule_id, tag_id=db_tag.id_)
         db_rule_tags.append(db_rule_tag)
 
     if db_rule_tags:
@@ -38,7 +37,9 @@ def create_rule_tag(db_connection: Session, rule_id: int, tags: List[str]) -> Li
     return db_rule_tags
 
 
-def create_tags_if_not_exists(db_connection: Session, tags: List[str]) -> List[model.DBtag]:
+def create_tags_if_not_exists(
+    db_connection: Session, tags: List[str]
+) -> List[model.DBtag]:
     """
     Create tags if they don't exist or select existing
     :param db_connection:
@@ -88,7 +89,9 @@ def create_tags(db_connection: Session, tags: List[str]) -> List[model.DBtag]:
     return db_create_tags
 
 
-def get_rule_tag_names_by_rule_pack_version(db_connection: Session, rule_pack_version: str):
+def get_rule_tag_names_by_rule_pack_version(
+    db_connection: Session, rule_pack_version: str
+):
     """
     Get rule names and there tags based on the rule pack version
     :param db_connection:
@@ -98,8 +101,10 @@ def get_rule_tag_names_by_rule_pack_version(db_connection: Session, rule_pack_ve
     :return: [rule.rule_name, tag.name]
         The output will contain a list of each rule and tag occurrence in the rule_pack
     """
-    query = db_connection.query(model.DBrule.rule_name, model.DBtag.name)\
-        .join(model.DBruleTag, model.DBruleTag.tag_id == model.DBtag.id_)\
-        .join(model.DBrule, model.DBrule.id_ == model.DBruleTag.rule_id)\
+    query = (
+        db_connection.query(model.DBrule.rule_name, model.DBtag.name)
+        .join(model.DBruleTag, model.DBruleTag.tag_id == model.DBtag.id_)
+        .join(model.DBrule, model.DBrule.id_ == model.DBruleTag.rule_id)
         .filter(model.DBrule.rule_pack == rule_pack_version)
+    )
     return query.all()

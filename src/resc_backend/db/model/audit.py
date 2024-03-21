@@ -14,8 +14,12 @@ class DBaudit(Base):
     __tablename__ = "audit"
     id_ = Column("id", Integer, primary_key=True)
     finding_id = Column(Integer, ForeignKey("finding.id"), nullable=False)
-    status = Column(Enum(FindingStatus), default=FindingStatus.NOT_ANALYZED, server_default="NOT_ANALYZED",
-                    nullable=False)
+    status = Column(
+        Enum(FindingStatus),
+        default=FindingStatus.NOT_ANALYZED,
+        server_default="NOT_ANALYZED",
+        nullable=False,
+    )
     auditor = Column(String(200))
     comment = Column(String(255), nullable=True)
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
@@ -29,13 +33,15 @@ class DBaudit(Base):
         self.timestamp = timestamp
 
     @staticmethod
-    def create_from_metadata(finding_id: int, status: str, auditor: str, comment: str, timestamp: datetime):
+    def create_from_metadata(
+        finding_id: int, status: str, auditor: str, comment: str, timestamp: datetime
+    ):
         sanitized_comment = html.escape(comment) if comment else comment
         db_audit = DBaudit(
             finding_id=finding_id,
             auditor=auditor,
             status=status,
             comment=sanitized_comment,
-            timestamp=timestamp
+            timestamp=timestamp,
         )
         return db_audit

@@ -15,11 +15,7 @@ class Model400(RescResponseModel):
     """
 
     class Config:
-        schema_extra = {
-            "example": {
-                "detail": "Bad Request"
-            }
-        }
+        schema_extra = {"example": {"detail": "Bad Request"}}
 
 
 class Model404(RescResponseModel):
@@ -28,12 +24,7 @@ class Model404(RescResponseModel):
     """
 
     class Config:
-        schema_extra = {
-            "example": {
-                "data": {},
-                "detail": "<id> not found"
-            }
-        }
+        schema_extra = {"example": {"data": {}, "detail": "<id> not found"}}
 
 
 class Model409(RescResponseModel):
@@ -53,6 +44,4 @@ class Model422(RescResponseModel):
     """
 
     class Config:
-        schema_extra = {
-            "example": {"detail": "Entity cannot be processed"}
-        }
+        schema_extra = {"example": {"detail": "Entity cannot be processed"}}

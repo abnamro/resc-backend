@@ -7,7 +7,10 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 # First Party
-from resc_backend.constants import DEFAULT_RECORDS_PER_PAGE_LIMIT, MAX_RECORDS_PER_PAGE_LIMIT
+from resc_backend.constants import (
+    DEFAULT_RECORDS_PER_PAGE_LIMIT,
+    MAX_RECORDS_PER_PAGE_LIMIT,
+)
 from resc_backend.db import model
 from resc_backend.resc_web_service.crud import finding as finding_crud
 from resc_backend.resc_web_service.crud import repository as repository_crud
@@ -18,14 +21,21 @@ from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
 
 def get_vcs_instance(db_connection: Session, vcs_instance_id: int):
-    vcs_instance = db_connection.query(
-        model.DBVcsInstance).filter(model.vcs_instance.DBVcsInstance.id_ == vcs_instance_id).first()
+    vcs_instance = (
+        db_connection.query(model.DBVcsInstance)
+        .filter(model.vcs_instance.DBVcsInstance.id_ == vcs_instance_id)
+        .first()
+    )
     return vcs_instance
 
 
-def get_vcs_instances(db_connection: Session, skip: int = 0, limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-                      vcs_provider_type: VCSProviders = None, vcs_instance_name: str = None) \
-        -> List[model.DBVcsInstance]:
+def get_vcs_instances(
+    db_connection: Session,
+    skip: int = 0,
+    limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
+    vcs_provider_type: VCSProviders = None,
+    vcs_instance_name: str = None,
+) -> List[model.DBVcsInstance]:
     """
         Retrieve all vcs_instances records
     :param db_connection:
@@ -41,7 +51,9 @@ def get_vcs_instances(db_connection: Session, skip: int = 0, limit: int = DEFAUL
     :return: [DBVcsInstance]
         List of DBVcsInstance objects
     """
-    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
+    limit_val = (
+        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
+    )
     query = db_connection.query(model.DBVcsInstance)
 
     if vcs_provider_type:
@@ -50,12 +62,20 @@ def get_vcs_instances(db_connection: Session, skip: int = 0, limit: int = DEFAUL
     if vcs_instance_name:
         query = query.filter(model.DBVcsInstance.name == vcs_instance_name)
 
-    vcs_instances = query.order_by(model.vcs_instance.DBVcsInstance.id_).offset(skip).limit(limit_val).all()
+    vcs_instances = (
+        query.order_by(model.vcs_instance.DBVcsInstance.id_)
+        .offset(skip)
+        .limit(limit_val)
+        .all()
+    )
     return vcs_instances
 
 
-def get_vcs_instances_count(db_connection: Session,
-                            vcs_provider_type: VCSProviders = None, vcs_instance_name: str = None) -> int:
+def get_vcs_instances_count(
+    db_connection: Session,
+    vcs_provider_type: VCSProviders = None,
+    vcs_instance_name: str = None,
+) -> int:
     """
         Retrieve count of vcs_instances records optionally filtered by VCS provider
     :param db_connection:
@@ -80,11 +100,13 @@ def get_vcs_instances_count(db_connection: Session,
 
 
 def update_vcs_instance(
-        db_connection: Session,
-        vcs_instance_id: int,
-        vcs_instance: vcs_instance_schema.VCSInstanceCreate) -> model.DBVcsInstance:
-    db_vcs_instance: model.DBVcsInstance = \
+    db_connection: Session,
+    vcs_instance_id: int,
+    vcs_instance: vcs_instance_schema.VCSInstanceCreate,
+) -> model.DBVcsInstance:
+    db_vcs_instance: model.DBVcsInstance = (
         db_connection.query(model.DBVcsInstance).filter_by(id_=vcs_instance_id).first()
+    )
     db_vcs_instance.name = vcs_instance.name
     db_vcs_instance.provider_type = vcs_instance.provider_type
     db_vcs_instance.port = vcs_instance.port
@@ -99,8 +121,9 @@ def update_vcs_instance(
     return db_vcs_instance
 
 
-def create_vcs_instance(db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate) \
-        -> model.DBVcsInstance:
+def create_vcs_instance(
+    db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate
+) -> model.DBVcsInstance:
     db_vcs_instance = model.vcs_instance.DBVcsInstance(
         name=vcs_instance.name,
         provider_type=vcs_instance.provider_type,
@@ -109,7 +132,7 @@ def create_vcs_instance(db_connection: Session, vcs_instance: vcs_instance_schem
         organization=vcs_instance.organization,
         hostname=vcs_instance.hostname,
         scope=",".join(vcs_instance.scope),
-        exceptions=",".join(vcs_instance.exceptions)
+        exceptions=",".join(vcs_instance.exceptions),
     )
     db_connection.add(db_vcs_instance)
     db_connection.commit()
@@ -117,14 +140,21 @@ def create_vcs_instance(db_connection: Session, vcs_instance: vcs_instance_schem
     return db_vcs_instance
 
 
-def create_vcs_instance_if_not_exists(db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate):
+def create_vcs_instance_if_not_exists(
+    db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate
+):
     # Query the database to see if the vcs_instance object exists based on the unique constraint parameters
-    db_select_vcs_instance = db_connection.query(model.DBVcsInstance) \
-        .filter(model.DBVcsInstance.provider_type == vcs_instance.provider_type,
-                model.DBVcsInstance.scheme == vcs_instance.scheme,
-                model.DBVcsInstance.hostname == vcs_instance.hostname,
-                model.DBVcsInstance.port == vcs_instance.port,
-                model.DBVcsInstance.organization == vcs_instance.organization).first()
+    db_select_vcs_instance = (
+        db_connection.query(model.DBVcsInstance)
+        .filter(
+            model.DBVcsInstance.provider_type == vcs_instance.provider_type,
+            model.DBVcsInstance.scheme == vcs_instance.scheme,
+            model.DBVcsInstance.hostname == vcs_instance.hostname,
+            model.DBVcsInstance.port == vcs_instance.port,
+            model.DBVcsInstance.organization == vcs_instance.organization,
+        )
+        .first()
+    )
     if db_select_vcs_instance is not None:
         return db_select_vcs_instance
 
@@ -132,7 +162,9 @@ def create_vcs_instance_if_not_exists(db_connection: Session, vcs_instance: vcs_
     return create_vcs_instance(db_connection, vcs_instance)
 
 
-def delete_vcs_instance(db_connection: Session, vcs_instance_id: int, delete_related: bool = False):
+def delete_vcs_instance(
+    db_connection: Session, vcs_instance_id: int, delete_related: bool = False
+):
     """
         Delete a vcs instance object
     :param db_connection:
@@ -143,10 +175,20 @@ def delete_vcs_instance(db_connection: Session, vcs_instance_id: int, delete_rel
         if related records need to be deleted
     """
     if delete_related:
-        scan_finding_crud.delete_scan_finding_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
-        finding_crud.delete_findings_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
-        scan_crud.delete_scans_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
-        repository_crud.delete_repositories_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
-    db_vcs_instance = db_connection.query(model.DBVcsInstance).filter_by(id_=vcs_instance_id).first()
+        scan_finding_crud.delete_scan_finding_by_vcs_instance_id(
+            db_connection, vcs_instance_id=vcs_instance_id
+        )
+        finding_crud.delete_findings_by_vcs_instance_id(
+            db_connection, vcs_instance_id=vcs_instance_id
+        )
+        scan_crud.delete_scans_by_vcs_instance_id(
+            db_connection, vcs_instance_id=vcs_instance_id
+        )
+        repository_crud.delete_repositories_by_vcs_instance_id(
+            db_connection, vcs_instance_id=vcs_instance_id
+        )
+    db_vcs_instance = (
+        db_connection.query(model.DBVcsInstance).filter_by(id_=vcs_instance_id).first()
+    )
     db_connection.delete(db_vcs_instance)
     db_connection.commit()

@@ -12,23 +12,33 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
 
 # First Party
-from resc_backend.constants import CACHE_PREFIX, REDIS_CACHE_EXPIRE, RWS_ROUTE_RULE_PACKS, RWS_VERSION_PREFIX
+from resc_backend.constants import (
+    CACHE_PREFIX,
+    REDIS_CACHE_EXPIRE,
+    RWS_ROUTE_RULE_PACKS,
+    RWS_VERSION_PREFIX,
+)
 from resc_backend.db.model.rule_allow_list import DBruleAllowList
 from resc_backend.db.model.rule_pack import DBrulePack
 from resc_backend.resc_web_service.api import app
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.dependencies import requires_auth, requires_no_auth
-from resc_backend.resc_web_service.endpoints.rule_packs import determine_uploaded_rule_pack_activation, read_rule_pack
+from resc_backend.resc_web_service.endpoints.rule_packs import (
+    determine_uploaded_rule_pack_activation,
+    read_rule_pack,
+)
 from resc_backend.resc_web_service.schema.rule_pack import RulePackCreate
 
 
 @pytest.fixture(autouse=True)
 def _init_cache() -> Generator[ANY, ANY, None]:
-    FastAPICache.init(InMemoryBackend(),
-                      prefix=CACHE_PREFIX,
-                      expire=REDIS_CACHE_EXPIRE,
-                      key_builder=CacheManager.request_key_builder,
-                      enable=True)
+    FastAPICache.init(
+        InMemoryBackend(),
+        prefix=CACHE_PREFIX,
+        expire=REDIS_CACHE_EXPIRE,
+        key_builder=CacheManager.request_key_builder,
+        enable=True,
+    )
     yield
     FastAPICache.reset()
 
@@ -139,8 +149,8 @@ class TestRules(unittest.TestCase):
         assert isinstance(exc_info.exception, HTTPException)
         assert exc_info.exception.status_code == 422
         assert (
-                exc_info.exception.detail
-                == f"Version {version} is not a valid semantic version"
+            exc_info.exception.detail
+            == f"Version {version} is not a valid semantic version"
         )
 
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_total_rule_packs_count")
@@ -173,7 +183,7 @@ class TestRules(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_total_rule_packs_count")
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_rule_packs")
     def test_get_rule_packs_when_version_provided(
-            self, get_rule_packs, get_total_rule_packs_count
+        self, get_rule_packs, get_total_rule_packs_count
     ):
         get_rule_packs.return_value = self.db_rule_packs[:1]
         get_total_rule_packs_count.return_value = len(self.db_rule_packs[:1])
@@ -202,7 +212,7 @@ class TestRules(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_total_rule_packs_count")
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_rule_packs")
     def test_get_rule_packs_when_version_and_active_provided(
-            self, get_rule_packs, get_total_rule_packs_count
+        self, get_rule_packs, get_total_rule_packs_count
     ):
         get_rule_packs.return_value = self.db_rule_packs[:1]
         get_total_rule_packs_count.return_value = len(self.db_rule_packs[:1])
@@ -232,7 +242,7 @@ class TestRules(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_total_rule_packs_count")
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_rule_packs")
     def test_get_rule_packs_when_active_provided(
-            self, get_rule_packs, get_total_rule_packs_count
+        self, get_rule_packs, get_total_rule_packs_count
     ):
         get_rule_packs.return_value = self.db_rule_packs[:2]
         get_total_rule_packs_count.return_value = len(self.db_rule_packs[:2])
@@ -271,8 +281,8 @@ class TestRules(unittest.TestCase):
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
             assert (
-                    data["detail"][0]["msg"]
-                    == "ensure this value is greater than or equal to 0"
+                data["detail"][0]["msg"]
+                == "ensure this value is greater than or equal to 0"
             )
             get_rule_packs.assert_not_called()
 
@@ -295,8 +305,8 @@ class TestRules(unittest.TestCase):
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
             assert (
-                    data["detail"][0]["msg"]
-                    == "ensure this value is greater than or equal to 1"
+                data["detail"][0]["msg"]
+                == "ensure this value is greater than or equal to 1"
             )
             get_rule_packs.assert_not_called()
 
@@ -310,7 +320,7 @@ class TestRules(unittest.TestCase):
 
     @patch("logging.Logger.info")
     def test_rule_pack_activation_when_requested_rule_pack_version_is_greater_than_latest_rule_pack_from_db(
-            self, mock
+        self, mock
     ):
         db_rule_pack = self.db_rule_packs[0]
         latest_rule_pack_from_db = db_rule_pack
@@ -338,7 +348,7 @@ class TestRules(unittest.TestCase):
 
     @patch("logging.Logger.info")
     def test_rule_pack_activation_when_latest_rule_pack_from_db_is_greater_and_latest_rule_pack_from_db_is_inactive(
-            self, mock
+        self, mock
     ):
         db_rule_pack = self.db_rule_packs[0]
         latest_rule_pack_from_db = db_rule_pack
@@ -355,7 +365,7 @@ class TestRules(unittest.TestCase):
 
     @patch("logging.Logger.info")
     def test_rule_pack_activation_when_latest_rule_pack_from_db_is_greater_and_latest_rule_pack_from_db_is_active(
-            self, mock
+        self, mock
     ):
         db_rule_pack = DBrulePack(version="1.0.1", active=True, global_allow_list=1)
         latest_rule_pack_from_db = db_rule_pack
@@ -431,7 +441,7 @@ class TestRules(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_current_active_rule_pack")
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_rule_packs_tags")
     def test_get_rule_packs_tags_multiple_no_versions_no_active_rule_pack(
-            self, mock_get_rule_packs_tags, mock_get_current_active_rule_pack
+        self, mock_get_rule_packs_tags, mock_get_current_active_rule_pack
     ):
         rule_pack = None
         mock_get_current_active_rule_pack.return_value = rule_pack
@@ -442,7 +452,9 @@ class TestRules(unittest.TestCase):
             )
 
             assert rule_packs_tags.status_code == 500
-            assert rule_packs_tags.json() == {"detail": "No currently active rule pack."}
+            assert rule_packs_tags.json() == {
+                "detail": "No currently active rule pack."
+            }
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
@@ -454,7 +466,7 @@ class TestRules(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_current_active_rule_pack")
     @patch("resc_backend.resc_web_service.crud.rule_pack.get_rule_packs_tags")
     def test_get_rule_packs_tags_multiple_no_versions_with_active_rule_pack(
-            self, mock_get_rule_packs_tags, mock_get_current_active_rule_pack
+        self, mock_get_rule_packs_tags, mock_get_current_active_rule_pack
     ):
         rule_pack = DBrulePack(version="1.0.1", active=True, global_allow_list=1)
         mock_get_current_active_rule_pack.return_value = rule_pack

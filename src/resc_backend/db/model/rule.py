@@ -1,6 +1,14 @@
 # pylint: disable=R0902
 # Third Party
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import (
+    Column,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 
 # First Party
 from resc_backend.db.model import Base
@@ -20,11 +28,24 @@ class DBrule(Base):
     regex = Column(Text, nullable=True)
     path = Column(Text, nullable=True)
     keywords = Column(Text, nullable=True)
-    __table_args__ = (UniqueConstraint("rule_name", "rule_pack", name="unique_rule_name_per_rule_pack_version"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "rule_name", "rule_pack", name="unique_rule_name_per_rule_pack_version"
+        ),
+    )
 
-    def __init__(self, rule_pack: str, rule_name: str, description: str, allow_list: int = None,
-                 entropy: float = None, secret_group: str = None, regex: str = None, path: str = None,
-                 keywords: str = None):
+    def __init__(
+        self,
+        rule_pack: str,
+        rule_name: str,
+        description: str,
+        allow_list: int = None,
+        entropy: float = None,
+        secret_group: str = None,
+        regex: str = None,
+        path: str = None,
+        keywords: str = None,
+    ):
         self.rule_pack = rule_pack
         self.allow_list = allow_list
         self.rule_name = rule_name
@@ -36,9 +57,17 @@ class DBrule(Base):
         self.keywords = keywords
 
     @staticmethod
-    def create_from_metadata(rule_pack: str, rule_name: str, description: str, entropy: float,
-                             secret_group: str, regex: str, path: str, keywords: str,
-                             allow_list: int):
+    def create_from_metadata(
+        rule_pack: str,
+        rule_name: str,
+        description: str,
+        entropy: float,
+        secret_group: str,
+        regex: str,
+        path: str,
+        keywords: str,
+        allow_list: int,
+    ):
         db_rule = DBrule(
             rule_pack=rule_pack,
             rule_name=rule_name,
@@ -48,6 +77,6 @@ class DBrule(Base):
             regex=regex,
             path=path,
             keywords=keywords,
-            allow_list=allow_list
+            allow_list=allow_list,
         )
         return db_rule

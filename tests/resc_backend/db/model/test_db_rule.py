@@ -15,13 +15,18 @@ sys.path.insert(0, "src")
 
 class TestRule(unittest.TestCase):
     def setUp(self):
-        self.engine = create_engine('sqlite:///:memory:')
+        self.engine = create_engine("sqlite:///:memory:")
         Base.metadata.create_all(self.engine)
         self.session = Session(bind=self.engine)
 
         self.rule_pack = DBrulePack(version="1.2")
 
-        self.rule = DBrule(rule_pack="1.2", rule_name="fake_rule", description="fake1, fake2, fake3", regex=".*")
+        self.rule = DBrule(
+            rule_pack="1.2",
+            rule_name="fake_rule",
+            description="fake1, fake2, fake3",
+            regex=".*",
+        )
 
         self.session.add(self.rule)
         self.session.commit()

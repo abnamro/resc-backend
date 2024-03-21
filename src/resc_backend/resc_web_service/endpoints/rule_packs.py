@@ -21,7 +21,7 @@ from resc_backend.constants import (
     ERROR_MESSAGE_503,
     REDIS_CACHE_EXPIRE,
     RULE_PACKS_TAG,
-    RWS_ROUTE_RULE_PACKS
+    RWS_ROUTE_RULE_PACKS,
 )
 from resc_backend.db.connection import Session
 from resc_backend.resc_web_service.cache_manager import CacheManager
@@ -29,13 +29,18 @@ from resc_backend.resc_web_service.crud import rule as rule_crud
 from resc_backend.resc_web_service.crud import rule_pack as rule_pack_crud
 from resc_backend.resc_web_service.crud import rule_tag as rule_tag_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
-from resc_backend.resc_web_service.helpers.resc_swagger_models import Model400, Model404, Model409, Model422
+from resc_backend.resc_web_service.helpers.resc_swagger_models import (
+    Model400,
+    Model404,
+    Model409,
+    Model422,
+)
 from resc_backend.resc_web_service.helpers.rule import (
     create_toml_dictionary,
     create_toml_rule_file,
     get_mapped_global_allow_list_obj,
     map_dictionary_to_rule_allow_list_object,
-    validate_uploaded_file_and_read_content
+    validate_uploaded_file_and_read_content,
 )
 from resc_backend.resc_web_service.schema.pagination_model import PaginationModel
 from resc_backend.resc_web_service.schema.rule import RuleCreate
@@ -47,21 +52,25 @@ router = APIRouter(prefix=f"{RWS_ROUTE_RULE_PACKS}", tags=[RULE_PACKS_TAG])
 logger = logging.getLogger(__name__)
 
 
-@router.get("/versions",
-            response_model=PaginationModel[RulePackRead],
-            summary="Get rule packs",
-            status_code=status.HTTP_200_OK,
-            responses={
-                200: {"description": "Retrieve all the rule-packs"},
-                500: {"description": ERROR_MESSAGE_500},
-                503: {"description": ERROR_MESSAGE_503}
-            })
+@router.get(
+    "/versions",
+    response_model=PaginationModel[RulePackRead],
+    summary="Get rule packs",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Retrieve all the rule-packs"},
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
 @cache(namespace=CACHE_NAMESPACE_RULE_PACK, expire=REDIS_CACHE_EXPIRE)
-def get_rule_packs(version: Optional[str] = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
-                   active: Optional[bool] = Query(None, description="Filter on active rule packs"),
-                   skip: int = Query(default=0, ge=0),
-                   limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-                   db_connection: Session = Depends(get_db_connection)) -> PaginationModel[RulePackRead]:
+def get_rule_packs(
+    version: Optional[str] = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
+    active: Optional[bool] = Query(None, description="Filter on active rule packs"),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
+    db_connection: Session = Depends(get_db_connection),
+) -> PaginationModel[RulePackRead]:
     """
         Retrieve rule packs
 
@@ -74,25 +83,43 @@ def get_rule_packs(version: Optional[str] = Query(None, pattern=r"^\d+(?:\.\d+){
         The output will contain a PaginationModel containing the list of RulePackRead type objects,
         or an empty list if no rule pack was found
     """
-    rule_packs = rule_pack_crud.get_rule_packs(db_connection=db_connection, version=version, active=active, skip=skip,
-                                               limit=limit)
-    total_rule_packs_count = rule_pack_crud.get_total_rule_packs_count(db_connection=db_connection, version=version,
-                                                                       active=active)
-    return PaginationModel[RulePackRead](data=rule_packs, total=total_rule_packs_count, limit=limit, skip=skip)
+    rule_packs = rule_pack_crud.get_rule_packs(
+        db_connection=db_connection,
+        version=version,
+        active=active,
+        skip=skip,
+        limit=limit,
+    )
+    total_rule_packs_count = rule_pack_crud.get_total_rule_packs_count(
+        db_connection=db_connection, version=version, active=active
+    )
+    return PaginationModel[RulePackRead](
+        data=rule_packs, total=total_rule_packs_count, limit=limit, skip=skip
+    )
 
 
-@router.get("",
-            summary="Download rule pack in TOML format",
-            status_code=status.HTTP_200_OK,
-            responses={
-                200: {"description": "Download the rule-pack in TOML format"},
-                404: {"model": Model404, "description": "No rule-pack of version <version_id> found"},
-                422: {"model": Model422, "description": "Version <version_id> is not a valid semantic version"},
-                500: {"description": ERROR_MESSAGE_500},
-                503: {"description": ERROR_MESSAGE_503}
-            })
-async def download_rule_pack_toml_file(version: Optional[str] = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
-                                       db_connection: Session = Depends(get_db_connection)) -> FileResponse:
+@router.get(
+    "",
+    summary="Download rule pack in TOML format",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Download the rule-pack in TOML format"},
+        404: {
+            "model": Model404,
+            "description": "No rule-pack of version <version_id> found",
+        },
+        422: {
+            "model": Model422,
+            "description": "Version <version_id> is not a valid semantic version",
+        },
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
+async def download_rule_pack_toml_file(
+    version: Optional[str] = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
+    db_connection: Session = Depends(get_db_connection),
+) -> FileResponse:
     """
         Download rule pack in TOML format
 
@@ -101,37 +128,60 @@ async def download_rule_pack_toml_file(version: Optional[str] = Query(None, patt
     - **return**: [FileResponse] The output returns rule pack file downloaded in TOML format
     """
     if not version:
-        logger.info("rule pack version not specified, downloading the currently active version")
+        logger.info(
+            "rule pack version not specified, downloading the currently active version"
+        )
     rule_pack_from_db = read_rule_pack(version=version, db_connection=db_connection)
     if rule_pack_from_db:
         version = rule_pack_from_db.version
-        rules = rule_crud.get_rules_by_rule_pack_version(db_connection=db_connection, rule_pack_version=version)
-        rule_tag_names = rule_tag_crud.get_rule_tag_names_by_rule_pack_version(db_connection=db_connection,
-                                                                               rule_pack_version=version)
-        global_allow_list = rule_crud.get_global_allow_list_by_rule_pack_version(db_connection=db_connection,
-                                                                                 rule_pack_version=version)
-        generated_toml_dict = create_toml_dictionary(version, rules, global_allow_list, rule_tag_names)
+        rules = rule_crud.get_rules_by_rule_pack_version(
+            db_connection=db_connection, rule_pack_version=version
+        )
+        rule_tag_names = rule_tag_crud.get_rule_tag_names_by_rule_pack_version(
+            db_connection=db_connection, rule_pack_version=version
+        )
+        global_allow_list = rule_crud.get_global_allow_list_by_rule_pack_version(
+            db_connection=db_connection, rule_pack_version=version
+        )
+        generated_toml_dict = create_toml_dictionary(
+            version, rules, global_allow_list, rule_tag_names
+        )
     else:
-        raise HTTPException(status_code=404, detail=f"No rule pack found with version {version}")
+        raise HTTPException(
+            status_code=404, detail=f"No rule pack found with version {version}"
+        )
 
     toml_file = create_toml_rule_file(generated_toml_dict)
     return FileResponse(toml_file.name, filename="RESC-SECRETS-RULE.toml")
 
 
-@router.post("",
-             summary="Upload rule pack in TOML format",
-             status_code=status.HTTP_200_OK,
-             responses={
-                 200: {"description": "Upload the rule-pack in TOML format"},
-                 400: {"model": Model400, "description": "No properties defined for rule allow list"},
-                 409: {"model": Model409, "description": "Rule-pack version <version_id> already exists"},
-                 422: {"model": Model422, "description": "Version <version_id> is not a valid semantic version"},
-                 500: {"description": ERROR_MESSAGE_500},
-                 503: {"description": ERROR_MESSAGE_503}
-             })
-async def upload_rule_pack_toml_file(version: str = Query(default=Required, pattern=r"^\d+(?:\.\d+){2}$"),
-                                     rule_file: UploadFile = File(...),
-                                     db_connection: Session = Depends(get_db_connection)) -> dict:
+@router.post(
+    "",
+    summary="Upload rule pack in TOML format",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Upload the rule-pack in TOML format"},
+        400: {
+            "model": Model400,
+            "description": "No properties defined for rule allow list",
+        },
+        409: {
+            "model": Model409,
+            "description": "Rule-pack version <version_id> already exists",
+        },
+        422: {
+            "model": Model422,
+            "description": "Version <version_id> is not a valid semantic version",
+        },
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
+async def upload_rule_pack_toml_file(
+    version: str = Query(default=Required, pattern=r"^\d+(?:\.\d+){2}$"),
+    rule_file: UploadFile = File(...),
+    db_connection: Session = Depends(get_db_connection),
+) -> dict:
     """
         Upload TOML rule pack to database
 
@@ -146,40 +196,60 @@ async def upload_rule_pack_toml_file(version: str = Query(default=Required, patt
     # Check if rule pack version exists
     rule_pack_from_db = read_rule_pack(version=version, db_connection=db_connection)
     if rule_pack_from_db:
-        raise HTTPException(status_code=409, detail=f"Unable to process rules. Rule pack version "
-                                                    f"{version} already exists")
+        raise HTTPException(
+            status_code=409,
+            detail=f"Unable to process rules. Rule pack version "
+            f"{version} already exists",
+        )
 
     # Insert in to RULE_ALLOW_LIST for storing global allow list
     created_global_rule_allow_list = None
-    global_allow_list: RuleAllowList = get_mapped_global_allow_list_obj(toml_rule_dictionary)
+    global_allow_list: RuleAllowList = get_mapped_global_allow_list_obj(
+        toml_rule_dictionary
+    )
     if global_allow_list:
-        created_global_rule_allow_list = create_rule_allow_list(rule_allow_list=global_allow_list,
-                                                                db_connection=db_connection)
+        created_global_rule_allow_list = create_rule_allow_list(
+            rule_allow_list=global_allow_list, db_connection=db_connection
+        )
         if not created_global_rule_allow_list.id_:
             logger.warning("Creating global rule allow list failed with an error")
 
     # # Insert in to RULE_PACK
-    global_allow_list_id = created_global_rule_allow_list.id_ if \
-        created_global_rule_allow_list and created_global_rule_allow_list.id_ else None
+    global_allow_list_id = (
+        created_global_rule_allow_list.id_
+        if created_global_rule_allow_list and created_global_rule_allow_list.id_
+        else None
+    )
 
     # Determine if uploaded rule pack needs to be activated
     current_newest_rule_pack = rule_pack_crud.get_newest_rule_pack(db_connection)
-    activate_uploaded_rule_pack = determine_uploaded_rule_pack_activation(version, current_newest_rule_pack)
+    activate_uploaded_rule_pack = determine_uploaded_rule_pack_activation(
+        version, current_newest_rule_pack
+    )
 
-    rule_pack = RulePackCreate(version=version, active=activate_uploaded_rule_pack,
-                               global_allow_list=global_allow_list_id)
-    created_rule_pack_version = create_rule_pack_version(rule_pack=rule_pack, db_connection=db_connection)
+    rule_pack = RulePackCreate(
+        version=version,
+        active=activate_uploaded_rule_pack,
+        global_allow_list=global_allow_list_id,
+    )
+    created_rule_pack_version = create_rule_pack_version(
+        rule_pack=rule_pack, db_connection=db_connection
+    )
     if created_rule_pack_version.version and activate_uploaded_rule_pack:
         # Update older rule packs to inactive
-        rule_pack_crud.make_older_rule_packs_to_inactive(latest_rule_pack_version=version,
-                                                         db_connection=db_connection)
+        rule_pack_crud.make_older_rule_packs_to_inactive(
+            latest_rule_pack_version=version, db_connection=db_connection
+        )
     else:
         logger.warning("Creating rule pack failed with an error")
 
     # Insert in to RULES
     if created_rule_pack_version and created_rule_pack_version.version:
-        insert_rules(version=version, toml_rule_dictionary=toml_rule_dictionary,
-                     db_connection=db_connection)
+        insert_rules(
+            version=version,
+            toml_rule_dictionary=toml_rule_dictionary,
+            db_connection=db_connection,
+        )
 
         # Clear cache related to rule-pack
         await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_RULE)
@@ -188,8 +258,9 @@ async def upload_rule_pack_toml_file(version: str = Query(default=Required, patt
     return {"filename": rule_file.filename}
 
 
-def read_rule_pack(version: Optional[str] = None,
-                   db_connection: Session = Depends(get_db_connection)) -> RulePackRead:
+def read_rule_pack(
+    version: Optional[str] = None, db_connection: Session = Depends(get_db_connection)
+) -> RulePackRead:
     """
         Read active rule pack from database
     :param version:
@@ -202,14 +273,19 @@ def read_rule_pack(version: Optional[str] = None,
     if version:
         regex = re.compile(r"^\d+(?:\.\d+){2}$")
         if not re.fullmatch(regex, version):
-            raise HTTPException(status_code=422, detail=f"Version {version} is not a valid semantic version")
-    db_rule_pack = rule_pack_crud.get_rule_pack(db_connection=db_connection, version=version)
+            raise HTTPException(
+                status_code=422,
+                detail=f"Version {version} is not a valid semantic version",
+            )
+    db_rule_pack = rule_pack_crud.get_rule_pack(
+        db_connection=db_connection, version=version
+    )
     return db_rule_pack
 
 
 def create_rule_pack_version(
-        rule_pack: RulePackCreate,
-        db_connection: Session = Depends(get_db_connection)):
+    rule_pack: RulePackCreate, db_connection: Session = Depends(get_db_connection)
+):
     """
         Create rule pack version in database
     :param rule_pack:
@@ -217,13 +293,14 @@ def create_rule_pack_version(
     :param db_connection:
         Session of the database connection
     """
-    return rule_pack_crud.create_rule_pack_version(db_connection=db_connection,
-                                                   rule_pack=rule_pack)
+    return rule_pack_crud.create_rule_pack_version(
+        db_connection=db_connection, rule_pack=rule_pack
+    )
 
 
 def create_rule_allow_list(
-        rule_allow_list: RuleAllowList,
-        db_connection: Session = Depends(get_db_connection)):
+    rule_allow_list: RuleAllowList, db_connection: Session = Depends(get_db_connection)
+):
     """
         Create rule allow list in database
     :param rule_allow_list:
@@ -231,13 +308,26 @@ def create_rule_allow_list(
     :param db_connection:
         Session of the database connection
     """
-    if rule_allow_list.paths or rule_allow_list.commits or rule_allow_list.stop_words \
-            or rule_allow_list.description or rule_allow_list.regexes:
-        return rule_crud.create_rule_allow_list(db_connection=db_connection, rule_allow_list=rule_allow_list)
-    raise HTTPException(status_code=400, detail="No properties defined for rule allow list")
+    if (
+        rule_allow_list.paths
+        or rule_allow_list.commits
+        or rule_allow_list.stop_words
+        or rule_allow_list.description
+        or rule_allow_list.regexes
+    ):
+        return rule_crud.create_rule_allow_list(
+            db_connection=db_connection, rule_allow_list=rule_allow_list
+        )
+    raise HTTPException(
+        status_code=400, detail="No properties defined for rule allow list"
+    )
 
 
-def insert_rules(version: str, toml_rule_dictionary: dict, db_connection: Session = Depends(get_db_connection)):
+def insert_rules(
+    version: str,
+    toml_rule_dictionary: dict,
+    db_connection: Session = Depends(get_db_connection),
+):
     """
         Create rules in database
     :param version:
@@ -267,38 +357,55 @@ def insert_rules(version: str, toml_rule_dictionary: dict, db_connection: Sessio
             rule_allow_list_obj = map_dictionary_to_rule_allow_list_object(allow_list)
             created_rule_allow_list = None
             if rule_allow_list_obj:
-                created_rule_allow_list = create_rule_allow_list(rule_allow_list=rule_allow_list_obj,
-                                                                 db_connection=db_connection)
+                created_rule_allow_list = create_rule_allow_list(
+                    rule_allow_list=rule_allow_list_obj, db_connection=db_connection
+                )
 
             # Insert in to RULES
             if allow_list and created_rule_allow_list and created_rule_allow_list.id_:
                 created_allow_list_id = created_rule_allow_list.id_
             else:
                 created_allow_list_id = None
-            rule_obj = RuleCreate(rule_pack=version,
-                                  allow_list=created_allow_list_id,
-                                  rule_name=rule_name, description=description, entropy=entropy,
-                                  secret_group=secret_group, regex=regex, path=path, keywords=keywords)
-            created_rule = rule_crud.create_rule(rule=rule_obj, db_connection=db_connection)
+            rule_obj = RuleCreate(
+                rule_pack=version,
+                allow_list=created_allow_list_id,
+                rule_name=rule_name,
+                description=description,
+                entropy=entropy,
+                secret_group=secret_group,
+                regex=regex,
+                path=path,
+                keywords=keywords,
+            )
+            created_rule = rule_crud.create_rule(
+                rule=rule_obj, db_connection=db_connection
+            )
             if not created_rule.id_:
                 logger.warning(f"Creating rule failed for Rule: {rule_name}")
             if "tags" in rule:
-                _ = rule_tag_crud.create_rule_tag(db_connection=db_connection, rule_id=created_rule.id_,
-                                                  tags=rule["tags"])
+                _ = rule_tag_crud.create_rule_tag(
+                    db_connection=db_connection,
+                    rule_id=created_rule.id_,
+                    tags=rule["tags"],
+                )
 
 
-@router.get("/tags",
-            response_model=List[str],
-            summary="Get rule packs' tags",
-            status_code=status.HTTP_200_OK,
-            responses={
-                200: {"description": "Retrieve all the tags related to a rule-pack[s]"},
-                500: {"description": ERROR_MESSAGE_500},
-                503: {"description": ERROR_MESSAGE_503}
-            })
+@router.get(
+    "/tags",
+    response_model=List[str],
+    summary="Get rule packs' tags",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Retrieve all the tags related to a rule-pack[s]"},
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
 @cache(namespace=CACHE_NAMESPACE_RULE_PACK, expire=REDIS_CACHE_EXPIRE)
-def get_rule_packs_tags(versions: Optional[List[str]] = Query(None, alias="version", title="version"),
-                        db_connection: Session = Depends(get_db_connection)) -> List[str]:
+def get_rule_packs_tags(
+    versions: Optional[List[str]] = Query(None, alias="version", title="version"),
+    db_connection: Session = Depends(get_db_connection),
+) -> List[str]:
     """
         Retrieve rule pack related tags
 
@@ -308,16 +415,23 @@ def get_rule_packs_tags(versions: Optional[List[str]] = Query(None, alias="versi
         The output will contain a list of tags related to one or more rule-packs.
     """
     if not versions:
-        active_rule_pack = rule_pack_crud.get_current_active_rule_pack(db_connection=db_connection)
+        active_rule_pack = rule_pack_crud.get_current_active_rule_pack(
+            db_connection=db_connection
+        )
         if not active_rule_pack:
-            raise HTTPException(status_code=500, detail="No currently active rule pack.")
+            raise HTTPException(
+                status_code=500, detail="No currently active rule pack."
+            )
         versions = [active_rule_pack.version]
-    rule_packs_tags = rule_pack_crud.get_rule_packs_tags(db_connection=db_connection, versions=versions)
+    rule_packs_tags = rule_pack_crud.get_rule_packs_tags(
+        db_connection=db_connection, versions=versions
+    )
     return rule_packs_tags
 
 
-def determine_uploaded_rule_pack_activation(requested_rule_pack_version: str,
-                                            latest_rule_pack_from_db: RulePackRead) -> bool:
+def determine_uploaded_rule_pack_activation(
+    requested_rule_pack_version: str, latest_rule_pack_from_db: RulePackRead
+) -> bool:
     """
         Determine if rule pack needs to be activated
     :param requested_rule_pack_version:
@@ -328,22 +442,31 @@ def determine_uploaded_rule_pack_activation(requested_rule_pack_version: str,
         The output returns true if rule pack needs to be activated else returns false
     """
     if latest_rule_pack_from_db:
-        if Version(latest_rule_pack_from_db.version) < Version(requested_rule_pack_version):
-            logger.info(f"Uploaded rule pack is of version '{requested_rule_pack_version}', using it to replace "
-                        f"'{latest_rule_pack_from_db.version}' as the active one.")
+        if Version(latest_rule_pack_from_db.version) < Version(
+            requested_rule_pack_version
+        ):
+            logger.info(
+                f"Uploaded rule pack is of version '{requested_rule_pack_version}', using it to replace "
+                f"'{latest_rule_pack_from_db.version}' as the active one."
+            )
             activate_uploaded_rule_pack = True
         else:
             if not latest_rule_pack_from_db.active:
-                logger.info(f"There is already a more recent rule pack present in the database "
-                            f"'{latest_rule_pack_from_db.version}', but it is set to inactive. "
-                            f"Activating the uploaded rule pack '{requested_rule_pack_version}'")
+                logger.info(
+                    f"There is already a more recent rule pack present in the database "
+                    f"'{latest_rule_pack_from_db.version}', but it is set to inactive. "
+                    f"Activating the uploaded rule pack '{requested_rule_pack_version}'"
+                )
                 activate_uploaded_rule_pack = True
             else:
-                logger.info(f"Uploaded rule pack is of version '{requested_rule_pack_version}', the existing rule pack "
-                            f"'{latest_rule_pack_from_db.version}' is kept as the active one.")
+                logger.info(
+                    f"Uploaded rule pack is of version '{requested_rule_pack_version}', the existing rule pack "
+                    f"'{latest_rule_pack_from_db.version}' is kept as the active one."
+                )
                 activate_uploaded_rule_pack = False
     else:
         logger.info(
-            f"No existing rule pack found, So activating the uploaded rule pack '{requested_rule_pack_version}'")
+            f"No existing rule pack found, So activating the uploaded rule pack '{requested_rule_pack_version}'"
+        )
         activate_uploaded_rule_pack = True
     return activate_uploaded_rule_pack

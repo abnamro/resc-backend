@@ -10,7 +10,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import true
 
 # First Party
-from resc_backend.constants import DEFAULT_RECORDS_PER_PAGE_LIMIT, MAX_RECORDS_PER_PAGE_LIMIT
+from resc_backend.constants import (
+    DEFAULT_RECORDS_PER_PAGE_LIMIT,
+    MAX_RECORDS_PER_PAGE_LIMIT,
+)
 from resc_backend.db import model
 from resc_backend.resc_web_service.schema import rule_pack as rule_pack_schema
 
@@ -155,7 +158,7 @@ def get_rule_packs_tags(db_connection: Session, versions: list) -> List[str]:
         ),
     )
     rule_packs_tags = query.distinct().all()
-    rule_packs_tags = [t for t, in rule_packs_tags]
+    rule_packs_tags = [t for (t,) in rule_packs_tags]
     return rule_packs_tags
 
 

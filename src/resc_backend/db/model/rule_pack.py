@@ -16,19 +16,26 @@ class DBrulePack(Base):
     active = Column(Boolean, nullable=False, default=False)
     created = Column(DateTime, nullable=False, default=datetime.utcnow)
 
-    def __init__(self, version: str, global_allow_list: int = None, active: bool = False,
-                 created: datetime = datetime.utcnow()):
+    def __init__(
+        self,
+        version: str,
+        global_allow_list: int = None,
+        active: bool = False,
+        created: datetime = datetime.utcnow(),
+    ):
         self.version = version
         self.global_allow_list = global_allow_list
         self.active = active
         self.created = created
 
     @staticmethod
-    def create_from_metadata(version: str, global_allow_list: int, active: bool, created: datetime):
+    def create_from_metadata(
+        version: str, global_allow_list: int, active: bool, created: datetime
+    ):
         db_rule_pack = DBrulePack(
             version=version,
             global_allow_list=global_allow_list,
             active=active,
-            created=created
+            created=created,
         )
         return db_rule_pack

@@ -18,7 +18,7 @@ from resc_backend.constants import (
     REDIS_CACHE_EXPIRE,
     RWS_ROUTE_AUTH_CHECK,
     RWS_ROUTE_SUPPORTED_VCS_PROVIDERS,
-    RWS_VERSION_PREFIX
+    RWS_VERSION_PREFIX,
 )
 from resc_backend.resc_web_service.api import app
 from resc_backend.resc_web_service.cache_manager import CacheManager
@@ -27,11 +27,13 @@ from resc_backend.resc_web_service.dependencies import requires_auth, requires_n
 
 @pytest.fixture(autouse=True)
 def _init_cache() -> Generator[ANY, ANY, None]:
-    FastAPICache.init(InMemoryBackend(),
-                      prefix=CACHE_PREFIX,
-                      expire=REDIS_CACHE_EXPIRE,
-                      key_builder=CacheManager.request_key_builder,
-                      enable=True)
+    FastAPICache.init(
+        InMemoryBackend(),
+        prefix=CACHE_PREFIX,
+        expire=REDIS_CACHE_EXPIRE,
+        key_builder=CacheManager.request_key_builder,
+        enable=True,
+    )
     yield
     FastAPICache.reset()
 
@@ -52,8 +54,9 @@ class TestFindings(unittest.TestCase):
 
     def test_get_supported_vcs_providers(self):
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}"
-                                  f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}")
+            response = client.get(
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}"
+            )
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == 3
@@ -62,14 +65,14 @@ class TestFindings(unittest.TestCase):
             assert data[2] == GITHUB_PUBLIC
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(f"{RWS_VERSION_PREFIX}"
-                                         f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}")
+            cached_response = client.get(
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}"
+            )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
     def test_auth_check(self):
-        response = self.client.get(f"{RWS_VERSION_PREFIX}"
-                                   f"{RWS_ROUTE_AUTH_CHECK}")
+        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_AUTH_CHECK}")
         assert response.status_code == 200, response.text
         data = response.json()
         assert len(data) == 1

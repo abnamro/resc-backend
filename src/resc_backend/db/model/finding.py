@@ -3,7 +3,15 @@
 from datetime import datetime
 
 # Third Party
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import (
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 
 # First Party
 from resc_backend.db.model import Base
@@ -25,11 +33,34 @@ class DBfinding(Base):
     email = Column(String(100))
     event_sent_on = Column(DateTime, nullable=True)
 
-    __table_args__ = (UniqueConstraint("commit_id", "repository_id", "rule_name", "file_path", "line_number",
-                                       "column_start", "column_end", name="uc_finding_per_repository"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "commit_id",
+            "repository_id",
+            "rule_name",
+            "file_path",
+            "line_number",
+            "column_start",
+            "column_end",
+            name="uc_finding_per_repository",
+        ),
+    )
 
-    def __init__(self, rule_name, file_path, line_number, commit_id, commit_message, commit_timestamp, author,
-                 email, event_sent_on, repository_id, column_start, column_end):
+    def __init__(
+        self,
+        rule_name,
+        file_path,
+        line_number,
+        commit_id,
+        commit_message,
+        commit_timestamp,
+        author,
+        email,
+        event_sent_on,
+        repository_id,
+        column_start,
+        column_end,
+    ):
         self.email = email
         self.author = author
         self.commit_timestamp = commit_timestamp
@@ -57,6 +88,6 @@ class DBfinding(Base):
             event_sent_on=finding.event_sent_on,
             repository_id=finding.repository_id,
             column_start=finding.column_start,
-            column_end=finding.column_end
+            column_end=finding.column_end,
         )
         return db_finding

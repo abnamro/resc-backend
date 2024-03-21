@@ -15,7 +15,6 @@ class RuleAllowListBase(BaseModel):
 
 
 class RuleAllowListCreate(RuleAllowListBase):
-
     @classmethod
     def create_from_base_class(cls, base_object: RuleAllowListBase):
         return cls(**(dict(base_object)))

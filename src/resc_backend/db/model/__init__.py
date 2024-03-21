@@ -6,11 +6,6 @@ import os
 # Third Party
 from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
-basedir = os.path.abspath(os.path.dirname(__file__))
-logger = logging.getLogger(__name__)
-
-
 # First Party
 from resc_backend.db.model.audit import DBaudit
 from resc_backend.db.model.finding import DBfinding
@@ -23,3 +18,21 @@ from resc_backend.db.model.scan import DBscan
 from resc_backend.db.model.scan_finding import DBscanFinding
 from resc_backend.db.model.tag import DBtag
 from resc_backend.db.model.vcs_instance import DBVcsInstance
+
+Base = declarative_base()
+basedir = os.path.abspath(os.path.dirname(__file__))
+logger = logging.getLogger(__name__)
+
+__all__ = [
+    DBaudit,
+    DBfinding,
+    DBrepository,
+    DBrule,
+    DBruleAllowList,
+    DBrulePack,
+    DBruleTag,
+    DBscan,
+    DBscanFinding,
+    DBtag,
+    DBVcsInstance,
+]

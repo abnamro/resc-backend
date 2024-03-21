@@ -16,6 +16,7 @@ class PaginationModel(GenericModel, Generic[Model]):
     :param Generic[Model]:
         Type of the object in the data list
     """
+
     # data: List[Model]
     data: conlist(item_type=Model, min_items=None, max_items=500)
     total: conint(gt=-1)

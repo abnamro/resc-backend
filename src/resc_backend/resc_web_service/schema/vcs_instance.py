@@ -25,22 +25,28 @@ class VCSInstanceBase(BaseModel):
     def check_scheme(cls, value):
         allowed_schemes = ["http", "https"]
         if value not in allowed_schemes:
-            raise ValueError(f"The scheme '{value}' must be one of the following {', '.join(allowed_schemes)}")
+            raise ValueError(
+                f"The scheme '{value}' must be one of the following {', '.join(allowed_schemes)}"
+            )
         return value
 
     @validator("organization", pre=True)
     @classmethod
     def check_organization(cls, value, values):
         if not value and values.get("provider_type", None) == AZURE_DEVOPS:
-            raise ValueError("The organization field needs to be specified for Azure devops vcs instances")
+            raise ValueError(
+                "The organization field needs to be specified for Azure devops vcs instances"
+            )
         return value
 
     @validator("scope", pre=True)
     @classmethod
     def check_scope_and_exceptions(cls, value, values):
         if value and values.get("exceptions", None):
-            raise ValueError("You cannot specify bot the scope and exceptions to the scan, only one setting"
-                             " is supported.")
+            raise ValueError(
+                "You cannot specify bot the scope and exceptions to the scan, only one setting"
+                " is supported."
+            )
         return value
 
 
@@ -60,15 +66,17 @@ class VCSInstanceRead(VCSInstanceBase):
         if db_vcs_instance.scope:
             scope = db_vcs_instance.scope.split(",")
 
-        vcs_instance_read = cls(id_=db_vcs_instance.id_,
-                                name=db_vcs_instance.name,
-                                provider_type=db_vcs_instance.provider_type,
-                                hostname=db_vcs_instance.hostname,
-                                port=db_vcs_instance.port,
-                                scheme=db_vcs_instance.scheme,
-                                exceptions=exceptions,
-                                scope=scope,
-                                organization=db_vcs_instance.organization)
+        vcs_instance_read = cls(
+            id_=db_vcs_instance.id_,
+            name=db_vcs_instance.name,
+            provider_type=db_vcs_instance.provider_type,
+            hostname=db_vcs_instance.hostname,
+            port=db_vcs_instance.port,
+            scheme=db_vcs_instance.scheme,
+            exceptions=exceptions,
+            scope=scope,
+            organization=db_vcs_instance.organization,
+        )
 
         return vcs_instance_read
 

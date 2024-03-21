@@ -20,9 +20,12 @@ def get_logging_settings_path():
 
 def initialise_logs(log_file_path: str, debug=True):
     logging_ini_file = get_logging_settings_path()
-    logging.config.fileConfig(logging_ini_file, defaults={'log_file_path': log_file_path},
-                              disable_existing_loggers=False)
-    logger_config = logging.getLogger('root')
+    logging.config.fileConfig(
+        logging_ini_file,
+        defaults={"log_file_path": log_file_path},
+        disable_existing_loggers=False,
+    )
+    logger_config = logging.getLogger("root")
     if int(debug) == 1:
         logger_config.setLevel(logging.DEBUG)
     else:

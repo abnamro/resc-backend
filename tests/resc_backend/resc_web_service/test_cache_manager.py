@@ -21,19 +21,25 @@ def env_setup(monkeypatch):
 @patch("fastapi_cache.FastAPICache.init")
 @patch("resc_backend.resc_web_service.cache_manager.CacheManager.get_cache_client")
 @patch("resc_backend.resc_web_service.cache_manager.CacheManager.request_key_builder")
-def test_initialize_cache_with_cache_enabled(mock_request_key_builder, mock_get_cache_client, mock_cache_init):
+def test_initialize_cache_with_cache_enabled(
+    mock_request_key_builder, mock_get_cache_client, mock_cache_init
+):
     mock_request_key_builder.return_value = "test-key"
     mock_get_cache_client.return_value = None
     mock_cache_init.return_value = None
-    env_variables = {"RESC_REDIS_CACHE_ENABLE": "true",
-                     "RESC_REDIS_SERVICE_HOST": "localhost",
-                     "RESC_REDIS_SERVICE_PORT": "6379",
-                     "REDIS_PASSWORD": "dummy_password"}
+    env_variables = {
+        "RESC_REDIS_CACHE_ENABLE": "true",
+        "RESC_REDIS_SERVICE_HOST": "localhost",
+        "RESC_REDIS_SERVICE_PORT": "6379",
+        "REDIS_PASSWORD": "dummy_password",
+    }
     CacheManager.initialize_cache(env_variables)
-    mock_get_cache_client.assert_called_once_with(host="localhost", port=int("6379"), password="dummy_password")
-    mock_cache_init.assert_called_once_with(ANY, prefix=CACHE_PREFIX,
-                                            key_builder=mock_request_key_builder,
-                                            enable=True)
+    mock_get_cache_client.assert_called_once_with(
+        host="localhost", port=int("6379"), password="dummy_password"
+    )
+    mock_cache_init.assert_called_once_with(
+        ANY, prefix=CACHE_PREFIX, key_builder=mock_request_key_builder, enable=True
+    )
 
 
 @patch("fastapi_cache.FastAPICache.init")
@@ -52,11 +58,18 @@ def test_request_key_builder(mock_debug_log, mock_get_prefix):
     mock_request.method = "GET"
     mock_request.url.path = "http://example.com/path"
     mock_request.query_params.items.return_value = ["param", "value"]
-    expected_cache_key = f"{CACHE_PREFIX}:test-namespace:get:http://example.com/path:['param', 'value']"
+    expected_cache_key = (
+        f"{CACHE_PREFIX}:test-namespace:get:http://example.com/path:['param', 'value']"
+    )
     expected_debug_msg = f"Cache created with key: {expected_cache_key}"
     response = Response()
     cache_key = CacheManager.request_key_builder(
-        func=None, namespace="test-namespace", request=mock_request, response=response, args=None, kwargs=None,
+        func=None,
+        namespace="test-namespace",
+        request=mock_request,
+        response=response,
+        args=None,
+        kwargs=None,
     )
     assert cache_key == expected_cache_key
     mock_debug_log.assert_called_once_with(expected_debug_msg)
@@ -75,7 +88,12 @@ def test_personalized_key_builder(mock_debug_log, mock_get_prefix):
     expected_debug_msg = f"Cache created with key: {expected_cache_key}"
     response = Response()
     cache_key = CacheManager.personalized_key_builder(
-        func=None, namespace="test-namespace", request=mock_request, response=response, args=None, kwargs=None,
+        func=None,
+        namespace="test-namespace",
+        request=mock_request,
+        response=response,
+        args=None,
+        kwargs=None,
     )
     assert cache_key == expected_cache_key
     mock_debug_log.assert_called_once_with(expected_debug_msg)

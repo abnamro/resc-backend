@@ -11,6 +11,5 @@ class DBruleTag(Base):
     tag_id = Column(Integer, ForeignKey("tag.id"), primary_key=True)
 
     def __init__(self, rule_id: int, tag_id: int):
-
         self.rule_id = rule_id
         self.tag_id = tag_id
