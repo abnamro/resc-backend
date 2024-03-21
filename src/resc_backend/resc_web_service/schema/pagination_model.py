@@ -2,7 +2,6 @@
 from typing import Generic, TypeVar
 
 # Third Party
-# pylint: disable=no-name-in-module
 from pydantic import BaseModel, conint, conlist
 from pydantic.generics import GenericModel
 
@@ -16,6 +15,7 @@ class PaginationModel(GenericModel, Generic[Model]):
     :param Generic[Model]:
         Type of the object in the data list
     """
+
     # data: List[Model]
     data: conlist(item_type=Model, min_items=None, max_items=500)
     total: conint(gt=-1)

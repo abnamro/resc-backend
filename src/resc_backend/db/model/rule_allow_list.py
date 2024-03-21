@@ -14,8 +14,14 @@ class DBruleAllowList(Base):
     commits = Column(Text, nullable=True)
     stop_words = Column(Text, nullable=True)
 
-    def __init__(self, description: str, regexes: str = None, paths: str = None, commits: str = None,
-                 stop_words: str = None):
+    def __init__(
+        self,
+        description: str,
+        regexes: str = None,
+        paths: str = None,
+        commits: str = None,
+        stop_words: str = None,
+    ):
         self.description = description
         self.regexes = regexes
         self.paths = paths
@@ -23,12 +29,14 @@ class DBruleAllowList(Base):
         self.stop_words = stop_words
 
     @staticmethod
-    def create_from_metadata(description: str, regexes: str, paths: str, commits: str, stop_words: str):
+    def create_from_metadata(
+        description: str, regexes: str, paths: str, commits: str, stop_words: str
+    ):
         db_rule_allow_list = DBruleAllowList(
             description=description,
             regexes=regexes,
             paths=paths,
             commits=commits,
-            stop_words=stop_words
+            stop_words=stop_words,
         )
         return db_rule_allow_list

@@ -1,4 +1,3 @@
-# pylint: disable=C0413,W0611,W0404
 # Standard Library
 import logging.config
 
@@ -18,13 +17,13 @@ from resc_backend.resc_web_service.configuration import (
     AUTHENTICATION_REQUIRED,
     CORS_ALLOWED_DOMAINS,
     ENABLE_CORS,
-    WEB_SERVICE_ENV_VARS
+    WEB_SERVICE_ENV_VARS,
 )
 from resc_backend.resc_web_service.dependencies import (
     check_db_initialized,
     requires_auth,
     requires_no_auth,
-    add_security_headers
+    add_security_headers,
 )
 from resc_backend.resc_web_service.endpoints import (
     common,
@@ -36,9 +35,11 @@ from resc_backend.resc_web_service.endpoints import (
     rules,
     rule_packs,
     scans,
-    vcs_instances
+    vcs_instances,
 )
-from resc_backend.resc_web_service.helpers.exception_handler import add_exception_handlers
+from resc_backend.resc_web_service.helpers.exception_handler import (
+    add_exception_handlers,
+)
 from resc_backend.resc_web_service.cache_manager import CacheManager
 
 # Check and load environment variables
@@ -79,22 +80,22 @@ def generate_logger_config(log_file_path, debug=True):
                 "formatter": "generic-log-formatter",
                 "filename": log_file_path,
                 "maxBytes": 100 * 1024 * 1024,
-                "backupCount": 5
-            }
+                "backupCount": 5,
+            },
         },
         "loggers": {
             "": {
                 "handlers": ["console", "file"],
                 "level": logging_level,
-                "propagate": True
+                "propagate": True,
             },
-        }
+        },
     }
 
     return logging_config
 
 
-logging.config.dictConfig(generate_logger_config('local_logs.log'))
+logging.config.dictConfig(generate_logger_config("local_logs.log"))
 logger = logging.getLogger(__name__)
 tags_metadata = [
     {"name": "health", "description": "Checks health for API"},
@@ -112,14 +113,16 @@ tags_metadata = [
 auth_disabled = env_variables[AUTHENTICATION_REQUIRED].lower() in ["false"]
 AUTH = [Depends(requires_no_auth)] if auth_disabled else [Depends(requires_auth)]
 
-app = FastAPI(title="Repository Scanner (RESC)",
-              description="RESC API helps you to perform several operations upon findings "
-                          "obtained from multiple source code repositories.",
-              version=get_package_version(),
-              openapi_tags=tags_metadata)
+app = FastAPI(
+    title="Repository Scanner (RESC)",
+    description="RESC API helps you to perform several operations upon findings "
+    "obtained from multiple source code repositories.",
+    version=get_package_version(),
+    openapi_tags=tags_metadata,
+)
 
 if env_variables[ENABLE_CORS].lower() in ["true"]:
-    origins = env_variables[CORS_ALLOWED_DOMAINS].split(', ')
+    origins = env_variables[CORS_ALLOWED_DOMAINS].split(", ")
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
@@ -133,7 +136,9 @@ app.include_router(common.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(rules.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(rule_packs.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
-app.include_router(detailed_findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
+app.include_router(
+    detailed_findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH
+)
 app.include_router(repositories.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(scans.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(vcs_instances.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
@@ -155,7 +160,9 @@ def app_startup():
 
         logger.info("Database is connected, expected table(s) found")
     except RetryError as exc:
-        raise SystemExit("Error while connecting to the database, retry timed out") from exc
+        raise SystemExit(
+            "Error while connecting to the database, retry timed out"
+        ) from exc
 
 
 @app.on_event("shutdown")

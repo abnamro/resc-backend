@@ -1,4 +1,3 @@
-# pylint: disable=bad-option-value,C0413
 # Standard Library
 import logging
 import os
@@ -11,10 +10,12 @@ from git import Repo  # noqa: E402
 logger = logging.getLogger(__name__)
 
 
-def clone_repository(repository_url: str,
-                     repo_clone_path: str,
-                     username: str = "",
-                     personal_access_token: str = ""):
+def clone_repository(
+    repository_url: str,
+    repo_clone_path: str,
+    username: str = "",
+    personal_access_token: str = "",
+):
     """
         Clones the given repository
     :param repository_url:
@@ -31,7 +32,9 @@ def clone_repository(repository_url: str,
         repo_clone_url = f"https://{username}:{personal_access_token}@{url}"
     else:
         repo_clone_url = f"https://{personal_access_token}@{url}"
-        logger.debug(f"username is not specified, so cloning the repository with only personal access token: {url}")
+        logger.debug(
+            f"username is not specified, so cloning the repository with only personal access token: {url}"
+        )
 
     Repo.clone_from(repo_clone_url, repo_clone_path)
     logger.debug(f"Repository {repository_url} cloned successfully")

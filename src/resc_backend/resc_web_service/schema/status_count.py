@@ -1,4 +1,3 @@
-# pylint: disable=no-name-in-module
 # Third Party
 from pydantic import BaseModel
 

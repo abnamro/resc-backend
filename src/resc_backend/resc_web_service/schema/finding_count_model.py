@@ -2,7 +2,6 @@
 from typing import Generic, Optional, TypeVar
 
 # Third Party
-# pylint: disable=no-name-in-module
 from pydantic import BaseModel, conint
 from pydantic.generics import GenericModel
 
@@ -18,6 +17,7 @@ class FindingCountModel(GenericModel, Generic[Model]):
     :param Generic[Model]:
         Type of the object in the data list
     """
+
     data: Optional[Model]
     true_positive: conint(gt=-1)
     false_positive: conint(gt=-1)

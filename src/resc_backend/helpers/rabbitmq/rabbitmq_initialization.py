@@ -1,4 +1,3 @@
-# pylint: disable=E1101
 # Standard Library
 import logging
 
@@ -10,7 +9,11 @@ from urllib3 import Retry
 
 # First Party
 from resc_backend.common import initialise_logs
-from resc_backend.constants import LOG_FILE_PATH_RABBITMQ, PROJECT_QUEUE, REPOSITORY_QUEUE
+from resc_backend.constants import (
+    LOG_FILE_PATH_RABBITMQ,
+    PROJECT_QUEUE,
+    REPOSITORY_QUEUE,
+)
 from resc_backend.helpers.environment_wrapper import validate_environment
 from resc_backend.helpers.rabbitmq.configuration import (
     RABBITMQ_DEFAULT_PASSWORD,
@@ -18,7 +21,7 @@ from resc_backend.helpers.rabbitmq.configuration import (
     RABBITMQ_DEFAULT_VHOST,
     RABBITMQ_PASSWORD,
     RABBITMQ_USERNAME,
-    REQUIRED_ENV_VARS
+    REQUIRED_ENV_VARS,
 )
 
 env_variables = validate_environment(REQUIRED_ENV_VARS)
@@ -36,13 +39,12 @@ def wait_for_rabbitmq_server_to_up(rabbitmq_api_base_url: str) -> bool:
     rabbitmq_admin_password = f"{env_variables[RABBITMQ_DEFAULT_PASSWORD]}"
 
     session = requests.Session()
-    retries = Retry(total=100,
-                    backoff_factor=1,
-                    status_forcelist=[500, 502, 503, 504])
+    retries = Retry(total=100, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
     uri = rabbitmq_api_base_url + "/api/health/checks/alarms"
     session.mount("http://", HTTPAdapter(max_retries=retries))
-    response = session.get(uri,
-                           auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password))
+    response = session.get(
+        uri, auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password)
+    )
 
     if hasattr(response, "status_code") and int(response.status_code) == 200:
         logger.debug("Rabbitmq server is up.")
@@ -51,7 +53,9 @@ def wait_for_rabbitmq_server_to_up(rabbitmq_api_base_url: str) -> bool:
     return False
 
 
-def create_user(rabbitmq_api_base_url: str, username: str, password: str, role: str) -> bool:
+def create_user(
+    rabbitmq_api_base_url: str, username: str, password: str, role: str
+) -> bool:
     """
         Creates a user in RabbitMQ server, it would return true if the operation was a success, false otherwise
     :param rabbitmq_api_base_url:
@@ -69,8 +73,12 @@ def create_user(rabbitmq_api_base_url: str, username: str, password: str, role: 
 
     uri = rabbitmq_api_base_url + "/api/users/" + username
     user_data = {"password": password, "tags": role}
-    response = requests.put(uri, json=user_data,
-                            auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password), timeout=10)
+    response = requests.put(
+        uri,
+        json=user_data,
+        auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password),
+        timeout=10,
+    )
 
     if hasattr(response, "status_code") and int(response.status_code) == 201:
         logger.info(f"User: {username} with role: {role} created successfully.")
@@ -78,14 +86,22 @@ def create_user(rabbitmq_api_base_url: str, username: str, password: str, role: 
     if hasattr(response, "status_code") and int(response.status_code) == 204:
         logger.info(f"User: {username} with role: {role} already exists.")
         return True
-    logger.error(f"Failed while creating user: '{username}' "
-                 f"with role: '{role}' "
-                 f", HTTP status: '{response.status_code}'")
+    logger.error(
+        f"Failed while creating user: '{username}' "
+        f"with role: '{role}' "
+        f", HTTP status: '{response.status_code}'"
+    )
     return False
 
 
-def set_resource_permissions(rabbitmq_api_base_url: str, v_host: str, username: str, configure_resources_regex: str,
-                             read_resources_regex: str, write_resources_regex: str) -> bool:
+def set_resource_permissions(
+    rabbitmq_api_base_url: str,
+    v_host: str,
+    username: str,
+    configure_resources_regex: str,
+    read_resources_regex: str,
+    write_resources_regex: str,
+) -> bool:
     """
         Sets permission for resources, it would return true if the operation was a success, false otherwise
     :param rabbitmq_api_base_url:
@@ -106,22 +122,39 @@ def set_resource_permissions(rabbitmq_api_base_url: str, v_host: str, username: 
     rabbitmq_admin_password = f"{env_variables[RABBITMQ_DEFAULT_PASSWORD]}"
 
     uri = rabbitmq_api_base_url + "/api/permissions/" + v_host + "/" + username
-    permission_data = {"configure": configure_resources_regex, "write": write_resources_regex,
-                       "read": read_resources_regex}
+    permission_data = {
+        "configure": configure_resources_regex,
+        "write": write_resources_regex,
+        "read": read_resources_regex,
+    }
 
-    response = requests.put(uri, json=permission_data,
-                            auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password), timeout=10)
+    response = requests.put(
+        uri,
+        json=permission_data,
+        auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password),
+        timeout=10,
+    )
     if hasattr(response, "status_code") and int(response.status_code) == 201:
-        logger.debug(f"vHost permission successfully assigned to user: {username} for vHost: {v_host}.")
+        logger.debug(
+            f"vHost permission successfully assigned to user: {username} for vHost: {v_host}."
+        )
         return True
-    logger.error(f"Failed while assigning vhost permission to user: '{username}' "
-                 f"for vhost: '{v_host}' "
-                 f", HTTP status: '{response.status_code}'")
+    logger.error(
+        f"Failed while assigning vhost permission to user: '{username}' "
+        f"for vhost: '{v_host}' "
+        f", HTTP status: '{response.status_code}'"
+    )
     return False
 
 
-def set_topic_permissions(rabbitmq_api_base_url: str, v_host: str, username: str, topic_name: str, allow_read: bool,
-                          allow_write: bool) -> bool:
+def set_topic_permissions(
+    rabbitmq_api_base_url: str,
+    v_host: str,
+    username: str,
+    topic_name: str,
+    allow_read: bool,
+    allow_write: bool,
+) -> bool:
     """
         Sets permission for topics, it would return true if the operation was a success, false otherwise
     :param rabbitmq_api_base_url:
@@ -152,19 +185,32 @@ def set_topic_permissions(rabbitmq_api_base_url: str, v_host: str, username: str
     rabbitmq_admin_password = f"{env_variables[RABBITMQ_DEFAULT_PASSWORD]}"
 
     uri = rabbitmq_api_base_url + "/api/topic-permissions/" + v_host + "/" + username
-    topic_permission_data = {"exchange": topic_name, "write": write_permission, "read": read_permission}
+    topic_permission_data = {
+        "exchange": topic_name,
+        "write": write_permission,
+        "read": read_permission,
+    }
 
-    response = requests.put(uri, json=topic_permission_data,
-                            auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password), timeout=10)
+    response = requests.put(
+        uri,
+        json=topic_permission_data,
+        auth=HTTPBasicAuth(rabbitmq_admin_user, rabbitmq_admin_password),
+        timeout=10,
+    )
 
-    if hasattr(response, "status_code") and (int(response.status_code) == 201 or int(response.status_code) == 204):
+    if hasattr(response, "status_code") and (
+        int(response.status_code) == 201 or int(response.status_code) == 204
+    ):
         logger.debug(
-            f"Topic permission successfully assigned to user: {username} for topic: {topic_name} in vhost: {v_host}.")
+            f"Topic permission successfully assigned to user: {username} for topic: {topic_name} in vhost: {v_host}."
+        )
         return True
-    logger.error(f"Failed while assigning topic permission to user: '{username}' "
-                 f"with vhost: '{v_host}' "
-                 f"for topic: '{topic_name}' "
-                 f", HTTP status: '{response.status_code}'")
+    logger.error(
+        f"Failed while assigning topic permission to user: '{username}' "
+        f"with vhost: '{v_host}' "
+        f"for topic: '{topic_name}' "
+        f", HTTP status: '{response.status_code}'"
+    )
     return False
 
 
@@ -178,18 +224,36 @@ def create_queue_user_and_set_permission(rabbitmq_api_base_url: str):
     queue_user = f"{env_variables[RABBITMQ_USERNAME]}"
     queue_password = f"{env_variables[RABBITMQ_PASSWORD]}"
 
-    user_created = create_user(rabbitmq_api_base_url=rabbitmq_api_base_url, username=queue_user,
-                               password=queue_password, role="monitoring")
+    user_created = create_user(
+        rabbitmq_api_base_url=rabbitmq_api_base_url,
+        username=queue_user,
+        password=queue_password,
+        role="monitoring",
+    )
     if user_created:
-        set_resource_permissions(rabbitmq_api_base_url=rabbitmq_api_base_url, v_host=rabbitmq_vhost,
-                                 username=queue_user,
-                                 configure_resources_regex=f"^({PROJECT_QUEUE}|{REPOSITORY_QUEUE}"
-                                                           f"|.*celery.*)$",
-                                 read_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}"
-                                                      f"|.*celery.*$",
-                                 write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}"
-                                                       f"|amq.default|.*celery.*$")
-        set_topic_permissions(rabbitmq_api_base_url=rabbitmq_api_base_url, v_host=rabbitmq_vhost, username=queue_user,
-                              topic_name=f"{PROJECT_QUEUE}", allow_read=True, allow_write=True)
-        set_topic_permissions(rabbitmq_api_base_url=rabbitmq_api_base_url, v_host=rabbitmq_vhost, username=queue_user,
-                              topic_name=f"{REPOSITORY_QUEUE}", allow_read=True, allow_write=True)
+        set_resource_permissions(
+            rabbitmq_api_base_url=rabbitmq_api_base_url,
+            v_host=rabbitmq_vhost,
+            username=queue_user,
+            configure_resources_regex=f"^({PROJECT_QUEUE}|{REPOSITORY_QUEUE}"
+            f"|.*celery.*)$",
+            read_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|.*celery.*$",
+            write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}"
+            f"|amq.default|.*celery.*$",
+        )
+        set_topic_permissions(
+            rabbitmq_api_base_url=rabbitmq_api_base_url,
+            v_host=rabbitmq_vhost,
+            username=queue_user,
+            topic_name=f"{PROJECT_QUEUE}",
+            allow_read=True,
+            allow_write=True,
+        )
+        set_topic_permissions(
+            rabbitmq_api_base_url=rabbitmq_api_base_url,
+            v_host=rabbitmq_vhost,
+            username=queue_user,
+            topic_name=f"{REPOSITORY_QUEUE}",
+            allow_read=True,
+            allow_write=True,
+        )

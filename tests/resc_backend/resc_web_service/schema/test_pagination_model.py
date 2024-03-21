@@ -27,13 +27,13 @@ def test_pagination_model_int():
     assert paginated.skip == skip
     assert len(paginated.data) == 5
     for i in range(len(paginated.data)):
-        assert paginated.data[i] == i+1
+        assert paginated.data[i] == i + 1
 
 
 def test_pagination_model_invalid_data():
     str_list = []
     for i in range(1, 6):
-        str_list.append(f'test{i}')
+        str_list.append(f"test{i}")
 
     total = -999
     limit = -50
@@ -44,7 +44,7 @@ def test_pagination_model_invalid_data():
     validation_errors = validation_error.value.errors()
 
     for i in range(0, 5):
-        assert validation_errors[i]["loc"][0] == 'data'
+        assert validation_errors[i]["loc"][0] == "data"
         assert validation_errors[i]["loc"][1] == i
         assert validation_errors[i]["msg"] == "value is not a valid integer"
         assert validation_errors[i]["type"] == "type_error.integer"
@@ -56,18 +56,20 @@ def test_pagination_model_invalid_data():
 def test_pagination_model_findings():
     findings = []
     for i in range(1, 6):
-        finding = DBfinding(file_path=f"file_path_{i}",
-                            line_number=i,
-                            column_start=i,
-                            column_end=i,
-                            commit_id=f"commit_id_{i}",
-                            commit_message=f"commit_message_{i}",
-                            commit_timestamp=datetime.utcnow(),
-                            author=f"author_{i}",
-                            email=f"email_{i}",
-                            rule_name=f"rule_{i}",
-                            event_sent_on=datetime.utcnow(),
-                            repository_id=1)
+        finding = DBfinding(
+            file_path=f"file_path_{i}",
+            line_number=i,
+            column_start=i,
+            column_end=i,
+            commit_id=f"commit_id_{i}",
+            commit_message=f"commit_message_{i}",
+            commit_timestamp=datetime.utcnow(),
+            author=f"author_{i}",
+            email=f"email_{i}",
+            rule_name=f"rule_{i}",
+            event_sent_on=datetime.utcnow(),
+            repository_id=1,
+        )
         finding.id_ = i
         findings.append(FindingRead.create_from_db_entities(finding, scan_ids=[]))
 
@@ -75,11 +77,13 @@ def test_pagination_model_findings():
     limit = 50
     skip = 0
 
-    paginated = PaginationModel[FindingRead](data=findings, total=total, limit=limit, skip=skip)
+    paginated = PaginationModel[FindingRead](
+        data=findings, total=total, limit=limit, skip=skip
+    )
 
     assert paginated.total == total
     assert paginated.limit == limit
     assert paginated.skip == skip
     assert len(paginated.data) == 5
     for i in range(len(paginated.data)):
-        assert paginated.data[i].id_ == i+1
+        assert paginated.data[i].id_ == i + 1

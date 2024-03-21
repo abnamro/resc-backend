@@ -17,7 +17,7 @@ from resc_backend.resc_web_service.configuration import (
     REDIS_PASSWORD,
     RESC_REDIS_CACHE_ENABLE,
     RESC_REDIS_SERVICE_HOST,
-    RESC_REDIS_SERVICE_PORT
+    RESC_REDIS_SERVICE_PORT,
 )
 
 logger_config = initialise_logs(LOG_FILE_CACHING)
@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 
 
 class CacheManager:
-
     @classmethod
     def initialize_cache(cls, env_variables):
         cache_enabled = env_variables[RESC_REDIS_CACHE_ENABLE].lower() in ["true"]
@@ -34,11 +33,15 @@ class CacheManager:
             redis_host = f"{env_variables[RESC_REDIS_SERVICE_HOST]}"
             redis_port = f"{env_variables[RESC_REDIS_SERVICE_PORT]}"
             redis_password = f"{env_variables[REDIS_PASSWORD]}"
-            redis_backend = cls.get_cache_client(host=redis_host, port=int(redis_port), password=redis_password)
-            FastAPICache.init(RedisBackend(redis_backend),
-                              prefix=CACHE_PREFIX,
-                              key_builder=cls.request_key_builder,
-                              enable=cache_enabled)
+            redis_backend = cls.get_cache_client(
+                host=redis_host, port=int(redis_port), password=redis_password
+            )
+            FastAPICache.init(
+                RedisBackend(redis_backend),
+                prefix=CACHE_PREFIX,
+                key_builder=cls.request_key_builder,
+                enable=cache_enabled,
+            )
         else:
             FastAPICache.init(backend=RedisBackend(None), enable=cache_enabled)
 
@@ -48,12 +51,15 @@ class CacheManager:
         return cache_client
 
     @staticmethod
-    def request_key_builder(func: Callable[..., Any],  # pylint: disable=W0613
-                            namespace: str = "",
-                            *,
-                            request: Request = None,
-                            response: Response = None,  # pylint: disable=W0613
-                            args: Tuple[Any, ...], kwargs: Dict[str, Any]) -> str:  # pylint: disable=W0613
+    def request_key_builder(
+        func: Callable[..., Any],
+        namespace: str = "",
+        *,
+        request: Request = None,
+        response: Response = None,
+        args: Tuple[Any, ...],
+        kwargs: Dict[str, Any],
+    ) -> str:
         """
         Build a unique key for caching based on the provided function, namespace, request, response,
         arguments (args), and keyword arguments (kwargs).
@@ -70,23 +76,28 @@ class CacheManager:
             str: A unique key based on the input parameters.
         """
 
-        cache_key = ":".join([
-            FastAPICache.get_prefix(),
-            namespace,
-            request.method.lower(),
-            request.url.path,
-            repr(sorted(request.query_params.items()))
-        ])
+        cache_key = ":".join(
+            [
+                FastAPICache.get_prefix(),
+                namespace,
+                request.method.lower(),
+                request.url.path,
+                repr(sorted(request.query_params.items())),
+            ]
+        )
         logger.debug(f"Cache created with key: {cache_key}")
         return cache_key
 
     @staticmethod
-    def personalized_key_builder(func: Callable[..., Any],  # pylint: disable=W0613
-                                 namespace: str = "",
-                                 *,
-                                 request: Request = None,
-                                 response: Response = None,  # pylint: disable=W0613
-                                 args: Tuple[Any, ...], kwargs: Dict[str, Any]) -> str:  # pylint: disable=W0613
+    def personalized_key_builder(
+        func: Callable[..., Any],
+        namespace: str = "",
+        *,
+        request: Request = None,
+        response: Response = None,
+        args: Tuple[Any, ...],
+        kwargs: Dict[str, Any],
+    ) -> str:
         """
         Build a personalized unique key for caching based logged-in user on the provided function, namespace, request,
         response, arguments (args), and keyword arguments (kwargs).
@@ -103,14 +114,16 @@ class CacheManager:
         Returns:
             str: A unique key based on the input parameters.
         """
-        cache_key = ":".join([
-            CACHE_PREFIX,
-            namespace,
-            request.user,
-            request.method.lower(),
-            request.url.path,
-            repr(sorted(request.query_params.items()))
-        ])
+        cache_key = ":".join(
+            [
+                CACHE_PREFIX,
+                namespace,
+                request.user,
+                request.method.lower(),
+                request.url.path,
+                repr(sorted(request.query_params.items())),
+            ]
+        )
         logger.debug(f"Cache created with key: {cache_key}")
         return cache_key
 

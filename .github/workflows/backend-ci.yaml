@@ -22,6 +22,17 @@ env:
 permissions: read-all
 
 jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: chartboost/ruff-action@v1
+        with:
+          src: "./src"
+      - uses: chartboost/ruff-action@v1
+        with:
+          src: "./tests"
+
   python-basic-validation:
     name: Python Basic Validation
     runs-on: ubuntu-latest
@@ -32,7 +43,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -46,14 +57,6 @@ jobs:
     - name: Test with pytest
       run: |
         tox -e pytest
-
-    - name: Import sorting with isort
-      run: |
-        tox -e sort
-    
-    - name: Lint with flake8
-      run: |
-        tox -e lint
 
     # This step will only execute if PR is created internally.
     - name: SonarCloud Scan

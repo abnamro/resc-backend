@@ -22,5 +22,7 @@ def validate_environment(env_variables):
             values[env_variable.key_name] = value
 
     if missing:
-        raise EnvironmentError(f"The following env variables need to be set: {', '.join(missing)}")
+        raise EnvironmentError(
+            f"The following env variables need to be set: {', '.join(missing)}"
+        )
     return values

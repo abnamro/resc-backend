@@ -1,4 +1,5 @@
-# pylint: disable=C0413
+# ruff: noqa: E402
+# ruff: noqa: F401
 # Standard Library
 import logging
 import os
@@ -9,7 +10,6 @@ from sqlalchemy.orm import declarative_base
 Base = declarative_base()
 basedir = os.path.abspath(os.path.dirname(__file__))
 logger = logging.getLogger(__name__)
-
 
 # First Party
 from resc_backend.db.model.audit import DBaudit

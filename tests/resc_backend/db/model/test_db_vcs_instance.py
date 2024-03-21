@@ -14,17 +14,19 @@ sys.path.insert(0, "src")
 
 class TestVCSInstances(unittest.TestCase):
     def setUp(self):
-        self.engine = create_engine('sqlite:///:memory:')
+        self.engine = create_engine("sqlite:///:memory:")
         Base.metadata.create_all(self.engine)
         self.session = Session(bind=self.engine)
-        self.vcs_instance = DBVcsInstance(name="name",
-                                          provider_type="AZURE_DEVOPS",
-                                          scheme="scheme",
-                                          hostname="hostname",
-                                          port=123,
-                                          organization="organization",
-                                          scope="scope",
-                                          exceptions="exceptions")
+        self.vcs_instance = DBVcsInstance(
+            name="name",
+            provider_type="AZURE_DEVOPS",
+            scheme="scheme",
+            hostname="hostname",
+            port=123,
+            organization="organization",
+            scope="scope",
+            exceptions="exceptions",
+        )
         self.session.add(self.vcs_instance)
 
         self.session.commit()

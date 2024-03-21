@@ -3,7 +3,7 @@ from resc_backend.helpers.dict_remapper import (
     create_nested_dictionary,
     delete_keys_from_nested_dict,
     get_value_from_nested_dictionary,
-    remap_dict_keys
+    remap_dict_keys,
 )
 
 
@@ -40,7 +40,6 @@ def test_no_remap_dict_keys():
 
 
 def test_create_nested_dictionary():
-
     keys = ["a", "b", "c"]
     value = "abc"
     expected_output_dict = {"a": {"b": {"c": "abc"}}}
