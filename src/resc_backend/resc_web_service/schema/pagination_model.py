@@ -2,7 +2,6 @@
 from typing import Generic, TypeVar
 
 # Third Party
-
 from pydantic import BaseModel, conint, conlist
 from pydantic.generics import GenericModel
 
