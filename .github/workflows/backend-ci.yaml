@@ -27,6 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: chartboost/ruff-action@v1
+        with:
+          src: "./src"
+      - uses: chartboost/ruff-action@v1
+        with:
+          src: "./tests"
 
   python-basic-validation:
     name: Python Basic Validation
