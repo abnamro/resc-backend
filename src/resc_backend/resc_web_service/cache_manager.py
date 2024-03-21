@@ -52,14 +52,14 @@ class CacheManager:
 
     @staticmethod
     def request_key_builder(
-        func: Callable[..., Any],  # pylint: disable=W0613
+        func: Callable[..., Any],
         namespace: str = "",
         *,
         request: Request = None,
-        response: Response = None,  # pylint: disable=W0613
+        response: Response = None,
         args: Tuple[Any, ...],
         kwargs: Dict[str, Any],
-    ) -> str:  # pylint: disable=W0613
+    ) -> str:
         """
         Build a unique key for caching based on the provided function, namespace, request, response,
         arguments (args), and keyword arguments (kwargs).
@@ -90,14 +90,14 @@ class CacheManager:
 
     @staticmethod
     def personalized_key_builder(
-        func: Callable[..., Any],  # pylint: disable=W0613
+        func: Callable[..., Any],
         namespace: str = "",
         *,
         request: Request = None,
-        response: Response = None,  # pylint: disable=W0613
+        response: Response = None,
         args: Tuple[Any, ...],
         kwargs: Dict[str, Any],
-    ) -> str:  # pylint: disable=W0613
+    ) -> str:
         """
         Build a personalized unique key for caching based logged-in user on the provided function, namespace, request,
         response, arguments (args), and keyword arguments (kwargs).

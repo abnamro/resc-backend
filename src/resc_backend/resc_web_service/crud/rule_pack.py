@@ -1,4 +1,3 @@
-# pylint:disable=not-callable
 # Standard Library
 import logging
 from typing import List, Optional

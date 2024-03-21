@@ -1,4 +1,3 @@
-# pylint: disable=no-name-in-module
 # Standard Library
 from typing import Optional
 

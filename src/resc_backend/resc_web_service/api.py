@@ -1,4 +1,3 @@
-# pylint: disable=C0413,W0611,W0404
 # Standard Library
 import logging.config
 

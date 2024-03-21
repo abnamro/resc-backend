@@ -1,4 +1,3 @@
-# pylint: disable=R0902
 # Standard Library
 from datetime import datetime
 from typing import List

@@ -1,4 +1,3 @@
-# pylint: disable=E1101
 # Standard Library
 import logging
 import sys
@@ -35,7 +34,7 @@ def create_cli_argparser() -> ArgumentParser:
     return parser
 
 
-def validate_cli_arguments(args: Namespace):  # pylint: disable=R0912
+def validate_cli_arguments(args: Namespace):
     valid_arguments = True
     if not args.rabbitmq_url:
         logger.error("RabbtMQ URL needs to be specified")

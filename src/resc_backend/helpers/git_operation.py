@@ -1,4 +1,3 @@
-# pylint: disable=bad-option-value,C0413
 # Standard Library
 import logging
 import os

@@ -1,4 +1,3 @@
-# pylint: disable=C0413
 # Standard Library
 import logging
 import os

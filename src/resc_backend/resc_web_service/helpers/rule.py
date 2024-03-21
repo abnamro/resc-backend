@@ -1,4 +1,3 @@
-# pylint: disable=R0912
 # Standard Library
 import logging
 import os

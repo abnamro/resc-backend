@@ -1,4 +1,3 @@
-# pylint: disable=R0902
 # Third Party
 from sqlalchemy import Column, Enum, Integer, String, Text, UniqueConstraint
 

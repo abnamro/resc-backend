@@ -61,7 +61,7 @@ async def requires_auth(
         "require": env_variables[SSO_JWT_REQUIRED_CLAIMS].split(","),
     }
     try:
-        ssl._create_default_https_context = ssl._create_unverified_context  # pylint: disable=W0212
+        ssl._create_default_https_context = ssl._create_unverified_context
         jwks_client = PyJWKClient(jwks_url)
         signing_key = jwks_client.get_signing_key_from_jwt(access_token)
         claims = jwt.decode(

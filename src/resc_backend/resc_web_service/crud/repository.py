@@ -1,4 +1,3 @@
-# pylint:disable=not-callable
 # Third Party
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
