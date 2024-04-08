@@ -2,10 +2,12 @@
 .run
 .vscode
 src/resc_backend.egg-info
+build
 **/__pycache__/
 .coverage
 .tox/
 venv
+.venv
 *.log
 *.sqlite
 self_signed_cert_generation/client
