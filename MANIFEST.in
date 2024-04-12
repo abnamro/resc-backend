@@ -1,3 +1,4 @@
 include requirements.txt
 exclude README.md
 exclude MANIFEST.in
+exclude src/resc_backend/resc_web_service/local.py
