@@ -25,7 +25,7 @@ done
 
 RESC_BACKEND_IMAGE="${backend_image:-"rescabnamro/resc-backend:latest"}"
 RESC_DATABASE_IMAGE="${database_image:-"mcr.microsoft.com/azure-sql-edge:1.0.7"}"
-RESC_ZAP_IMAGE="${zap_image:-"owasp/zap2docker-bare"}"
+RESC_ZAP_IMAGE="${zap_image:-"softwaresecurityproject/zap-stable:latest"}"
 RESC_BACKEND_CONTAINER="resc-api-test"
 RESC_DATABASE_CONTAINER="resc-database-test"
 RESC_ZAP_CONTAINER="resc-zap-test"
