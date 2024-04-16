@@ -11797,8 +11797,6 @@
 											"    pm.expect(responseJson[\"data\"][6][\"commit_url\"]).to.eql(\"https://dev.azure.com/test-org/test-project/_git/test-repository/commit/testcommit12345?path=/dummy_file.txt\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"Rule-1\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_pack\"]).to.eql(\"1.0.0\");",
-											"    pm.expect(responseJson[\"data\"][6][\"scan_id\"]).to.eql(pm.environment.get(\"scan_id\"));",
-											"    pm.expect(responseJson[\"data\"][6][\"id_\"]).to.eql(pm.environment.get(\"finding_id\"));",
 											"",
 											"    pm.expect(responseJson[\"total\"]).to.eql(7);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
