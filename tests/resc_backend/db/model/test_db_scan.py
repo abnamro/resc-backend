@@ -49,6 +49,7 @@ class TestScan(unittest.TestCase):
             timestamp=datetime.utcnow(),
             rule_pack="1.2",
             increment_number=1,
+            is_latest=True,
         )
 
         self.session.add(self.scan)

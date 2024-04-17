@@ -35,6 +35,7 @@ class TestScans(unittest.TestCase):
                     timestamp=datetime.utcnow(),
                     increment_number=0,
                     rule_pack=f"rule_pack_{i}",
+                    is_latest=True,
                 )
             )
             self.db_scans[i - 1].id_ = i

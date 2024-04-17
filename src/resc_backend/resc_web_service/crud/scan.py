@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List
 
 # Third Party
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, update
 from sqlalchemy.orm import Session
 
 # First Party
@@ -123,6 +123,18 @@ def update_scan(
 
 
 def create_scan(db_connection: Session, scan: scan_schema.ScanCreate) -> DBscan:
+    # We only flag the previous ones if we are doing a base scan.
+    # In the other cases they are simply marked as latest for incremental.
+    if scan.scan_type == ScanType.BASE:
+        db_connection.execute(
+            update(DBscan)
+            .where(
+                DBscan.repository_id == scan.repository_id,
+                DBscan.rule_pack == scan.rule_pack,
+            )
+            .values(is_latest=False)
+        )
+
     db_scan = DBscan(
         scan_type=scan.scan_type,
         last_scanned_commit=scan.last_scanned_commit,
@@ -130,6 +142,7 @@ def create_scan(db_connection: Session, scan: scan_schema.ScanCreate) -> DBscan:
         timestamp=scan.timestamp,
         increment_number=scan.increment_number,
         rule_pack=scan.rule_pack,
+        is_latest=True,
     )
     db_connection.add(db_scan)
     db_connection.commit()

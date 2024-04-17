@@ -3,7 +3,16 @@ import html
 from datetime import datetime
 
 # Third Party
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    text,
+)
 
 # First Party
 from resc_backend.db.model import Base
@@ -17,24 +26,31 @@ class DBaudit(Base):
     status = Column(
         Enum(FindingStatus),
         default=FindingStatus.NOT_ANALYZED,
-        server_default="NOT_ANALYZED",
+        server_default=text("NOT_ANALYZED"),
         nullable=False,
     )
     auditor = Column(String(200))
     comment = Column(String(255), nullable=True)
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
+    is_latest = Column(Boolean, nullable=False, default=False, server_default=text("0"))
 
-    def __init__(self, finding_id, status, auditor, comment, timestamp):
+    def __init__(self, finding_id, status, auditor, comment, timestamp, is_latest):
         sanitized_comment = html.escape(comment) if comment else comment
         self.finding_id = finding_id
         self.status = status
         self.auditor = auditor
         self.comment = sanitized_comment
         self.timestamp = timestamp
+        self.is_latest = is_latest
 
     @staticmethod
     def create_from_metadata(
-        finding_id: int, status: str, auditor: str, comment: str, timestamp: datetime
+        finding_id: int,
+        status: str,
+        auditor: str,
+        comment: str,
+        timestamp: datetime,
+        is_latest: bool,
     ):
         sanitized_comment = html.escape(comment) if comment else comment
         db_audit = DBaudit(
@@ -43,5 +59,6 @@ class DBaudit(Base):
             status=status,
             comment=sanitized_comment,
             timestamp=timestamp,
+            is_latest=is_latest,
         )
         return db_audit

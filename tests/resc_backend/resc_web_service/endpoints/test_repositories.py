@@ -86,6 +86,7 @@ class TestRepositories(unittest.TestCase):
                     timestamp=datetime.utcnow(),
                     rule_pack="1.2",
                     increment_number=1,
+                    is_latest=True,
                 )
             )
             self.db_scans[i - 1].id_ = i
