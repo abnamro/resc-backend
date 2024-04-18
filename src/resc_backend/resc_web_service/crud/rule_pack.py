@@ -4,8 +4,9 @@ from typing import List, Optional
 
 # Third Party
 from packaging.version import Version
-from sqlalchemy import and_, func, update
+from sqlalchemy import func, update
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.query import Query
 from sqlalchemy.sql.expression import true
 
 # First Party
@@ -33,10 +34,10 @@ def get_rule_pack(
     """
     query = db_connection.query(DBrulePack)
     if version:
-        query = query.filter(DBrulePack.version == version)
+        query = query.where(DBrulePack.version == version)
     else:
         logger.debug("rule pack version not specified, fetching currently active one")
-        query = query.filter(DBrulePack.active == true())
+        query = query.where(DBrulePack.active == true())
     rule_pack = query.first()
     return rule_pack
 
@@ -109,9 +110,9 @@ def get_rule_packs(
     query = db_connection.query(DBrulePack)
 
     if version:
-        query = query.filter(DBrulePack.version == version)
+        query = query.where(DBrulePack.version == version)
     if active is not None:
-        query = query.filter(DBrulePack.active == active)
+        query = query.where(DBrulePack.active == active)
     rule_packs = (
         query.order_by(DBrulePack.version.desc()).offset(skip).limit(limit_val).all()
     )
@@ -129,7 +130,7 @@ def get_current_active_rule_pack(
         returns the DBRulePack containing the active rule pack
     """
     query = db_connection.query(DBrulePack)
-    active_rule_pack = query.filter(DBrulePack.active == 1).one()
+    active_rule_pack = query.where(DBrulePack.active == 1).one()
     return active_rule_pack
 
 
@@ -144,15 +145,10 @@ def get_rule_packs_tags(db_connection: Session, versions: list) -> List[str]:
         The output will contain the list of str that are the tags, or an empty list.
     """
 
-    query = db_connection.query(DBtag.name)
+    query: Query = db_connection.query(DBtag.name)
     query = query.join(DBruleTag, DBruleTag.tag_id == DBtag.id_)
-    query = query.join(
-        DBrule,
-        and_(
-            DBrule.id_ == DBruleTag.rule_id,
-            DBrule.rule_pack.in_(versions),
-        ),
-    )
+    query = query.join(DBrule, DBrule.id_ == DBruleTag.rule_id)
+    query = query.where(DBrule.rule_pack.in_(versions))
     rule_packs_tags = query.distinct().all()
     rule_packs_tags = [t for (t,) in rule_packs_tags]
     return rule_packs_tags
@@ -174,9 +170,9 @@ def get_total_rule_packs_count(
     """
     total_count_query = db_connection.query(func.count(DBrulePack.version))
     if version:
-        total_count_query = total_count_query.filter(DBrulePack.version == version)
+        total_count_query = total_count_query.where(DBrulePack.version == version)
     if active is not None:
-        total_count_query = total_count_query.filter(DBrulePack.active == active)
+        total_count_query = total_count_query.where(DBrulePack.active == active)
 
     total_count = total_count_query.scalar()
     return total_count
