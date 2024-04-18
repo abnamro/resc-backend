@@ -816,8 +816,8 @@ def get_finding_audit_status_count_over_time(
         )
 
         query = db_connection.query(
-            literal_column(last_nth_week_date_time.isocalendar()[0]).label("year"),
-            literal_column(last_nth_week_date_time.isocalendar()[1]).label("week"),
+            literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
+            literal_column(str(last_nth_week_date_time.isocalendar()[1])).label("week"),
             DBVcsInstance.provider_type.label("provider_type"),
             func.count(DBaudit.id_).label("finding_count"),
         )
@@ -859,8 +859,8 @@ def get_finding_count_by_vcs_provider_over_time(
         max_base_scan = _max_base_scan_subequery(db_connection, last_nth_week_date_time)
 
         query = db_connection.query(
-            literal_column(last_nth_week_date_time.isocalendar()[0]).label("year"),
-            literal_column(last_nth_week_date_time.isocalendar()[1]).label("week"),
+            literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
+            literal_column(str(last_nth_week_date_time.isocalendar()[1])).label("week"),
             DBVcsInstance.provider_type.label("provider_type"),
             func.count(DBfinding.id_).label("finding_count"),
         )
@@ -906,8 +906,8 @@ def get_un_triaged_finding_count_by_vcs_provider_over_time(
         )
 
         query = db_connection.query(
-            literal_column(last_nth_week_date_time.isocalendar()[0]).label("year"),
-            literal_column(last_nth_week_date_time.isocalendar()[1]).label("week"),
+            literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
+            literal_column(str(last_nth_week_date_time.isocalendar()[1])).label("week"),
             DBVcsInstance.provider_type.label("provider_type"),
             func.count(DBfinding.id_).label("finding_count"),
         )
