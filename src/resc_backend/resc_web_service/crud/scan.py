@@ -125,7 +125,7 @@ def create_scan(db_connection: Session, scan: scan_schema.ScanCreate) -> DBscan:
         query = update(DBscan)
         query = query.where(DBscan.repository_id == scan.repository_id)
         query = query.where(DBscan.rule_pack == scan.rule_pack)
-        query.values(is_latest=False)
+        query = query.values(is_latest=False)
         db_connection.execute(query)
 
     db_scan = DBscan(
