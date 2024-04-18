@@ -4,6 +4,7 @@ from typing import List
 
 # Third Party
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.query import Query
 
 # First Party
 from resc_backend.db.model import DBrule, DBruleAllowList, DBrulePack, DBscan
@@ -27,7 +28,7 @@ def get_rules_by_scan_id(db_connection: Session, scan_id: int) -> List[RuleRead]
     """
     rule_query = db_connection.query(DBrule)
     rule_query = rule_query.join(DBscan, DBscan.rule_pack == DBrule.rule_pack)
-    rule_query = rule_query.filter(DBscan.id_ == scan_id)
+    rule_query = rule_query.where(DBscan.id_ == scan_id)
     rules: List[RuleRead] = rule_query.all()
     return rules
 
@@ -92,28 +93,30 @@ def get_rules_by_rule_pack_version(
     :return: List[str]
         The output contains list of strings of global allow list
     """
-    query = (
-        db_connection.query(
-            DBrule.id_,
-            DBrule.rule_pack,
-            DBrule.rule_name,
-            DBrule.entropy,
-            DBrule.secret_group,
-            DBrule.regex,
-            DBrule.path,
-            DBrule.keywords,
-            DBruleAllowList.description,
-            DBruleAllowList.regexes,
-            DBruleAllowList.paths,
-            DBruleAllowList.commits,
-            DBruleAllowList.stop_words,
-        )
-        .join(DBrulePack, DBrulePack.version == DBrule.rule_pack)
-        .join(DBruleAllowList, DBruleAllowList.id_ == DBrule.allow_list, isouter=True)
+    query: Query = db_connection.query(
+        DBrule.id_,
+        DBrule.rule_pack,
+        DBrule.rule_name,
+        DBrule.entropy,
+        DBrule.secret_group,
+        DBrule.regex,
+        DBrule.path,
+        DBrule.keywords,
+        DBruleAllowList.description,
+        DBruleAllowList.regexes,
+        DBruleAllowList.paths,
+        DBruleAllowList.commits,
+        DBruleAllowList.stop_words,
     )
-    db_rules = (
-        query.filter(DBrule.rule_pack == rule_pack_version).order_by(DBrule.id_).all()
+
+    query = query.join(DBrulePack, DBrulePack.version == DBrule.rule_pack)
+    query = query.join(
+        DBruleAllowList, DBruleAllowList.id_ == DBrule.allow_list, isouter=True
     )
+    query = query.where(DBrule.rule_pack == rule_pack_version)
+    query = query.order_by(DBrule.id_)
+    db_rules = query.all()
+
     return db_rules
 
 
@@ -129,17 +132,19 @@ def get_global_allow_list_by_rule_pack_version(
     :return: List[str]
         The output contains list of strings of global allow list
     """
-    query = db_connection.query(
+    query: Query = db_connection.query(
         DBrulePack.version,
         DBruleAllowList.description,
         DBruleAllowList.regexes,
         DBruleAllowList.paths,
         DBruleAllowList.commits,
         DBruleAllowList.stop_words,
-    ).join(DBruleAllowList, DBruleAllowList.id_ == DBrulePack.global_allow_list)
-    db_global_allow_list = (
-        query.filter(DBrulePack.version == rule_pack_version)
-        .order_by(DBruleAllowList.id_)
-        .first()
     )
+    query = query.join(
+        DBruleAllowList, DBruleAllowList.id_ == DBrulePack.global_allow_list
+    )
+    query = query.where(DBrulePack.version == rule_pack_version)
+    query = query.order_by(DBruleAllowList.id_)
+    db_global_allow_list = query.first()
+
     return db_global_allow_list
