@@ -2,7 +2,16 @@
 from datetime import datetime
 
 # Third Party
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    text,
+)
 
 # First Party
 from resc_backend.constants import BASE_SCAN
@@ -26,6 +35,7 @@ class DBscan(Base):
     increment_number = Column(
         Integer, server_default=text("0"), default=0, nullable=False
     )
+    is_latest = Column(Boolean, nullable=False, default=False, server_default=text("0"))
 
     def __init__(
         self,
@@ -35,6 +45,7 @@ class DBscan(Base):
         timestamp: datetime,
         increment_number: int,
         rule_pack: str,
+        is_latest: bool,
     ):
         self.repository_id = repository_id
         self.scan_type = scan_type
@@ -42,6 +53,7 @@ class DBscan(Base):
         self.timestamp = timestamp
         self.increment_number = increment_number
         self.rule_pack = rule_pack
+        self.is_latest = is_latest
 
     @staticmethod
     def create_from_metadata(
@@ -51,6 +63,7 @@ class DBscan(Base):
         increment_number: int,
         rule_pack: str,
         repository_id: int,
+        is_latest: bool,
     ):
         db_scan = DBscan(
             timestamp=timestamp,
@@ -59,5 +72,6 @@ class DBscan(Base):
             increment_number=increment_number,
             rule_pack=rule_pack,
             repository_id=repository_id,
+            is_latest=is_latest,
         )
         return db_scan

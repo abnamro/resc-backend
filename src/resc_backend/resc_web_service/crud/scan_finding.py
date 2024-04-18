@@ -1,8 +1,10 @@
 # Standard Library
 from typing import List
 
+# Third Party
+from sqlalchemy.orm import Session
+
 # First Party
-from resc_backend.db.connection import Session
 from resc_backend.db.model import (
     DBfinding,
     DBrepository,

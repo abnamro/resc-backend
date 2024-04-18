@@ -40,15 +40,33 @@ def upgrade():
 
     op.drop_constraint('fk_finding_repository_id', finding, type_='foreignkey')
     op.drop_constraint('fk_scan_repository_id', scan, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, repository, vcs_instance), repository, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, rule_pack, rule_allow_list), rule_pack, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, rules, rule_allow_list), rules, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, rules, rule_pack), rules, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, scan, rule_pack), scan, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, scan_finding, finding), scan_finding, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, scan_finding, scan), scan_finding, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, rule_tag, rules), rule_tag, type_='foreignkey')
-    op.drop_constraint(get_foreign_key_name(inspector, rule_tag, tag), rule_tag, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, repository, vcs_instance)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, repository, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, rule_pack, rule_allow_list)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, rule_pack, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, rules, rule_allow_list)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, rules, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, rules, rule_pack)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, rules, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, scan, rule_pack)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, scan, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, scan_finding, finding)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, scan_finding, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, scan_finding, scan)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, scan_finding, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, rule_tag, rules)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, rule_tag, type_='foreignkey')
+    fk_name = get_foreign_key_name(inspector, rule_tag, tag)
+    if fk_name is not None:
+        op.drop_constraint(fk_name, rule_tag, type_='foreignkey')
     
     op.create_foreign_key('fk_' + finding + '_' + repository, finding, repository, ['repository_id'], ['id'])
     op.create_foreign_key('fk_' + scan + '_' + repository, scan, repository, ['repository_id'], ['id'], ondelete='CASCADE', onupdate='CASCADE')
@@ -73,4 +91,4 @@ def get_foreign_key_name(inspector: Inspector, table_name: str, reference_table:
         if foreign_key["referred_table"] == reference_table:
             return foreign_key["name"]
     logger.error(f"Unable to find foreign key name for {table_name} referencing {reference_table}")
-    sys.exit(-1)
+    return None

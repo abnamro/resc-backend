@@ -87,6 +87,7 @@ class TestFindings(unittest.TestCase):
                 status=FindingStatus.TRUE_POSITIVE,
                 comment=f"comment {i}",
                 timestamp=datetime.utcnow(),
+                is_latest=True,
             )
             self.db_audits.append(audit)
             self.db_audits[i - 1].id_ = i

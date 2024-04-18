@@ -28,13 +28,13 @@ INSERT INTO repository (vcs_instance, project_key, repository_id, repository_nam
    (1, 'ado-project2', 'r2', 'resc-dummy2', 'https://fake-dev.azure.com/ado-org/ado-project2/_git/resc-dummy2'), -- 2
    (2, 'btbk-project1', 'r3', 'resc-dummy3', 'https://fake-bitbucket.com/scm/r3/resc-dummy3.git'); -- 3
 
-INSERT INTO scan (rule_pack, scan_type, last_scanned_commit, [timestamp], increment_number, repository_id) VALUES
-   ('0.0.0', 'BASE', 'qwerty1', '2023-07-12 00:00:00.000', 0, 1), -- 1
-   ('0.0.0', 'INCREMENTAL', 'qwerty2', '2023-07-13 00:00:00.000', 1, 1), -- 2
-   ('1.0.0', 'BASE', 'qwerty1', '2023-07-14 00:00:00.000', 0, 1), -- 3
-   ('1.0.0', 'INCREMENTAL', 'qwerty2', '2023-07-15 00:00:00.000', 1, 1), -- 4
-   ('1.0.0', 'BASE', 'qwerty3', '2023-07-14 00:00:00.000', 0, 2), -- 5
-   ('1.0.0', 'INCREMENTAL', 'qwerty4', '2023-07-15 00:00:00.000', 1, 2); -- 6
+INSERT INTO scan (rule_pack, scan_type, last_scanned_commit, [timestamp], increment_number, repository_id, is_latest) VALUES
+   ('0.0.0', 'BASE', 'qwerty1', '2023-07-12 00:00:00.000', 0, 1, 1), -- 1
+   ('0.0.0', 'INCREMENTAL', 'qwerty2', '2023-07-13 00:00:00.000', 1, 1, 1), -- 2
+   ('1.0.0', 'BASE', 'qwerty1', '2023-07-14 00:00:00.000', 0, 1, 1), -- 3
+   ('1.0.0', 'INCREMENTAL', 'qwerty2', '2023-07-15 00:00:00.000', 1, 1, 1), -- 4
+   ('1.0.0', 'BASE', 'qwerty3', '2023-07-14 00:00:00.000', 0, 2, 1), -- 5
+   ('1.0.0', 'INCREMENTAL', 'qwerty4', '2023-07-15 00:00:00.000', 1, 2, 1); -- 6
 
 INSERT INTO finding (repository_id, rule_name, file_path, line_number, commit_id, commit_message, commit_timestamp, author, email, event_sent_on, column_start, column_end) VALUES
    (1, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty1', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100), -- 1
@@ -53,6 +53,6 @@ INSERT INTO scan_finding(scan_id, finding_id) VALUES
    (5, 5),
    (6, 6);
 
-INSERT INTO audit(finding_id, [status], auditor, comment, [timestamp]) VALUES
-   (1, 'NOT_ANALYZED', 'Anonymous', NULL, '2023-07-20 00:00:00.000'), -- 1
-   (1, 'TRUE_POSITIVE', 'Anonymous', 'It is a true positive issue', '2023-07-21 00:00:00.000'); -- 2
+INSERT INTO audit(finding_id, [status], auditor, comment, [timestamp], is_latest) VALUES
+   (1, 'NOT_ANALYZED', 'Anonymous', NULL, '2023-07-20 00:00:00.000', 0), -- 1
+   (1, 'TRUE_POSITIVE', 'Anonymous', 'It is a true positive issue', '2023-07-21 00:00:00.000', 1); -- 2
