@@ -70,7 +70,12 @@ def get_repositories(
     )
 
     # Get the latest scan for repository
-    last_scan_sub_query = _get_max_base_scan(db_connection)
+    sub_query: Query = db_connection.query(
+        DBscan.repository_id, func.max(DBscan.timestamp).label("max_timestamp")
+    )
+    sub_query = sub_query.where(DBscan.is_latest == True)  # noqa: E712
+    sub_query = sub_query.group_by(DBscan.repository_id)
+    sub_query = sub_query.subquery()
 
     query = db_connection.query(
         DBrepository.id_,
@@ -85,14 +90,14 @@ def get_repositories(
     )
     query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
     query = query.join(
-        last_scan_sub_query,
-        DBrepository.id_ == last_scan_sub_query.c.repository_id,
+        sub_query,
+        DBrepository.id_ == sub_query.c.repository_id,
         isouter=True,
     )
     query = query.join(
         DBscan,
-        (DBscan.repository_id == last_scan_sub_query.c.repository_id)
-        & (DBscan.timestamp == last_scan_sub_query.c.max_timestamp),
+        (DBscan.repository_id == sub_query.c.repository_id)
+        & (DBscan.timestamp == sub_query.c.max_timestamp),
         isouter=True,
     )
 
