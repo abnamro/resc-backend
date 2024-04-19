@@ -334,8 +334,7 @@ def get_distinct_rules_from_findings(
     if finding_statuses:
         query = query.join(
             DBaudit,
-            (DBaudit.finding_id == DBfinding.id_)
-            & (DBaudit.is_latest == True),  # noqa: E712
+            (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
             isouter=True,
         )
 
