@@ -3,6 +3,7 @@ from typing import List
 
 # Third Party
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.query import Query
 
 # First Party
 from resc_backend.db.model import DBrule, DBruleTag, DBtag
@@ -98,10 +99,8 @@ def get_rule_tag_names_by_rule_pack_version(
     :return: [rule.rule_name, tag.name]
         The output will contain a list of each rule and tag occurrence in the rule_pack
     """
-    query = (
-        db_connection.query(DBrule.rule_name, DBtag.name)
-        .join(DBruleTag, DBruleTag.tag_id == DBtag.id_)
-        .join(DBrule, DBrule.id_ == DBruleTag.rule_id)
-        .filter(DBrule.rule_pack == rule_pack_version)
-    )
+    query: Query = db_connection.query(DBrule.rule_name, DBtag.name)
+    query = query.join(DBruleTag, DBruleTag.tag_id == DBtag.id_)
+    query = query.join(DBrule, DBrule.id_ == DBruleTag.rule_id)
+    query = query.where(DBrule.rule_pack == rule_pack_version)
     return query.all()
