@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List
 
 # Third Party
-from sqlalchemy import and_, func, update
+from sqlalchemy import func, update
 from sqlalchemy.orm import Session
 
 # First Party
@@ -26,7 +26,7 @@ from resc_backend.resc_web_service.schema.scan_type import ScanType
 
 
 def get_scan(db_connection: Session, scan_id: int) -> DBscan:
-    scan = db_connection.query(DBscan).filter(DBscan.id_ == scan_id).first()
+    scan = db_connection.query(DBscan).where(DBscan.id_ == scan_id).first()
     return scan
 
 
@@ -42,18 +42,14 @@ def get_latest_scan_for_repository(
     :return: scan
         scan object having the most recent timestamp for a given repository object
     """
-    subquery = (
-        db_connection.query(func.max(DBscan.timestamp).label("max_time")).filter(
-            DBscan.repository_id == repository_id
-        )
-    ).subquery()
+    subquery = db_connection.query(func.max(DBscan.timestamp).label("max_time"))
+    subquery = subquery.where(DBscan.repository_id == repository_id)
+    subquery = subquery.subquery()
 
-    scan = (
-        db_connection.query(DBscan)
-        .join(subquery, and_(DBscan.timestamp == subquery.c.max_time))
-        .filter(DBscan.repository_id == repository_id)
-        .first()
-    )
+    query = db_connection.query(DBscan)
+    query = query.join(subquery, DBscan.timestamp == subquery.c.max_time)
+    query = query.where(DBscan.repository_id == repository_id)
+    scan = query.first()
 
     return scan
 
@@ -83,7 +79,7 @@ def get_scans(
     query = db_connection.query(DBscan)
 
     if repository_id > 0:
-        query = query.filter(DBscan.repository_id == repository_id)
+        query = query.where(DBscan.repository_id == repository_id)
 
     scans = query.order_by(DBscan.id_).offset(skip).limit(limit_val).all()
     return scans
@@ -102,7 +98,7 @@ def get_scans_count(db_connection: Session, repository_id: int = -1) -> int:
     query = db_connection.query(func.count(DBscan.id_))
 
     if repository_id > 0:
-        query = query.filter(DBscan.repository_id == repository_id)
+        query = query.where(DBscan.repository_id == repository_id)
 
     total_count = query.scalar()
     return total_count
@@ -126,14 +122,11 @@ def create_scan(db_connection: Session, scan: scan_schema.ScanCreate) -> DBscan:
     # We only flag the previous ones if we are doing a base scan.
     # In the other cases they are simply marked as latest for incremental.
     if scan.scan_type == ScanType.BASE:
-        db_connection.execute(
-            update(DBscan)
-            .where(
-                DBscan.repository_id == scan.repository_id,
-                DBscan.rule_pack == scan.rule_pack,
-            )
-            .values(is_latest=False)
-        )
+        query = update(DBscan)
+        query = query.where(DBscan.repository_id == scan.repository_id)
+        query = query.where(DBscan.rule_pack == scan.rule_pack)
+        query = query.values(is_latest=False)
+        db_connection.execute(query)
 
     db_scan = DBscan(
         scan_type=scan.scan_type,
@@ -229,9 +222,10 @@ def delete_repository_findings_not_linked_to_any_scan(
         id of the repository
     """
     sub_query = db_connection.query(DBscanFinding.finding_id).distinct()
-    db_connection.query(DBfinding).filter(
-        DBfinding.id_.not_in(sub_query), DBfinding.repository_id == repository_id
-    ).delete(synchronize_session=False)
+    query = db_connection.query(DBfinding)
+    query = query.where(DBfinding.id_.not_in(sub_query))
+    query = query.where(DBfinding.repository_id == repository_id)
+    query.delete(synchronize_session=False)
     db_connection.commit()
 
 
@@ -254,10 +248,12 @@ def delete_scan(
     """
     if delete_related:
         scan_finding_crud.delete_scan_finding(db_connection, scan_id=scan_id)
-    db_connection.query(DBscan).filter(DBscan.id_ == scan_id).delete(
-        synchronize_session=False
-    )
+
+    query = db_connection.query(DBscan)
+    query = query.where(DBscan.id_ == scan_id)
+    query.delete(synchronize_session=False)
     db_connection.commit()
+
     delete_repository_findings_not_linked_to_any_scan(
         db_connection, repository_id=repository_id
     )
@@ -271,7 +267,7 @@ def delete_scans_by_repository_id(db_connection: Session, repository_id: int):
     :param repository_id:
         id of the repository
     """
-    db_connection.query(DBscan).filter(DBscan.repository_id == repository_id).delete(
+    db_connection.query(DBscan).where(DBscan.repository_id == repository_id).delete(
         synchronize_session=False
     )
     db_connection.commit()
@@ -285,9 +281,9 @@ def delete_scans_by_vcs_instance_id(db_connection: Session, vcs_instance_id: int
     :param vcs_instance_id:
         id of the vcs instance
     """
-    db_connection.query(DBscan).filter(
-        DBscan.repository_id == DBrepository.id_,
-        DBrepository.vcs_instance == DBVcsInstance.id_,
-        DBVcsInstance.id_ == vcs_instance_id,
-    ).delete(synchronize_session=False)
+    query = db_connection.query(DBscan)
+    query = query.where(DBscan.repository_id == DBrepository.id_)
+    query = query.where(DBrepository.vcs_instance == DBVcsInstance.id_)
+    query = query.where(DBVcsInstance.id_ == vcs_instance_id)
+    query.delete(synchronize_session=False)
     db_connection.commit()
