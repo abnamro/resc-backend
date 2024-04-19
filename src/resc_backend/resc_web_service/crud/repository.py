@@ -268,7 +268,8 @@ def get_distinct_projects(
     if repository_filter:
         query = query.where(DBrepository.repository_name == repository_filter)
 
-    distinct_projects = query.distinct().all()
+    query = query.distinct()
+    distinct_projects = query.all()
     return distinct_projects
 
 
@@ -310,7 +311,8 @@ def get_distinct_repositories(
     if project_name:
         query = query.where(DBrepository.project_key == project_name)
 
-    distinct_repositories = query.distinct().all()
+    query = query.distinct()
+    distinct_repositories = query.all()
     return distinct_repositories
 
 
@@ -338,7 +340,7 @@ def get_findings_metadata_by_repository_id(
     query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
     query = query.join(
         DBaudit,
-        (DBaudit.finding_id == DBscanFinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
+        (DBaudit.finding_id == DBscanFinding.finding_id) & (DBaudit.is_latest == True),  # noqa: E712
         isouter=True,
     )
     query = query.where(DBrepository.id_.in_(repository_ids))
@@ -368,9 +370,7 @@ def get_findings_metadata_by_repository_id(
         elif status_count[1] == FindingStatus.UNDER_REVIEW:
             repo_count_dict[status_count[0]]["under_review"] += status_count[2]
         elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED:
-            repo_count_dict[status_count[0]]["clarification_required"] += status_count[
-                2
-            ]
+            repo_count_dict[status_count[0]]["clarification_required"] += status_count[2]
 
     return repo_count_dict
 
