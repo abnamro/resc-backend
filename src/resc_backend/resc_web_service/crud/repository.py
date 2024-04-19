@@ -221,8 +221,6 @@ def create_repository_if_not_exists(
     query = query.where(DBrepository.project_key == repository.project_key)
     query = query.where(DBrepository.repository_id == repository.repository_id)
     query = query.where(DBrepository.vcs_instance == repository.vcs_instance)
-    query = query.first()
-
     db_select_repository = query.first()
 
     if db_select_repository is not None:
