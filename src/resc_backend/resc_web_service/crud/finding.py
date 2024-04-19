@@ -334,7 +334,7 @@ def get_distinct_rules_from_findings(
     if finding_statuses:
         query = query.join(
             DBaudit,
-            (DBaudit.finding_id == DBscanFinding.finding_id)
+            (DBaudit.finding_id == DBfinding.id_)
             & (DBaudit.is_latest == True),  # noqa: E712
             isouter=True,
         )
@@ -397,7 +397,7 @@ def get_findings_count_by_status(
     )
     query = query.join(
         DBaudit,
-        (DBaudit.finding_id == DBscanFinding.finding_id) & (DBaudit.is_latest == True),  # noqa: E712
+        (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
         isouter=True,
     )
 
@@ -451,7 +451,7 @@ def get_rule_findings_count_by_status(
         max_base_scan_subquery = max_base_scan_subquery.where(
             DBscan.rule_pack.in_(rule_pack_versions)
         )
-    max_base_scan_subquery = max_base_scan_subquery.group_by(
+    max_base_scan_subquery: Query = max_base_scan_subquery.group_by(
         DBscan.repository_id
     ).subquery()
 
@@ -490,7 +490,7 @@ def get_rule_findings_count_by_status(
 
     query = query.join(
         DBaudit,
-        (DBaudit.finding_id == DBscanFinding.finding_id) & (DBaudit.is_latest == True),  # noqa: E712
+        (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
         isouter=True,
     )
     query = query.group_by(DBfinding.rule_name, DBaudit.status)
