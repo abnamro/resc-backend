@@ -370,7 +370,9 @@ def get_findings_metadata_by_repository_id(
         elif status_count[1] == FindingStatus.UNDER_REVIEW:
             repo_count_dict[status_count[0]]["under_review"] += status_count[2]
         elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED:
-            repo_count_dict[status_count[0]]["clarification_required"] += status_count[2]
+            repo_count_dict[status_count[0]]["clarification_required"] += status_count[
+                2
+            ]
 
     return repo_count_dict
 
