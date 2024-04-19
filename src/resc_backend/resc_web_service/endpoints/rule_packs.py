@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse
 from fastapi_cache.decorator import cache
 from packaging.version import Version
 from pydantic import Required
+from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
@@ -23,7 +24,6 @@ from resc_backend.constants import (
     RULE_PACKS_TAG,
     RWS_ROUTE_RULE_PACKS,
 )
-from resc_backend.db.connection import Session
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import rule as rule_crud
 from resc_backend.resc_web_service.crud import rule_pack as rule_pack_crud
