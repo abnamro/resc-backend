@@ -2,8 +2,9 @@
 from typing import List
 
 # Third Party
-from sqlalchemy import and_, func
+from sqlalchemy import func
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.query import Query
 
 # First Party
 from resc_backend.constants import (
@@ -24,6 +25,16 @@ from resc_backend.resc_web_service.schema import repository as repository_schema
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.scan_type import ScanType
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
+
+
+def _get_max_base_scan(db_connection: Session) -> Query:
+    subquery: Query = db_connection.query(
+        DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
+    )
+    subquery = subquery.where(DBscan.scan_type == ScanType.BASE)
+    subquery = subquery.where(DBscan.is_latest == True)  # noqa: E712
+    subquery = subquery.group_by(DBscan.repository_id)
+    return subquery.subquery()
 
 
 def get_repositories(
@@ -59,12 +70,12 @@ def get_repositories(
     )
 
     # Get the latest scan for repository
-    repo_last_scan_sub_query = db_connection.query(
+    sub_query: Query = db_connection.query(
         DBscan.repository_id, func.max(DBscan.timestamp).label("max_timestamp")
     )
-    repo_last_scan_sub_query = repo_last_scan_sub_query.group_by(
-        DBscan.repository_id
-    ).subquery()
+    sub_query = sub_query.where(DBscan.is_latest == True)  # noqa: E712
+    sub_query = sub_query.group_by(DBscan.repository_id)
+    sub_query = sub_query.subquery()
 
     query = db_connection.query(
         DBrepository.id_,
@@ -79,56 +90,46 @@ def get_repositories(
     )
     query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
     query = query.join(
-        repo_last_scan_sub_query,
-        DBrepository.id_ == repo_last_scan_sub_query.c.repository_id,
+        sub_query,
+        DBrepository.id_ == sub_query.c.repository_id,
         isouter=True,
     )
     query = query.join(
         DBscan,
-        and_(
-            DBscan.repository_id == repo_last_scan_sub_query.c.repository_id,
-            DBscan.timestamp == repo_last_scan_sub_query.c.max_timestamp,
-        ),
+        (DBscan.repository_id == sub_query.c.repository_id)
+        & (DBscan.timestamp == sub_query.c.max_timestamp),
         isouter=True,
     )
 
     if only_if_has_findings:
-        max_base_scan_subquery = db_connection.query(
-            DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
-        )
-        max_base_scan_subquery = max_base_scan_subquery.filter(
-            DBscan.scan_type == ScanType.BASE
-        )
-        max_base_scan_subquery = max_base_scan_subquery.group_by(
-            DBscan.repository_id
-        ).subquery()
+        last_scan_sub_query = _get_max_base_scan(db_connection)
 
         sub_query = db_connection.query(DBrepository.id_)
         sub_query = sub_query.join(
-            max_base_scan_subquery,
-            DBrepository.id_ == max_base_scan_subquery.c.repository_id,
+            last_scan_sub_query,
+            DBrepository.id_ == last_scan_sub_query.c.repository_id,
         )
         sub_query = sub_query.join(
             DBscan,
-            and_(
-                DBrepository.id_ == DBscan.repository_id,
-                DBscan.id_ >= max_base_scan_subquery.c.latest_base_scan_id,
-            ),
+            DBrepository.id_ == DBscan.repository_id,
+        )
+        sub_query = sub_query.where(
+            DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id
         )
         sub_query = sub_query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
         sub_query = sub_query.distinct()
 
         # Filter on repositories that are in the selection
-        query = query.filter(DBrepository.id_.in_(sub_query))
+        query = query.where(DBrepository.id_.in_(sub_query))
 
     if vcs_providers and vcs_providers is not None:
-        query = query.filter(DBVcsInstance.provider_type.in_(vcs_providers))
+        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
 
     if project_filter:
-        query = query.filter(DBrepository.project_key == project_filter)
+        query = query.where(DBrepository.project_key == project_filter)
 
     if repository_filter:
-        query = query.filter(DBrepository.repository_name == repository_filter)
+        query = query.where(DBrepository.repository_name == repository_filter)
 
     repositories = query.order_by(DBrepository.id_).offset(skip).limit(limit_val).all()
 
@@ -160,45 +161,37 @@ def get_repositories_count(
     query = db_connection.query(func.count(DBrepository.id_))
 
     if only_if_has_findings:
-        max_base_scan_subquery = db_connection.query(
-            DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
-        )
-        max_base_scan_subquery = max_base_scan_subquery.filter(
-            DBscan.scan_type == ScanType.BASE
-        )
-        max_base_scan_subquery = max_base_scan_subquery.group_by(
-            DBscan.repository_id
-        ).subquery()
+        last_scan_sub_query = _get_max_base_scan(db_connection)
 
         sub_query = db_connection.query(DBrepository.id_)
         sub_query = sub_query.join(
-            max_base_scan_subquery,
-            DBrepository.id_ == max_base_scan_subquery.c.repository_id,
+            last_scan_sub_query,
+            DBrepository.id_ == last_scan_sub_query.c.repository_id,
         )
         sub_query = sub_query.join(
             DBscan,
-            and_(
-                DBrepository.id_ == DBscan.repository_id,
-                DBscan.id_ >= max_base_scan_subquery.c.latest_base_scan_id,
-            ),
+            DBrepository.id_ == DBscan.repository_id,
+        )
+        sub_query = sub_query.where(
+            DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id
         )
         sub_query = sub_query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
         sub_query = sub_query.distinct()
 
         # Filter on repositories that are in the selection
-        query = query.filter(DBrepository.id_.in_(sub_query))
+        query = query.where(DBrepository.id_.in_(sub_query))
 
     if vcs_providers and vcs_providers is not None:
         query = query.join(
             DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
         )
-        query = query.filter(DBVcsInstance.provider_type.in_(vcs_providers))
+        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
 
     if project_filter:
-        query = query.filter(DBrepository.project_key == project_filter)
+        query = query.where(DBrepository.project_key == project_filter)
 
     if repository_filter:
-        query = query.filter(DBrepository.repository_name == repository_filter)
+        query = query.where(DBrepository.repository_name == repository_filter)
 
     total_count = query.scalar()
     return total_count
@@ -207,7 +200,7 @@ def get_repositories_count(
 def get_repository(db_connection: Session, repository_id: int):
     repository = (
         db_connection.query(DBrepository)
-        .filter(DBrepository.id_ == repository_id)
+        .where(DBrepository.id_ == repository_id)
         .first()
     )
     return repository
@@ -251,15 +244,12 @@ def create_repository_if_not_exists(
     db_connection: Session, repository: repository_schema.RepositoryCreate
 ):
     # Query the database to see if the repository object exists based on the unique constraint parameters
-    db_select_repository = (
-        db_connection.query(DBrepository)
-        .filter(
-            DBrepository.project_key == repository.project_key,
-            DBrepository.repository_id == repository.repository_id,
-            DBrepository.vcs_instance == repository.vcs_instance,
-        )
-        .first()
-    )
+    query: Query = db_connection.query(DBrepository)
+    query = query.where(DBrepository.project_key == repository.project_key)
+    query = query.where(DBrepository.repository_id == repository.repository_id)
+    query = query.where(DBrepository.vcs_instance == repository.vcs_instance)
+    db_select_repository = query.first()
+
     if db_select_repository is not None:
         return db_select_repository
 
@@ -289,39 +279,29 @@ def get_distinct_projects(
     query = db_connection.query(DBrepository.project_key)
 
     if only_if_has_findings:
-        max_base_scan_subquery = db_connection.query(
-            DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
-        )
-        max_base_scan_subquery = max_base_scan_subquery.filter(
-            DBscan.scan_type == ScanType.BASE
-        )
-        max_base_scan_subquery = max_base_scan_subquery.group_by(
-            DBscan.repository_id
-        ).subquery()
-
+        last_scan_sub_query = _get_max_base_scan(db_connection)
         query = query.join(
-            max_base_scan_subquery,
-            DBrepository.id_ == max_base_scan_subquery.c.repository_id,
+            last_scan_sub_query,
+            DBrepository.id_ == last_scan_sub_query.c.repository_id,
         )
         query = query.join(
             DBscan,
-            and_(
-                DBrepository.id_ == DBscan.repository_id,
-                DBscan.id_ >= max_base_scan_subquery.c.latest_base_scan_id,
-            ),
+            DBrepository.id_ == DBscan.repository_id,
         )
+        query = query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
         query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
 
     if vcs_providers and vcs_providers is not None:
         query = query.join(
             DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
         )
-        query = query.filter(DBVcsInstance.provider_type.in_(vcs_providers))
+        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
 
     if repository_filter:
-        query = query.filter(DBrepository.repository_name == repository_filter)
+        query = query.where(DBrepository.repository_name == repository_filter)
 
-    distinct_projects = query.distinct().all()
+    query = query.distinct()
+    distinct_projects = query.all()
     return distinct_projects
 
 
@@ -347,39 +327,29 @@ def get_distinct_repositories(
     query = db_connection.query(DBrepository.repository_name)
 
     if only_if_has_findings:
-        max_base_scan_subquery = db_connection.query(
-            DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
-        )
-        max_base_scan_subquery = max_base_scan_subquery.filter(
-            DBscan.scan_type == ScanType.BASE
-        )
-        max_base_scan_subquery = max_base_scan_subquery.group_by(
-            DBscan.repository_id
-        ).subquery()
-
+        last_scan_sub_query = _get_max_base_scan(db_connection)
         query = query.join(
-            max_base_scan_subquery,
-            DBrepository.id_ == max_base_scan_subquery.c.repository_id,
+            last_scan_sub_query,
+            DBrepository.id_ == last_scan_sub_query.c.repository_id,
         )
         query = query.join(
             DBscan,
-            and_(
-                DBrepository.id_ == DBscan.repository_id,
-                DBscan.id_ >= max_base_scan_subquery.c.latest_base_scan_id,
-            ),
+            DBrepository.id_ == DBscan.repository_id,
         )
+        query = query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
         query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
 
     if vcs_providers and vcs_providers is not None:
         query = query.join(
             DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
         )
-        query = query.filter(DBVcsInstance.provider_type.in_(vcs_providers))
+        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
 
     if project_name:
-        query = query.filter(DBrepository.project_key == project_name)
+        query = query.where(DBrepository.project_key == project_name)
 
-    distinct_repositories = query.distinct().all()
+    query = query.distinct()
+    distinct_repositories = query.all()
     return distinct_repositories
 
 
@@ -399,48 +369,23 @@ def get_findings_metadata_by_repository_id(
         DBrepository.id_, DBaudit.status, func.count(DBscanFinding.finding_id)
     )
 
-    max_base_scan_subquery = db_connection.query(
-        DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
-    )
-    max_base_scan_subquery = max_base_scan_subquery.filter(
-        DBscan.scan_type == ScanType.BASE
-    )
-    max_base_scan_subquery = max_base_scan_subquery.group_by(
-        DBscan.repository_id
-    ).subquery()
-
-    max_audit_subquery = (
-        db_connection.query(DBaudit.finding_id, func.max(DBaudit.id_).label("audit_id"))
-        .group_by(DBaudit.finding_id)
-        .subquery()
-    )
-
+    last_scan_sub_query = _get_max_base_scan(db_connection)
     query = query.join(
-        max_base_scan_subquery,
-        DBrepository.id_ == max_base_scan_subquery.c.repository_id,
+        last_scan_sub_query,
+        DBrepository.id_ == last_scan_sub_query.c.repository_id,
     )
     query = query.join(
         DBscan,
-        and_(
-            DBrepository.id_ == DBscan.repository_id,
-            DBscan.id_ >= max_base_scan_subquery.c.latest_base_scan_id,
-        ),
+        DBrepository.id_ == DBscan.repository_id,
     )
+    query = query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
     query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
     query = query.join(
-        max_audit_subquery,
-        max_audit_subquery.c.finding_id == DBscanFinding.finding_id,
-        isouter=True,
-    )
-    query = query.join(
         DBaudit,
-        and_(
-            DBaudit.finding_id == DBscanFinding.finding_id,
-            DBaudit.id_ == max_audit_subquery.c.audit_id,
-        ),
+        (DBaudit.finding_id == DBscanFinding.finding_id) & (DBaudit.is_latest == True),  # noqa: E712
         isouter=True,
     )
-    query = query.filter(DBrepository.id_.in_(repository_ids))
+    query = query.where(DBrepository.id_.in_(repository_ids))
     query = query.group_by(
         DBrepository.id_,
         DBaudit.status,
@@ -496,7 +441,7 @@ def delete_repository(
         scan_crud.delete_scans_by_repository_id(
             db_connection, repository_id=repository_id
         )
-    db_connection.query(DBrepository).filter(DBrepository.id_ == repository_id).delete(
+    db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).delete(
         synchronize_session=False
     )
     db_connection.commit()
@@ -512,7 +457,7 @@ def delete_repositories_by_vcs_instance_id(
     :param vcs_instance_id:
         id of the vcs instance
     """
-    db_connection.query(DBrepository).filter(
+    db_connection.query(DBrepository).where(
         DBrepository.vcs_instance == DBVcsInstance.id_,
         DBVcsInstance.id_ == vcs_instance_id,
     ).delete(synchronize_session=False)
