@@ -23,11 +23,7 @@ def create_scan_findings(
 
     # load existing scan findings for this scan into the session
     scan_id = scan_findings[0].scan_id
-    _ = (
-        db_connection.query(DBscanFinding)
-        .filter(DBscanFinding.scan_id == scan_id)
-        .all()
-    )
+    _ = db_connection.query(DBscanFinding).where(DBscanFinding.scan_id == scan_id).all()
 
     # merge the new scan findings into the session, ignoring duplicates
     for scan_finding in scan_findings:
@@ -40,7 +36,7 @@ def create_scan_findings(
 
 def get_scan_findings(db_connection: Session, finding_id: int) -> List[DBscanFinding]:
     scan_findings = db_connection.query(DBscanFinding)
-    scan_findings = scan_findings.filter(DBscanFinding.finding_id == finding_id).all()
+    scan_findings = scan_findings.where(DBscanFinding.finding_id == finding_id).all()
     return scan_findings
 
 
@@ -59,9 +55,9 @@ def delete_scan_finding(
     if finding_id or scan_id:
         query = db_connection.query(DBscanFinding)
         if finding_id:
-            query = query.filter(DBscanFinding.finding_id == finding_id)
+            query = query.where(DBscanFinding.finding_id == finding_id)
         if scan_id:
-            query = query.filter(DBscanFinding.scan_id == scan_id)
+            query = query.where(DBscanFinding.scan_id == scan_id)
         query.delete(synchronize_session=False)
         db_connection.commit()
 
@@ -74,7 +70,7 @@ def delete_scan_finding_by_repository_id(db_connection: Session, repository_id: 
     :param repository_id:
         id of the repository
     """
-    db_connection.query(DBscanFinding).filter(
+    db_connection.query(DBscanFinding).where(
         DBscanFinding.scan_id == DBscan.id_,
         DBscanFinding.finding_id == DBfinding.id_,
         DBscan.repository_id == DBfinding.repository_id,
@@ -93,7 +89,7 @@ def delete_scan_finding_by_vcs_instance_id(
     :param vcs_instance_id:
         id of the vcs instance
     """
-    db_connection.query(DBscanFinding).filter(
+    db_connection.query(DBscanFinding).where(
         DBscanFinding.scan_id == DBscan.id_,
         DBscanFinding.finding_id == DBfinding.id_,
         DBscan.repository_id == DBrepository.id_,
