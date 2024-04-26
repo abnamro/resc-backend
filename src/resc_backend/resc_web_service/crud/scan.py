@@ -180,15 +180,15 @@ def get_repository_findings_metadata_for_latest_scan(
         for finding in findings_count_by_status:
             finding_status = finding[1]
             count = finding[0]
-            if finding_status == FindingStatus.TRUE_POSITIVE:
+            if finding_status == FindingStatus.TRUE_POSITIVE.value:
                 true_positive_count = count
-            if finding_status == FindingStatus.FALSE_POSITIVE:
+            if finding_status == FindingStatus.FALSE_POSITIVE.value:
                 false_positive_count = count
-            if finding_status == FindingStatus.NOT_ANALYZED or finding_status is None:
+            if finding_status == FindingStatus.NOT_ANALYZED.value or finding_status is None:
                 not_analyzed_count += count
-            if finding_status == FindingStatus.UNDER_REVIEW:
+            if finding_status == FindingStatus.UNDER_REVIEW.value:
                 under_review_count = count
-            if finding_status == FindingStatus.CLARIFICATION_REQUIRED:
+            if finding_status == FindingStatus.CLARIFICATION_REQUIRED.value:
                 clarification_required_count = count
 
     total_findings_count = (

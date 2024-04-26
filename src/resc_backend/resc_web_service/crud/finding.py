@@ -166,7 +166,7 @@ def get_scans_findings(
             isouter=True,
         )
 
-        if FindingStatus.NOT_ANALYZED in statuses_filter:
+        if FindingStatus.NOT_ANALYZED.value in statuses_filter:
             query = query.where(
                 DBaudit.status.in_(statuses_filter) | (DBaudit.status == None)  # noqa: E711
             )
@@ -244,7 +244,7 @@ def get_total_findings_count(
         if findings_filter.rule_names:
             query = query.where(DBfinding.rule_name.in_(findings_filter.rule_names))
         if findings_filter.finding_statuses:
-            if FindingStatus.NOT_ANALYZED in findings_filter.finding_statuses:
+            if FindingStatus.NOT_ANALYZED.value in findings_filter.finding_statuses:
                 query = query.where(
                     DBaudit.status.in_(findings_filter.finding_statuses)
                     | (DBaudit.status == None)  # noqa: E711
@@ -343,7 +343,7 @@ def get_distinct_rules_from_findings(
         query = query.where(DBscanFinding.scan_id == scan_id)
     else:
         if finding_statuses:
-            if FindingStatus.NOT_ANALYZED in finding_statuses:
+            if FindingStatus.NOT_ANALYZED.value in finding_statuses:
                 query = query.where(
                     DBaudit.status.in_(finding_statuses) | (DBaudit.status == None)  # noqa: E711
                 )
@@ -406,7 +406,7 @@ def get_findings_count_by_status(
         query = query.where(DBscan.id_.in_(scan_ids))
 
     if finding_statuses:
-        if FindingStatus.NOT_ANALYZED in finding_statuses:
+        if FindingStatus.NOT_ANALYZED.value in finding_statuses:
             query = query.where(
                 DBaudit.status.in_(finding_statuses) | (DBaudit.status == None)  # noqa: E711
             )
@@ -509,15 +509,15 @@ def get_rule_findings_count_by_status(
 
     for status_count in status_counts:
         rule_count_dict[status_count[0]]["total_findings_count"] += status_count[2]
-        if status_count[1] == FindingStatus.NOT_ANALYZED or status_count[1] is None:
+        if status_count[1] == FindingStatus.NOT_ANALYZED.value or status_count[1] is None:
             rule_count_dict[status_count[0]]["not_analyzed"] += status_count[2]
-        elif status_count[1] == FindingStatus.FALSE_POSITIVE:
+        elif status_count[1] == FindingStatus.FALSE_POSITIVE.value:
             rule_count_dict[status_count[0]]["false_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.TRUE_POSITIVE:
+        elif status_count[1] == FindingStatus.TRUE_POSITIVE.value:
             rule_count_dict[status_count[0]]["true_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.UNDER_REVIEW:
+        elif status_count[1] == FindingStatus.UNDER_REVIEW.value:
             rule_count_dict[status_count[0]]["under_review"] += status_count[2]
-        elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED:
+        elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
             rule_count_dict[status_count[0]]["clarification_required"] += status_count[
                 2
             ]
@@ -933,7 +933,7 @@ def get_un_triaged_finding_count_by_vcs_provider_over_time(
             isouter=True,
         )
         query = query.where(
-            (DBaudit.id_ == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED)  # noqa: E711
+            (DBaudit.id_ == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED.value)  # noqa: E711
         )
         query = query.group_by(DBVcsInstance.provider_type)
         all_tables.append(query)

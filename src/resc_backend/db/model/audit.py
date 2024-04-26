@@ -25,7 +25,7 @@ class DBaudit(Base):
     finding_id = Column(Integer, ForeignKey("finding.id"), nullable=False)
     status = Column(
         Enum(FindingStatus),
-        default=FindingStatus.NOT_ANALYZED,
+        default=FindingStatus.NOT_ANALYZED.value,
         server_default=text("NOT_ANALYZED"),
         nullable=False,
     )

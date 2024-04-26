@@ -388,7 +388,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -403,7 +403,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -417,8 +417,8 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -433,8 +433,8 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -477,7 +477,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
                 f"&repositoryfilter={repository_name}"
             )
             assert response.status_code == 200, response.text
@@ -493,7 +493,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
                 f"&repositoryfilter={repository_name}"
             )
             self.assert_cache(cached_response)
@@ -533,7 +533,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -548,7 +548,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -562,8 +562,8 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -578,8 +578,8 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -622,7 +622,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
                 f"&projectname={project_name}"
             )
             assert response.status_code == 200, response.text
@@ -638,7 +638,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET}"
+                f"vcsprovider={VCSProviders.BITBUCKET.value}"
                 f"&projectname={project_name}"
             )
             self.assert_cache(cached_response)

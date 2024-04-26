@@ -1,4 +1,4 @@
-FROM python:3.9.16-alpine3.17
+FROM python:3.12-alpine3.18
 
 ARG NAME="resc_backend"
 ARG DESCRIPTION="Repository Scanner Backend"
@@ -34,7 +34,7 @@ RUN addgroup -g $GID $RUN_AS_GROUP \
 USER $RUN_AS_USER
 ENV PATH=$PATH:/home/apiuser/.local/bin
 
-RUN pip install --no-cache-dir --upgrade pyodbc==4.0.32 -e /resc_backend
+RUN pip install --no-cache-dir --upgrade pyodbc==5.1.0 -e /resc_backend
 
 USER root
 

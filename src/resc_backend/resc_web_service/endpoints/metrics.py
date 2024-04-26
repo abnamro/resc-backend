@@ -60,7 +60,7 @@ logger = logging.getLogger(__name__)
 def get_finding_audit_count_over_time(
     db_connection: Session = Depends(get_db_connection),
     weeks: Optional[int] = Query(default=13, ge=1),
-    audit_status: Optional[FindingStatus] = Query(default=FindingStatus.TRUE_POSITIVE),
+    audit_status: Optional[FindingStatus] = Query(default=FindingStatus.TRUE_POSITIVE.value),
 ) -> list[FindingCountOverTime]:
     """
         Retrieve count of audited findings over time for given weeks per vcs provider
