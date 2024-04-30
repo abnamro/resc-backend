@@ -22,7 +22,7 @@ for i in range(1, 6):
             commit_timestamp=datetime.utcnow(),
             author=f"author_{i}",
             email=f"email_{i}",
-            status=FindingStatus.NOT_ANALYZED,
+            status=FindingStatus.NOT_ANALYZED.value,
             comment=f"comment_{i}",
             rule_name=f"rule_{i}",
             repository_id=1,

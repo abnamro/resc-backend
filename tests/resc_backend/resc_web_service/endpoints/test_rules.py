@@ -120,7 +120,7 @@ class TestRules(unittest.TestCase):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED}"
+                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -131,7 +131,7 @@ class TestRules(unittest.TestCase):
             # Make the second request to retrieve response from cache
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED}"
+                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -146,8 +146,8 @@ class TestRules(unittest.TestCase):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED}"
-                f"&findingstatus={FindingStatus.CLARIFICATION_REQUIRED}"
+                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
+                f"&findingstatus={FindingStatus.CLARIFICATION_REQUIRED.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -158,8 +158,8 @@ class TestRules(unittest.TestCase):
             # Make the second request to retrieve response from cache
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED}"
-                f"&findingstatus={FindingStatus.CLARIFICATION_REQUIRED}"
+                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
+                f"&findingstatus={FindingStatus.CLARIFICATION_REQUIRED.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -174,7 +174,7 @@ class TestRules(unittest.TestCase):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET}"
+                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -185,7 +185,7 @@ class TestRules(unittest.TestCase):
             # Make the second request to retrieve response from cache
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET}"
+                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -200,8 +200,8 @@ class TestRules(unittest.TestCase):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS}"
+                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -212,8 +212,8 @@ class TestRules(unittest.TestCase):
             # Make the second request to retrieve response from cache
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS}"
+                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -366,8 +366,8 @@ class TestRules(unittest.TestCase):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED}"
-                f"&vcsprovider={VCSProviders.BITBUCKET}"
+                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
+                f"&vcsprovider={VCSProviders.BITBUCKET.value}"
                 f"&projectname={project_name}"
                 f"&repositoryname={repository_name}"
                 f"&start_date_time={start_date_time}"
@@ -382,8 +382,8 @@ class TestRules(unittest.TestCase):
             # Make the second request to retrieve response from cache
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED}"
-                f"&vcsprovider={VCSProviders.BITBUCKET}"
+                f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
+                f"&vcsprovider={VCSProviders.BITBUCKET.value}"
                 f"&projectname={project_name}"
                 f"&repositoryname={repository_name}"
                 f"&start_date_time={start_date_time}"

@@ -127,27 +127,27 @@ def get_rules_finding_status_count(
         )
         rule_finding_count.finding_statuses_count.append(
             StatusCount(
-                status=FindingStatus.TRUE_POSITIVE, count=rule_counts["true_positive"]
+                status=FindingStatus.TRUE_POSITIVE.value, count=rule_counts["true_positive"]
             )
         )
         rule_finding_count.finding_statuses_count.append(
             StatusCount(
-                status=FindingStatus.FALSE_POSITIVE, count=rule_counts["false_positive"]
+                status=FindingStatus.FALSE_POSITIVE.value, count=rule_counts["false_positive"]
             )
         )
         rule_finding_count.finding_statuses_count.append(
             StatusCount(
-                status=FindingStatus.NOT_ANALYZED, count=rule_counts["not_analyzed"]
+                status=FindingStatus.NOT_ANALYZED.value, count=rule_counts["not_analyzed"]
             )
         )
         rule_finding_count.finding_statuses_count.append(
             StatusCount(
-                status=FindingStatus.UNDER_REVIEW, count=rule_counts["under_review"]
+                status=FindingStatus.UNDER_REVIEW.value, count=rule_counts["under_review"]
             )
         )
         rule_finding_count.finding_statuses_count.append(
             StatusCount(
-                status=FindingStatus.CLARIFICATION_REQUIRED,
+                status=FindingStatus.CLARIFICATION_REQUIRED.value,
                 count=rule_counts["clarification_required"],
             )
         )

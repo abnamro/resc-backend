@@ -18,4 +18,5 @@ packaging==23.1
 fastapi-cache2==0.2.1
 redis==4.6.0
 azure-identity==1.15.0
+setuptools==69.5.1
 

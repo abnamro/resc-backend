@@ -18,14 +18,14 @@ def test_findings_filter_basic_vcs_provider():
 def test_findings_filter_multiple_values():
     params = {
         "vcs_providers": [VCSProviders.AZURE_DEVOPS, VCSProviders.BITBUCKET],
-        "finding_statuses": [FindingStatus.NOT_ANALYZED],
+        "finding_statuses": [FindingStatus.NOT_ANALYZED.value],
     }
     findings_filter = FindingsFilter(**params)
     assert findings_filter.vcs_providers == [
         VCSProviders.AZURE_DEVOPS,
         VCSProviders.BITBUCKET,
     ]
-    assert findings_filter.finding_statuses == [FindingStatus.NOT_ANALYZED]
+    assert findings_filter.finding_statuses == [FindingStatus.NOT_ANALYZED.value]
 
 
 def test_findings_filter_valid_date_range():

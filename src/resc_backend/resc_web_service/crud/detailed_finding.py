@@ -170,7 +170,7 @@ def _query_apply_findings_filters(
         query = query.where(DBrepository.project_key == findings_filter.project_name)
 
     if findings_filter.finding_statuses:
-        if FindingStatus.NOT_ANALYZED in findings_filter.finding_statuses:
+        if FindingStatus.NOT_ANALYZED.value in findings_filter.finding_statuses:
             query = query.where(
                 (DBaudit.status.in_(findings_filter.finding_statuses))
                 | (DBaudit.status == None)  # noqa: E711

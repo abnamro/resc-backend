@@ -403,15 +403,15 @@ def get_findings_metadata_by_repository_id(
         }
     for status_count in status_counts:
         repo_count_dict[status_count[0]]["total_findings_count"] += status_count[2]
-        if status_count[1] == FindingStatus.NOT_ANALYZED or status_count[1] is None:
+        if status_count[1] == FindingStatus.NOT_ANALYZED.value or status_count[1] is None:
             repo_count_dict[status_count[0]]["not_analyzed"] += status_count[2]
-        elif status_count[1] == FindingStatus.FALSE_POSITIVE:
+        elif status_count[1] == FindingStatus.FALSE_POSITIVE.value:
             repo_count_dict[status_count[0]]["false_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.TRUE_POSITIVE:
+        elif status_count[1] == FindingStatus.TRUE_POSITIVE.value:
             repo_count_dict[status_count[0]]["true_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.UNDER_REVIEW:
+        elif status_count[1] == FindingStatus.UNDER_REVIEW.value:
             repo_count_dict[status_count[0]]["under_review"] += status_count[2]
-        elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED:
+        elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
             repo_count_dict[status_count[0]]["clarification_required"] += status_count[
                 2
             ]

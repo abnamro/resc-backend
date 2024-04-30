@@ -70,10 +70,10 @@ class GenerateData:
         self.scan_types = [ScanType.BASE, ScanType.INCREMENTAL]
         self.vcs_instance_types = [BITBUCKET, AZURE_DEVOPS, GITHUB_PUBLIC]
         self.audit_status = [
-            FindingStatus.NOT_ANALYZED,
-            FindingStatus.CLARIFICATION_REQUIRED,
-            FindingStatus.FALSE_POSITIVE,
-            FindingStatus.TRUE_POSITIVE,
+            FindingStatus.NOT_ANALYZED.value,
+            FindingStatus.CLARIFICATION_REQUIRED.value,
+            FindingStatus.FALSE_POSITIVE.value,
+            FindingStatus.TRUE_POSITIVE.value,
         ]
 
     @staticmethod

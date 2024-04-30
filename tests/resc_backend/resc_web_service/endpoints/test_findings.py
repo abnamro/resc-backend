@@ -84,7 +84,7 @@ class TestFindings(unittest.TestCase):
             audit = DBaudit(
                 finding_id=i,
                 auditor=f"auditor {i}",
-                status=FindingStatus.TRUE_POSITIVE,
+                status=FindingStatus.TRUE_POSITIVE.value,
                 comment=f"comment {i}",
                 timestamp=datetime.utcnow(),
                 is_latest=True,
@@ -720,7 +720,7 @@ class TestFindings(unittest.TestCase):
     ):
         audit_multiple = AuditMultiple(
             finding_ids=[1, 2],
-            status=FindingStatus.FALSE_POSITIVE,
+            status=FindingStatus.FALSE_POSITIVE.value,
             comment="Hello World!",
         )
         get_scan_findings.return_value = [self.db_scan_findings[1]]
@@ -763,7 +763,7 @@ class TestFindings(unittest.TestCase):
     def test_audit_findings_non_existing(self, audit_findings, get_finding):
         audit_multiple = AuditMultiple(
             finding_ids=[1, 2],
-            status=FindingStatus.FALSE_POSITIVE,
+            status=FindingStatus.FALSE_POSITIVE.value,
             comment="Hello World!",
         )
         get_finding.return_value = None
@@ -809,7 +809,7 @@ class TestFindings(unittest.TestCase):
         get_findings_count_by_time.return_value = [(2021, 10, 100), (2022, 12, 200)]
         response = self.client.get(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.MONTH}"
+            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.MONTH.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -833,7 +833,7 @@ class TestFindings(unittest.TestCase):
         get_findings_count_by_time.return_value = [(2021, 40, 100), (2022, 42, 200)]
         response = self.client.get(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.WEEK}"
+            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.WEEK.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -860,7 +860,7 @@ class TestFindings(unittest.TestCase):
         ]
         response = self.client.get(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.DAY}"
+            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.DAY.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
