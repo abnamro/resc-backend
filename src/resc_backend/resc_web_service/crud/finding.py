@@ -636,8 +636,8 @@ def get_findings_count_by_time_total(
             extract("month", DBscan.timestamp),
             extract("day", DBscan.timestamp),
         )
-    # To check later if it fixes the bug.
-    # query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
+
+    query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
 
     if start_date_time:
         query = query.where(DBscan.timestamp >= start_date_time)
