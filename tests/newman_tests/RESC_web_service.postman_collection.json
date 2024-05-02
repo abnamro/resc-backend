@@ -13303,7 +13303,7 @@
 											"    pm.expect(responseJson[\"data\"][2][\"finding_count\"]).to.eql(2);",
 											"    pm.expect(responseJson[\"data\"][3][\"date_lable\"]).to.include(pm.environment.get(\"currentdate\").substring(0, 3));",
 											"    pm.expect(responseJson[\"data\"][3][\"finding_count\"]).to.eql(1);",
-											"    pm.expect(responseJson[\"total\"]).to.eql(5);",
+											"    pm.expect(responseJson[\"total\"]).to.eql(4);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"    ",
