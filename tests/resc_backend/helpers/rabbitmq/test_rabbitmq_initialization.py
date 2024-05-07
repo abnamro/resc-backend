@@ -37,9 +37,7 @@ with mock.patch.dict(
 def test_wait_for_rabbitmq_server_to_up_is_successful(mock_get):
     response.status_code = 200
     mock_get.return_value = response
-    result = rabbitmq_init.wait_for_rabbitmq_server_to_up(
-        rabbitmq_api_base_url="dummy-rabbitmq-api-base-url"
-    )
+    result = rabbitmq_init.wait_for_rabbitmq_server_to_up(rabbitmq_api_base_url="dummy-rabbitmq-api-base-url")
     assert result is True
     assert mock_get.call_count == 1
 
@@ -48,9 +46,7 @@ def test_wait_for_rabbitmq_server_to_up_is_successful(mock_get):
 def test_wait_for_rabbitmq_server_to_up_is_failed(mock_get):
     response.status_code = 500
     mock_get.return_value = response
-    result = rabbitmq_init.wait_for_rabbitmq_server_to_up(
-        rabbitmq_api_base_url="dummy-rabbitmq-api-base-url"
-    )
+    result = rabbitmq_init.wait_for_rabbitmq_server_to_up(rabbitmq_api_base_url="dummy-rabbitmq-api-base-url")
     assert result is False
     assert mock_get.call_count == 1
 
@@ -153,9 +149,7 @@ def test_set_topic_permissions_is_unsuccessful(mock_put):
 def test_create_queue_user_and_set_permission(
     mock_create_user, mock_set_resource_permissions, mock_set_topic_permissions
 ):
-    rabbitmq_init.create_queue_user_and_set_permission(
-        rabbitmq_api_base_url="dummy-rabbitmq-api-base-url"
-    )
+    rabbitmq_init.create_queue_user_and_set_permission(rabbitmq_api_base_url="dummy-rabbitmq-api-base-url")
     mock_create_user.assert_called_once_with(
         rabbitmq_api_base_url="dummy-rabbitmq-api-base-url",
         username=ANY,
@@ -166,11 +160,8 @@ def test_create_queue_user_and_set_permission(
         rabbitmq_api_base_url="dummy-rabbitmq-api-base-url",
         v_host="vhost",
         username="fake_rabbituser",
-        configure_resources_regex=f"^({PROJECT_QUEUE}"
-        f"|{REPOSITORY_QUEUE}"
-        f"|.*celery.*)$",
+        configure_resources_regex=f"^({PROJECT_QUEUE}" f"|{REPOSITORY_QUEUE}" f"|.*celery.*)$",
         read_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|.*celery.*$",
-        write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}"
-        f"|amq.default|.*celery.*$",
+        write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|amq.default|.*celery.*$",
     )
     assert mock_set_topic_permissions.call_count == 2

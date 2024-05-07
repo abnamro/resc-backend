@@ -118,10 +118,7 @@ class TestScans(unittest.TestCase):
     def assert_scan(data, scan):
         assert data["id_"] == scan.id_
         assert data["repository_id"] == scan.repository_id
-        assert (
-            datetime.strptime(data["timestamp"], "%Y-%m-%dT%H:%M:%S.%f")
-            == scan.timestamp
-        )
+        assert datetime.strptime(data["timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == scan.timestamp
 
     @patch("resc_backend.resc_web_service.crud.scan.get_scan")
     def test_get_scan_non_existing(self, get_scan):
@@ -137,9 +134,7 @@ class TestScans(unittest.TestCase):
     def test_get_scan(self, get_scan):
         db_scan = self.db_scans[0]
         get_scan.return_value = db_scan
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{db_scan.id_}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{db_scan.id_}")
         assert response.status_code == 200, response.text
         self.assert_scan(response.json(), db_scan)
         get_scan.assert_called_once_with(ANY, scan_id=db_scan.id_)
@@ -149,9 +144,7 @@ class TestScans(unittest.TestCase):
     def test_delete_scan(self, delete_scan, get_scan):
         db_scan = self.db_scans[0]
         get_scan.return_value = db_scan
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{db_scan.id_}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{db_scan.id_}")
         assert response.status_code == 200, response.text
         get_scan.assert_called_once_with(ANY, scan_id=db_scan.id_)
         delete_scan.assert_called_once_with(
@@ -166,9 +159,7 @@ class TestScans(unittest.TestCase):
     def test_delete_scans_non_existing(self, delete_scan, get_scan):
         db_scan_id = 999
         get_scan.return_value = None
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{db_scan_id}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{db_scan_id}")
         assert response.status_code == 404, response.text
         data = response.json()
         assert data["detail"] == "Scan not found"
@@ -185,9 +176,7 @@ class TestScans(unittest.TestCase):
         )
         assert response.status_code == 201, response.text
         self.assert_scan(response.json(), db_scan)
-        create_scan.assert_called_once_with(
-            db_connection=ANY, scan=self.cast_db_scan_to_scan_create(db_scan)
-        )
+        create_scan.assert_called_once_with(db_connection=ANY, scan=self.cast_db_scan_to_scan_create(db_scan))
 
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
     @patch("resc_backend.resc_web_service.crud.scan.get_latest_scan_for_repository")
@@ -294,9 +283,7 @@ class TestScans(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.scan.get_scan")
     @patch("resc_backend.resc_web_service.crud.scan.update_scan")
     def test_put_scans_empty_body(self, update_scan, get_scan):
-        response = self.client.put(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/9999999999", json={}
-        )
+        response = self.client.put(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/9999999999", json={})
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "last_scanned_commit"]
@@ -315,9 +302,7 @@ class TestScans(unittest.TestCase):
     def test_get_multiple_scans(self, get_scans, get_scans_count):
         get_scans.return_value = self.db_scans[:2]
         get_scans_count.return_value = len(self.db_scans[:2])
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}", params={"skip": 0, "limit": 5}
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}", params={"skip": 0, "limit": 5})
         assert response.status_code == 200, response.text
         data = response.json()
         assert len(data["data"]) == 2
@@ -329,30 +314,20 @@ class TestScans(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.scan.get_scans")
     def test_get_multiple_scans_with_negative_skip(self, get_scans):
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}", params={"skip": -1, "limit": 5}
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}", params={"skip": -1, "limit": 5})
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "skip"]
-        assert (
-            data["detail"][0]["msg"]
-            == "ensure this value is greater than or equal to 0"
-        )
+        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
         get_scans.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.scan.get_scans")
     def test_get_multiple_scans_with_negative_limit(self, get_scans):
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}", params={"skip": 0, "limit": -1}
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}", params={"skip": 0, "limit": -1})
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "limit"]
-        assert (
-            data["detail"][0]["msg"]
-            == "ensure this value is greater than or equal to 1"
-        )
+        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
         get_scans.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_scans_findings")
@@ -360,9 +335,7 @@ class TestScans(unittest.TestCase):
     def test_get_scan_findings(self, get_total_findings_count, get_scan_findings):
         get_scan_findings.return_value = self.enriched_findings
         get_total_findings_count.return_value = 5
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/1{RWS_ROUTE_FINDINGS}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/1{RWS_ROUTE_FINDINGS}")
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["data"][0]["id_"] == self.enriched_findings[0].id_
@@ -375,14 +348,10 @@ class TestScans(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.finding.get_scans_findings")
     @patch("resc_backend.resc_web_service.crud.finding.get_total_findings_count")
-    def test_get_scan_findings_non_existing(
-        self, get_total_findings_count, get_scan_findings
-    ):
+    def test_get_scan_findings_non_existing(self, get_total_findings_count, get_scan_findings):
         get_scan_findings.return_value = []
         get_total_findings_count.return_value = 0
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/9999{RWS_ROUTE_FINDINGS}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/9999{RWS_ROUTE_FINDINGS}")
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["data"] == []
@@ -391,9 +360,7 @@ class TestScans(unittest.TestCase):
         assert data["skip"] == 0
 
     def test_get_scan_findings_invalid_id(self):
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/invalid{RWS_ROUTE_FINDINGS}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/invalid{RWS_ROUTE_FINDINGS}")
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["path", "scan_id"]
@@ -404,8 +371,7 @@ class TestScans(unittest.TestCase):
     def test_get_distinct_rules_from_scans(self, get_distinct_rules_from_scans):
         get_distinct_rules_from_scans.return_value = self.db_rules
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}"
-            f"{RWS_ROUTE_DETECTED_RULES}/?scan_id=1&scan_id=2"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}" f"{RWS_ROUTE_DETECTED_RULES}/?scan_id=1&scan_id=2"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -435,14 +401,10 @@ class TestScans(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.finding.get_scans_findings")
     @patch("resc_backend.resc_web_service.crud.finding.get_total_findings_count")
-    def test_get_scans_findings_non_existing(
-        self, get_total_findings_count, get_scans_findings
-    ):
+    def test_get_scans_findings_non_existing(self, get_total_findings_count, get_scans_findings):
         get_scans_findings.return_value = []
         get_total_findings_count.return_value = 0
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}{RWS_ROUTE_FINDINGS}/"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}{RWS_ROUTE_FINDINGS}/")
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["data"] == []

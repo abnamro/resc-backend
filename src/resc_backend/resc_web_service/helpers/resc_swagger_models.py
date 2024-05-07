@@ -32,9 +32,7 @@ class Model409(RescResponseModel):
     """
 
     class Config:
-        schema_extra = {
-            "example": {"detail": "Unable to process entity due to conflict"}
-        }
+        schema_extra = {"example": {"detail": "Unable to process entity due to conflict"}}
 
 
 class Model422(RescResponseModel):

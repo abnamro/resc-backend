@@ -33,9 +33,7 @@ def get_rules_by_scan_id(db_connection: Session, scan_id: int) -> List[RuleRead]
     return rules
 
 
-def create_rule_allow_list(
-    db_connection: Session, rule_allow_list: rule_allow_list_schema.RuleAllowList
-):
+def create_rule_allow_list(db_connection: Session, rule_allow_list: rule_allow_list_schema.RuleAllowList):
     """
         Create rule allow list in database
     :param db_connection:
@@ -81,9 +79,7 @@ def create_rule(db_connection: Session, rule: RuleCreate):
     return db_rule
 
 
-def get_rules_by_rule_pack_version(
-    db_connection: Session, rule_pack_version: str
-) -> List[str]:
+def get_rules_by_rule_pack_version(db_connection: Session, rule_pack_version: str) -> List[str]:
     """
         Fetch rules by rule pack version
     :param db_connection:
@@ -110,9 +106,7 @@ def get_rules_by_rule_pack_version(
     )
 
     query = query.join(DBrulePack, DBrulePack.version == DBrule.rule_pack)
-    query = query.join(
-        DBruleAllowList, DBruleAllowList.id_ == DBrule.allow_list, isouter=True
-    )
+    query = query.join(DBruleAllowList, DBruleAllowList.id_ == DBrule.allow_list, isouter=True)
     query = query.where(DBrule.rule_pack == rule_pack_version)
     query = query.order_by(DBrule.id_)
     db_rules = query.all()
@@ -120,9 +114,7 @@ def get_rules_by_rule_pack_version(
     return db_rules
 
 
-def get_global_allow_list_by_rule_pack_version(
-    db_connection: Session, rule_pack_version: str
-) -> List[str]:
+def get_global_allow_list_by_rule_pack_version(db_connection: Session, rule_pack_version: str) -> List[str]:
     """
         Retrieve global allow list by rule pack version
     :param db_connection:
@@ -140,9 +132,7 @@ def get_global_allow_list_by_rule_pack_version(
         DBruleAllowList.commits,
         DBruleAllowList.stop_words,
     )
-    query = query.join(
-        DBruleAllowList, DBruleAllowList.id_ == DBrulePack.global_allow_list
-    )
+    query = query.join(DBruleAllowList, DBruleAllowList.id_ == DBrulePack.global_allow_list)
     query = query.where(DBrulePack.version == rule_pack_version)
     query = query.order_by(DBruleAllowList.id_)
     db_global_allow_list = query.first()

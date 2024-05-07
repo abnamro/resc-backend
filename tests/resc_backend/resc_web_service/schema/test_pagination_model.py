@@ -77,9 +77,7 @@ def test_pagination_model_findings():
     limit = 50
     skip = 0
 
-    paginated = PaginationModel[FindingRead](
-        data=findings, total=total, limit=limit, skip=skip
-    )
+    paginated = PaginationModel[FindingRead](data=findings, total=total, limit=limit, skip=skip)
 
     assert paginated.total == total
     assert paginated.limit == limit

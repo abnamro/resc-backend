@@ -53,9 +53,7 @@ router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
 def get_all_repositories(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcsproviders: List[VCSProviders] = Query(
-        None, alias="vcsprovider", title="VCSProviders"
-    ),
+    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     projectfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repositoryfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     db_connection: Session = Depends(get_db_connection),
@@ -120,9 +118,7 @@ async def create_repository(
     - **repository_url**: repository url
     - **vcs_instance**: vcs instance id
     """
-    repository = repository_crud.create_repository_if_not_exists(
-        db_connection=db_connection, repository=repository
-    )
+    repository = repository_crud.create_repository_if_not_exists(db_connection=db_connection, repository=repository)
 
     # Clear cache related to repository
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_REPOSITORY)
@@ -141,18 +137,14 @@ async def create_repository(
         503: {"description": ERROR_MESSAGE_503},
     },
 )
-def read_repository(
-    repository_id: int, db_connection: Session = Depends(get_db_connection)
-):
+def read_repository(repository_id: int, db_connection: Session = Depends(get_db_connection)):
     """
         Read a repository by ID
 
     - **db_connection**: Session of the database connection
     - **repository_id**: ID of the repository for which details need to be fetched
     """
-    db_repository = repository_crud.get_repository(
-        db_connection, repository_id=repository_id
-    )
+    db_repository = repository_crud.get_repository(db_connection, repository_id=repository_id)
     if db_repository is None:
         raise HTTPException(status_code=404, detail="Repository not found")
     return db_repository
@@ -186,9 +178,7 @@ async def update_repository(
     - **repository_url**: repository url that needs to be updated
     - **vcs_instance**: vcs instance id that needs to be updated
     """
-    db_repository = repository_crud.get_repository(
-        db_connection, repository_id=repository_id
-    )
+    db_repository = repository_crud.get_repository(db_connection, repository_id=repository_id)
     if db_repository is None:
         raise HTTPException(status_code=404, detail="Repository not found")
 
@@ -212,9 +202,7 @@ async def update_repository(
         503: {"description": ERROR_MESSAGE_503},
     },
 )
-async def delete_repository(
-    repository_id: int, db_connection: Session = Depends(get_db_connection)
-):
+async def delete_repository(repository_id: int, db_connection: Session = Depends(get_db_connection)):
     """
         Delete a repository
 
@@ -222,14 +210,10 @@ async def delete_repository(
     - **repository_id**: ID of the repository to delete
     - **return**: The output will contain a success or error message based on the success of the deletion
     """
-    db_repository = repository_crud.get_repository(
-        db_connection, repository_id=repository_id
-    )
+    db_repository = repository_crud.get_repository(db_connection, repository_id=repository_id)
     if db_repository is None:
         raise HTTPException(status_code=404, detail="Repository not found")
-    repository_crud.delete_repository(
-        db_connection, repository_id=repository_id, delete_related=True
-    )
+    repository_crud.delete_repository(db_connection, repository_id=repository_id, delete_related=True)
 
     # Clear cache related to repository
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_REPOSITORY)
@@ -249,9 +233,7 @@ async def delete_repository(
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_projects(
-    vcsproviders: List[VCSProviders] = Query(
-        None, alias="vcsprovider", title="VCSProviders"
-    ),
+    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     repositoryfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
@@ -290,9 +272,7 @@ def get_distinct_projects(
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_repositories(
-    vcsproviders: List[VCSProviders] = Query(
-        None, alias="vcsprovider", title="VCSProviders"
-    ),
+    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     projectname: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
@@ -324,9 +304,7 @@ def get_distinct_repositories(
     summary="Get findings metadata for a repository",
     status_code=status.HTTP_200_OK,
     responses={
-        200: {
-            "description": "Retrieve findings metadata for repository <repository_id>"
-        },
+        200: {"description": "Retrieve findings metadata for repository <repository_id>"},
         404: {"model": Model404, "description": "Repository <repository_id> not found"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
@@ -344,9 +322,7 @@ def get_findings_metadata_for_repository(
         The output will contain a RepositoryRead type object along with findings count per status,
         or empty if no scan was found
     """
-    repository = repository_crud.get_repository(
-        db_connection, repository_id=repository_id
-    )
+    repository = repository_crud.get_repository(db_connection, repository_id=repository_id)
     if repository is None:
         raise HTTPException(status_code=404, detail="Repository not found")
 
@@ -360,9 +336,7 @@ def get_findings_metadata_for_repository(
         false_positive=findings_meta_data[repository_id]["false_positive"],
         not_analyzed=findings_meta_data[repository_id]["not_analyzed"],
         under_review=findings_meta_data[repository_id]["under_review"],
-        clarification_required=findings_meta_data[repository_id][
-            "clarification_required"
-        ],
+        clarification_required=findings_meta_data[repository_id]["clarification_required"],
         total_findings_count=findings_meta_data[repository_id]["total_findings_count"],
     )
 
@@ -373,9 +347,7 @@ def get_findings_metadata_for_repository(
     summary="Get all repositories with findings metadata",
     status_code=status.HTTP_200_OK,
     responses={
-        200: {
-            "description": "Retrieve all the findings metadata for all the repositories"
-        },
+        200: {"description": "Retrieve all the findings metadata for all the repositories"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -384,9 +356,7 @@ def get_findings_metadata_for_repository(
 def get_all_repositories_with_findings_metadata(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcsproviders: List[VCSProviders] = Query(
-        None, alias="vcsprovider", title="VCSProviders"
-    ),
+    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     projectfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repositoryfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
@@ -443,12 +413,8 @@ def get_all_repositories_with_findings_metadata(
             false_positive=repo_findings_meta_data[repo.id_]["false_positive"],
             not_analyzed=repo_findings_meta_data[repo.id_]["not_analyzed"],
             under_review=repo_findings_meta_data[repo.id_]["under_review"],
-            clarification_required=repo_findings_meta_data[repo.id_][
-                "clarification_required"
-            ],
-            total_findings_count=repo_findings_meta_data[repo.id_][
-                "total_findings_count"
-            ],
+            clarification_required=repo_findings_meta_data[repo.id_]["clarification_required"],
+            total_findings_count=repo_findings_meta_data[repo.id_]["total_findings_count"],
         )
         repository_list.append(enriched_repository)
 
@@ -481,9 +447,7 @@ def get_last_scan_for_repository(
         The output will contain a ScanRead type object,
         or empty if no scan was found
     """
-    last_scan = scan_crud.get_latest_scan_for_repository(
-        db_connection, repository_id=repository_id
-    )
+    last_scan = scan_crud.get_latest_scan_for_repository(db_connection, repository_id=repository_id)
     if last_scan is None:
         raise HTTPException(status_code=404, detail="Scan not found")
     return last_scan
@@ -517,12 +481,8 @@ def get_scans_for_repository(
         The output will contain a PaginationModel containing the list of ScanRead type objects,
         or an empty list if no scan was found
     """
-    scans = scan_crud.get_scans(
-        db_connection, skip=skip, limit=limit, repository_id=repository_id
-    )
+    scans = scan_crud.get_scans(db_connection, skip=skip, limit=limit, repository_id=repository_id)
 
     total_scans = scan_crud.get_scans_count(db_connection, repository_id=repository_id)
 
-    return PaginationModel[scan_schema.ScanRead](
-        data=scans, total=total_scans, limit=limit, skip=skip
-    )
+    return PaginationModel[scan_schema.ScanRead](data=scans, total=total_scans, limit=limit, skip=skip)

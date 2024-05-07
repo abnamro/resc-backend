@@ -14,9 +14,7 @@ from resc_backend.db.model import (
 )
 
 
-def create_scan_findings(
-    db_connection: Session, scan_findings: List[DBscanFinding]
-) -> int:
+def create_scan_findings(db_connection: Session, scan_findings: List[DBscanFinding]) -> int:
     if len(scan_findings) < 1:
         # Function is called with an empty list of findings
         return 0
@@ -40,9 +38,7 @@ def get_scan_findings(db_connection: Session, finding_id: int) -> List[DBscanFin
     return scan_findings
 
 
-def delete_scan_finding(
-    db_connection: Session, finding_id: int = None, scan_id: int = None
-):
+def delete_scan_finding(db_connection: Session, finding_id: int = None, scan_id: int = None):
     """
         Delete scan findings when finding id or scan id provided
     :param db_connection:
@@ -79,9 +75,7 @@ def delete_scan_finding_by_repository_id(db_connection: Session, repository_id: 
     db_connection.commit()
 
 
-def delete_scan_finding_by_vcs_instance_id(
-    db_connection: Session, vcs_instance_id: int
-):
+def delete_scan_finding_by_vcs_instance_id(db_connection: Session, vcs_instance_id: int):
     """
         Delete scan findings for a given vcs instance
     :param db_connection:

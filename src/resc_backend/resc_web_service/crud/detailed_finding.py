@@ -30,9 +30,7 @@ from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.scan_type import ScanType
 
 
-def _query_join_if_multiple_rule_pack(
-    query: Query, rule_pack_versions: List[str]
-) -> Query:
+def _query_join_if_multiple_rule_pack(query: Query, rule_pack_versions: List[str]) -> Query:
     """
     When we are working with rule pack it is sometimes necessary to use a join
     with a subquery (i.e. when there are 0 or > 1 rule pack selected).
@@ -52,9 +50,7 @@ def _query_join_if_multiple_rule_pack(
     if rule_pack_versions is not None and len(rule_pack_versions) == 1:
         return query
 
-    subquery: Query = query.session.query(
-        DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
-    )
+    subquery: Query = query.session.query(DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id"))
 
     # This contraint is not necessary, but it will make the table smaller.
     subquery = subquery.where(DBscan.is_latest == True)  # noqa: E712
@@ -97,16 +93,13 @@ def _query_join_if_rule_tag(query: Query, rule_tags: List[str]) -> Query:
 
     query = query.join(
         DBrule,
-        (DBrule.rule_name == DBfinding.rule_name)
-        & (DBrule.rule_pack == DBscan.rule_pack),
+        (DBrule.rule_name == DBfinding.rule_name) & (DBrule.rule_pack == DBscan.rule_pack),
     )
     query = query.where(DBrule.id_.in_(subquery))
     return query
 
 
-def _query_apply_findings_filters(
-    query: Query, findings_filter: FindingsFilter
-) -> Query:
+def _query_apply_findings_filters(query: Query, findings_filter: FindingsFilter) -> Query:
     """
     Apply filtering on the query.
     This only applies filtering for:
@@ -157,14 +150,10 @@ def _query_apply_findings_filters(
             query = query.where(DBfinding.event_sent_on == None)  # noqa: E711
 
     if findings_filter.repository_name:
-        query = query.where(
-            DBrepository.repository_name == findings_filter.repository_name
-        )
+        query = query.where(DBrepository.repository_name == findings_filter.repository_name)
 
     if findings_filter.vcs_providers and findings_filter.vcs_providers is not None:
-        query = query.where(
-            DBVcsInstance.provider_type.in_(findings_filter.vcs_providers)
-        )
+        query = query.where(DBVcsInstance.provider_type.in_(findings_filter.vcs_providers))
 
     if findings_filter.project_name:
         query = query.where(DBrepository.project_key == findings_filter.project_name)
@@ -172,8 +161,7 @@ def _query_apply_findings_filters(
     if findings_filter.finding_statuses:
         if FindingStatus.NOT_ANALYZED.value in findings_filter.finding_statuses:
             query = query.where(
-                (DBaudit.status.in_(findings_filter.finding_statuses))
-                | (DBaudit.status == None)  # noqa: E711
+                (DBaudit.status.in_(findings_filter.finding_statuses)) | (DBaudit.status == None)  # noqa: E711
             )
         else:
             query = query.where(DBaudit.status.in_(findings_filter.finding_statuses))
@@ -202,9 +190,7 @@ def get_detailed_findings(
         or an empty list if no finding was found for the given findings_filter
     """
 
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
 
     query = db_connection.query(
         DBfinding.id_,
@@ -253,9 +239,7 @@ def get_detailed_findings(
     return findings
 
 
-def get_detailed_findings_count(
-    db_connection: Session, findings_filter: FindingsFilter
-) -> int:
+def get_detailed_findings_count(db_connection: Session, findings_filter: FindingsFilter) -> int:
     """
     Retrieve count of detailed findings objects matching the provided FindingsFilter
     :param findings_filter:
@@ -288,9 +272,7 @@ def get_detailed_findings_count(
     return findings_count
 
 
-def get_detailed_finding(
-    db_connection: Session, finding_id: int
-) -> detailed_finding_schema.DetailedFindingRead:
+def get_detailed_finding(db_connection: Session, finding_id: int) -> detailed_finding_schema.DetailedFindingRead:
     """
     Retrieve a detailed finding objects matching the provided finding_id
     :param db_connection:

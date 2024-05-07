@@ -33,9 +33,7 @@ class CacheManager:
             redis_host = f"{env_variables[RESC_REDIS_SERVICE_HOST]}"
             redis_port = f"{env_variables[RESC_REDIS_SERVICE_PORT]}"
             redis_password = f"{env_variables[REDIS_PASSWORD]}"
-            redis_backend = cls.get_cache_client(
-                host=redis_host, port=int(redis_port), password=redis_password
-            )
+            redis_backend = cls.get_cache_client(host=redis_host, port=int(redis_port), password=redis_password)
             FastAPICache.init(
                 RedisBackend(redis_backend),
                 prefix=CACHE_PREFIX,

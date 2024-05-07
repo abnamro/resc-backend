@@ -56,23 +56,18 @@ class DetailedFindingRead(DetailedFinding):
         else:
             repo_base_url = repository_url
         bitbucket_commit_url = (
-            f"{repo_base_url}/projects/{project_key}/repos/"
-            f"{repository_name}/browse/{file_path}?at={commit_id}"
+            f"{repo_base_url}/projects/{project_key}/repos/" f"{repository_name}/browse/{file_path}?at={commit_id}"
         )
         commit_url = bitbucket_commit_url
         return commit_url
 
     @staticmethod
-    def build_ado_commit_url(
-        repository_url: str, file_path: str, commit_id: str
-    ) -> str:
+    def build_ado_commit_url(repository_url: str, file_path: str, commit_id: str) -> str:
         ado_commit_url = f"{repository_url}/commit/{commit_id}?path=/{file_path}"
         return ado_commit_url
 
     @staticmethod
-    def build_github_commit_url(
-        repository_url: str, file_path: str, commit_id: str
-    ) -> str:
+    def build_github_commit_url(repository_url: str, file_path: str, commit_id: str) -> str:
         github_commit_url = f"{repository_url}/commit/{commit_id}?path=/{file_path}"
         return github_commit_url
 
@@ -104,9 +99,7 @@ class DetailedFindingRead(DetailedFinding):
                 commit_id=values["commit_id"],
             )
         else:
-            raise NotImplementedError(
-                f"Unsupported VCSProvider: {values['vcs_provider']}"
-            )
+            raise NotImplementedError(f"Unsupported VCSProvider: {values['vcs_provider']}")
         return values
 
     class Config:

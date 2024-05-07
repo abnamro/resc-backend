@@ -37,9 +37,7 @@ from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 logger = logging.getLogger(__name__)
 
 
-def patch_finding(
-    db_connection: Session, finding_id: int, finding_update: finding_schema.FindingPatch
-):
+def patch_finding(db_connection: Session, finding_id: int, finding_update: finding_schema.FindingPatch):
     db_finding = db_connection.query(DBfinding).filter_by(id_=finding_id).first()
 
     finding_update_dict = finding_update.dict(exclude_unset=True)
@@ -51,9 +49,7 @@ def patch_finding(
     return db_finding
 
 
-def create_findings(
-    db_connection: Session, findings: List[finding_schema.FindingCreate]
-) -> List[DBfinding]:
+def create_findings(db_connection: Session, findings: List[finding_schema.FindingCreate]) -> List[DBfinding]:
     if len(findings) < 1:
         # Function is called with an empty list of findings
         return []
@@ -112,12 +108,8 @@ def get_finding(db_connection: Session, finding_id: int):
     return finding
 
 
-def get_findings(
-    db_connection: Session, skip: int = 0, limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT
-):
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+def get_findings(db_connection: Session, skip: int = 0, limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT):
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     findings = db_connection.query(DBfinding)
     findings = findings.order_by(DBfinding.id_).offset(skip).limit(limit_val).all()
     return findings
@@ -152,9 +144,7 @@ def get_scans_findings(
     if len(scan_ids) == 0:
         return []
 
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
 
     query: Query = db_connection.query(DBfinding)
     query = query.join(DBscanFinding, DBscanFinding.finding_id == DBfinding.id_)
@@ -184,9 +174,7 @@ def get_scans_findings(
     return findings
 
 
-def get_total_findings_count(
-    db_connection: Session, findings_filter: FindingsFilter = None
-) -> int:
+def get_total_findings_count(db_connection: Session, findings_filter: FindingsFilter = None) -> int:
     """
         Retrieve count of finding records of a given scan
     :param findings_filter:
@@ -207,10 +195,7 @@ def get_total_findings_count(
             )
 
         if (
-            (
-                findings_filter.vcs_providers
-                and findings_filter.vcs_providers is not None
-            )
+            (findings_filter.vcs_providers and findings_filter.vcs_providers is not None)
             or findings_filter.project_name
             or findings_filter.repository_name
             or findings_filter.start_date_time
@@ -219,9 +204,7 @@ def get_total_findings_count(
             query = query.join(DBscanFinding, DBscanFinding.finding_id == DBfinding.id_)
             query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
             query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
-            query = query.join(
-                DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-            )
+            query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
 
         if findings_filter.start_date_time:
             query = query.where(DBscan.timestamp >= findings_filter.start_date_time)
@@ -229,30 +212,21 @@ def get_total_findings_count(
             query = query.where(DBscan.timestamp <= findings_filter.end_date_time)
 
         if findings_filter.repository_name:
-            query = query.where(
-                DBrepository.repository_name == findings_filter.repository_name
-            )
+            query = query.where(DBrepository.repository_name == findings_filter.repository_name)
 
         if findings_filter.vcs_providers and findings_filter.vcs_providers is not None:
-            query = query.where(
-                DBVcsInstance.provider_type.in_(findings_filter.vcs_providers)
-            )
+            query = query.where(DBVcsInstance.provider_type.in_(findings_filter.vcs_providers))
         if findings_filter.project_name:
-            query = query.where(
-                DBrepository.project_key == findings_filter.project_name
-            )
+            query = query.where(DBrepository.project_key == findings_filter.project_name)
         if findings_filter.rule_names:
             query = query.where(DBfinding.rule_name.in_(findings_filter.rule_names))
         if findings_filter.finding_statuses:
             if FindingStatus.NOT_ANALYZED.value in findings_filter.finding_statuses:
                 query = query.where(
-                    DBaudit.status.in_(findings_filter.finding_statuses)
-                    | (DBaudit.status == None)  # noqa: E711
+                    DBaudit.status.in_(findings_filter.finding_statuses) | (DBaudit.status == None)  # noqa: E711
                 )
             else:
-                query = query.where(
-                    DBaudit.status.in_(findings_filter.finding_statuses)
-                )
+                query = query.where(DBaudit.status.in_(findings_filter.finding_statuses))
         if findings_filter.scan_ids and len(findings_filter.scan_ids) == 1:
             query = query.join(DBscanFinding, DBscanFinding.finding_id == DBfinding.id_)
             query = query.where(DBscanFinding.scan_id == findings_filter.scan_ids[0])
@@ -271,9 +245,7 @@ def get_findings_by_rule(
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
     rule_name: str = "",
 ):
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     findings = db_connection.query(DBfinding)
     findings = findings.where(DBfinding.rule_name == rule_name)
     findings = findings.order_by(DBfinding.id_).offset(skip).limit(limit_val).all()
@@ -317,19 +289,12 @@ def get_distinct_rules_from_findings(
     query = db_connection.query(DBfinding.rule_name)
 
     if (
-        vcs_providers
-        or project_name
-        or repository_name
-        or start_date_time
-        or end_date_time
-        or rule_pack_versions
+        vcs_providers or project_name or repository_name or start_date_time or end_date_time or rule_pack_versions
     ) and scan_id < 0:
         query = query.join(DBscanFinding, DBscanFinding.finding_id == DBfinding.id_)
         query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
         query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
-        query = query.join(
-            DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-        )
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
 
     if finding_statuses:
         query = query.join(
@@ -391,9 +356,7 @@ def get_findings_count_by_status(
     :return: findings_count
         count of findings
     """
-    query = db_connection.query(
-        func.count(DBfinding.id_).label("status_count"), DBaudit.status
-    )
+    query = db_connection.query(func.count(DBfinding.id_).label("status_count"), DBaudit.status)
     query = query.join(
         DBaudit,
         (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
@@ -436,23 +399,15 @@ def get_rule_findings_count_by_status(
     :return: findings_count
         per rulename and status the count of findings
     """
-    query = db_connection.query(
-        DBfinding.rule_name, DBaudit.status, func.count(DBfinding.id_)
-    )
+    query = db_connection.query(DBfinding.rule_name, DBaudit.status, func.count(DBfinding.id_))
 
     max_base_scan_subquery = db_connection.query(
         DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
     )
-    max_base_scan_subquery = max_base_scan_subquery.where(
-        DBscan.scan_type == ScanType.BASE
-    )
+    max_base_scan_subquery = max_base_scan_subquery.where(DBscan.scan_type == ScanType.BASE)
     if rule_pack_versions:
-        max_base_scan_subquery = max_base_scan_subquery.where(
-            DBscan.rule_pack.in_(rule_pack_versions)
-        )
-    max_base_scan_subquery: Query = max_base_scan_subquery.group_by(
-        DBscan.repository_id
-    ).subquery()
+        max_base_scan_subquery = max_base_scan_subquery.where(DBscan.rule_pack.in_(rule_pack_versions))
+    max_base_scan_subquery: Query = max_base_scan_subquery.group_by(DBscan.repository_id).subquery()
 
     query = query.join(DBscanFinding, DBfinding.id_ == DBscanFinding.finding_id)
     query = query.join(
@@ -463,24 +418,17 @@ def get_rule_findings_count_by_status(
     query = query.where(DBscan.id_ >= max_base_scan_subquery.c.latest_base_scan_id)
 
     if rule_tags:
-        rule_tag_subquery: Query = db_connection.query(DBruleTag.rule_id).join(
-            DBtag, DBruleTag.tag_id == DBtag.id_
-        )
+        rule_tag_subquery: Query = db_connection.query(DBruleTag.rule_id).join(DBtag, DBruleTag.tag_id == DBtag.id_)
         if rule_pack_versions:
-            rule_tag_subquery = rule_tag_subquery.join(
-                DBrule, DBrule.id_ == DBruleTag.rule_id
-            )
-            rule_tag_subquery = rule_tag_subquery.where(
-                DBrule.rule_pack.in_(rule_pack_versions)
-            )
+            rule_tag_subquery = rule_tag_subquery.join(DBrule, DBrule.id_ == DBruleTag.rule_id)
+            rule_tag_subquery = rule_tag_subquery.where(DBrule.rule_pack.in_(rule_pack_versions))
 
         rule_tag_subquery = rule_tag_subquery.where(DBtag.name.in_(rule_tags))
         rule_tag_subquery = rule_tag_subquery.group_by(DBruleTag.rule_id).subquery()
 
         query = query.join(
             DBrule,
-            (DBrule.rule_name == DBfinding.rule_name)
-            | (DBrule.rule_pack == DBscan.rule_pack),
+            (DBrule.rule_name == DBfinding.rule_name) | (DBrule.rule_pack == DBscan.rule_pack),
         )
         query = query.join(rule_tag_subquery, DBrule.id_ == rule_tag_subquery.c.rule_id)
 
@@ -518,9 +466,7 @@ def get_rule_findings_count_by_status(
         elif status_count[1] == FindingStatus.UNDER_REVIEW.value:
             rule_count_dict[status_count[0]]["under_review"] += status_count[2]
         elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
-            rule_count_dict[status_count[0]]["clarification_required"] += status_count[
-                2
-            ]
+            rule_count_dict[status_count[0]]["clarification_required"] += status_count[2]
 
     return rule_count_dict
 
@@ -576,19 +522,11 @@ def get_findings_count_by_time(
         query = query.where(DBscan.timestamp <= end_date_time)
 
     if date_type == DateFilter.MONTH:
-        query = query.group_by(
-            extract("year", DBscan.timestamp), extract("month", DBscan.timestamp)
-        )
-        query = query.order_by(
-            extract("year", DBscan.timestamp), extract("month", DBscan.timestamp)
-        )
+        query = query.group_by(extract("year", DBscan.timestamp), extract("month", DBscan.timestamp))
+        query = query.order_by(extract("year", DBscan.timestamp), extract("month", DBscan.timestamp))
     elif date_type == DateFilter.WEEK:
-        query = query.group_by(
-            extract("year", DBscan.timestamp), extract("week", DBscan.timestamp)
-        )
-        query = query.order_by(
-            extract("year", DBscan.timestamp), extract("week", DBscan.timestamp)
-        )
+        query = query.group_by(extract("year", DBscan.timestamp), extract("week", DBscan.timestamp))
+        query = query.order_by(extract("year", DBscan.timestamp), extract("week", DBscan.timestamp))
     elif date_type == DateFilter.DAY:
         query = query.group_by(
             extract("year", DBscan.timestamp),
@@ -623,13 +561,9 @@ def get_findings_count_by_time_total(
         optional, filter on end date
     """
     if date_type == DateFilter.MONTH:
-        query: Query = db_connection.query(
-            extract("year", DBscan.timestamp), extract("month", DBscan.timestamp)
-        )
+        query: Query = db_connection.query(extract("year", DBscan.timestamp), extract("month", DBscan.timestamp))
     elif date_type == DateFilter.WEEK:
-        query: Query = db_connection.query(
-            extract("year", DBscan.timestamp), extract("week", DBscan.timestamp)
-        )
+        query: Query = db_connection.query(extract("year", DBscan.timestamp), extract("week", DBscan.timestamp))
     elif date_type == DateFilter.DAY:
         query: Query = db_connection.query(
             extract("year", DBscan.timestamp),
@@ -650,9 +584,7 @@ def get_findings_count_by_time_total(
     return result
 
 
-def get_distinct_rules_from_scans(
-    db_connection: Session, scan_ids: List[int] = None
-) -> List[DBrule]:
+def get_distinct_rules_from_scans(db_connection: Session, scan_ids: List[int] = None) -> List[DBrule]:
     """
         Retrieve distinct rules detected
     :param db_connection:
@@ -674,9 +606,7 @@ def get_distinct_rules_from_scans(
     return rules
 
 
-def delete_finding(
-    db_connection: Session, finding_id: int, delete_related: bool = False
-):
+def delete_finding(db_connection: Session, finding_id: int, delete_related: bool = False):
     """
         Delete a finding object
     :param db_connection:
@@ -689,9 +619,7 @@ def delete_finding(
     if delete_related:
         scan_finding_crud.delete_scan_finding(db_connection, finding_id=finding_id)
 
-    db_connection.query(DBfinding).where(DBfinding.id_ == finding_id).delete(
-        synchronize_session=False
-    )
+    db_connection.query(DBfinding).where(DBfinding.id_ == finding_id).delete(synchronize_session=False)
     db_connection.commit()
 
 
@@ -703,9 +631,7 @@ def delete_findings_by_repository_id(db_connection: Session, repository_id: int)
     :param repository_id:
         id of the repository
     """
-    db_connection.query(DBfinding).where(
-        DBfinding.repository_id == repository_id
-    ).delete(synchronize_session=False)
+    db_connection.query(DBfinding).where(DBfinding.repository_id == repository_id).delete(synchronize_session=False)
     db_connection.commit()
 
 
@@ -742,15 +668,11 @@ def _get_iso_date_now_diff_week(week: int) -> datetime:
     current_iso_week = current_iso[1]
     # We use 6 (Saturday) to include the current week when 0
     # rather than doing a shift from current day.
-    last_nth_week_date_time = datetime.fromisocalendar(
-        current_iso_year, current_iso_week, 6
-    ) - timedelta(weeks=week)
+    last_nth_week_date_time = datetime.fromisocalendar(current_iso_year, current_iso_week, 6) - timedelta(weeks=week)
     return last_nth_week_date_time
 
 
-def _max_base_scan_subequery(
-    db_connection: Session, last_nth_week_date_time: datetime
-) -> Query:
+def _max_base_scan_subequery(db_connection: Session, last_nth_week_date_time: datetime) -> Query:
     """
         Creates a subquery given a cut-off date to have the max base scan
         per repository
@@ -762,18 +684,14 @@ def _max_base_scan_subequery(
     Returns:
         Query: subquery to have the max base scan under a cut-off date
     """
-    subquery: Query = db_connection.query(
-        func.max(DBscan.id_).label("scan_id"), DBscan.repository_id
-    )
+    subquery: Query = db_connection.query(func.max(DBscan.id_).label("scan_id"), DBscan.repository_id)
     subquery = subquery.where(DBscan.timestamp <= last_nth_week_date_time)
     subquery = subquery.where(DBscan.scan_type == ScanType.BASE)
     subquery = subquery.group_by(DBscan.repository_id)
     return subquery.subquery()
 
 
-def _max_audit_subequery(
-    db_connection: Session, last_nth_week_date_time: datetime
-) -> Query:
+def _max_audit_subequery(db_connection: Session, last_nth_week_date_time: datetime) -> Query:
     """
         Creates a subquery given a cut-off date to have the last audit
         per finding
@@ -785,17 +703,13 @@ def _max_audit_subequery(
     Returns:
         Query: subquery to have the last audit under a cut-off date
     """
-    subquery: Query = db_connection.query(
-        func.max(DBaudit.id_).label("audit_id"), DBaudit.finding_id
-    )
+    subquery: Query = db_connection.query(func.max(DBaudit.id_).label("audit_id"), DBaudit.finding_id)
     subquery = subquery.where(DBaudit.timestamp < last_nth_week_date_time)
     subquery = subquery.group_by(DBaudit.finding_id)
     return subquery.subquery()
 
 
-def get_finding_audit_status_count_over_time(
-    db_connection: Session, status: FindingStatus, weeks: int = 13
-) -> dict:
+def get_finding_audit_status_count_over_time(db_connection: Session, status: FindingStatus, weeks: int = 13) -> dict:
     """
         Retrieve count of true positive findings over time for given weeks
     :param db_connection:
@@ -810,9 +724,7 @@ def get_finding_audit_status_count_over_time(
     all_tables = []
     for week in range(0, weeks):
         last_nth_week_date_time = _get_iso_date_now_diff_week(week)
-        max_audit_subquery = _max_audit_subequery(
-            db_connection, last_nth_week_date_time
-        )
+        max_audit_subquery = _max_audit_subequery(db_connection, last_nth_week_date_time)
 
         query = db_connection.query(
             literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
@@ -820,14 +732,10 @@ def get_finding_audit_status_count_over_time(
             DBVcsInstance.provider_type.label("provider_type"),
             func.count(DBaudit.id_).label("finding_count"),
         )
-        query = query.join(
-            max_audit_subquery, max_audit_subquery.c.audit_id == DBaudit.id_
-        )
+        query = query.join(max_audit_subquery, max_audit_subquery.c.audit_id == DBaudit.id_)
         query = query.join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
         query = query.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
-        query = query.join(
-            DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-        )
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
         query = query.where(DBaudit.status == status)
         query = query.group_by(DBVcsInstance.provider_type)
 
@@ -839,9 +747,7 @@ def get_finding_audit_status_count_over_time(
     return status_count_over_time
 
 
-def get_finding_count_by_vcs_provider_over_time(
-    db_connection: Session, weeks: int = 13
-) -> list[Row]:
+def get_finding_count_by_vcs_provider_over_time(db_connection: Session, weeks: int = 13) -> list[Row]:
     """
         Retrieve count findings over time for given weeks
     :param db_connection:
@@ -865,15 +771,11 @@ def get_finding_count_by_vcs_provider_over_time(
         )
         query = query.join(DBscanFinding, DBfinding.id_ == DBscanFinding.finding_id)
         query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
-        query = query.join(
-            max_base_scan, max_base_scan.c.repository_id == DBscan.repository_id
-        )
+        query = query.join(max_base_scan, max_base_scan.c.repository_id == DBscan.repository_id)
         query = query.where(DBscan.id_ >= max_base_scan.c.scan_id)
         query = query.where(DBscan.timestamp <= last_nth_week_date_time)
         query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
-        query = query.join(
-            DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-        )
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
         query = query.group_by(DBVcsInstance.provider_type)
 
         all_tables.append(query)
@@ -884,9 +786,7 @@ def get_finding_count_by_vcs_provider_over_time(
     return count_over_time
 
 
-def get_un_triaged_finding_count_by_vcs_provider_over_time(
-    db_connection: Session, weeks: int = 13
-) -> list[Row]:
+def get_un_triaged_finding_count_by_vcs_provider_over_time(db_connection: Session, weeks: int = 13) -> list[Row]:
     """
         Retrieve count of un triaged findings over time for given weeks
     :param db_connection:
@@ -900,9 +800,7 @@ def get_un_triaged_finding_count_by_vcs_provider_over_time(
     for week in range(0, weeks):
         last_nth_week_date_time = _get_iso_date_now_diff_week(week)
         max_base_scan = _max_base_scan_subequery(db_connection, last_nth_week_date_time)
-        max_audit_subquery = _max_audit_subequery(
-            db_connection, last_nth_week_date_time
-        )
+        max_audit_subquery = _max_audit_subequery(db_connection, last_nth_week_date_time)
 
         query = db_connection.query(
             literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
@@ -913,12 +811,8 @@ def get_un_triaged_finding_count_by_vcs_provider_over_time(
         query = query.join(DBscanFinding, DBfinding.id_ == DBscanFinding.finding_id)
         query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
         query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
-        query = query.join(
-            DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-        )
-        query = query.join(
-            max_base_scan, max_base_scan.c.repository_id == DBscan.repository_id
-        )
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
+        query = query.join(max_base_scan, max_base_scan.c.repository_id == DBscan.repository_id)
         query = query.where(DBscan.id_ >= max_base_scan.c.scan_id)
         query = query.where(DBscan.timestamp <= last_nth_week_date_time)
         query = query.join(
@@ -928,8 +822,7 @@ def get_un_triaged_finding_count_by_vcs_provider_over_time(
         )
         query = query.join(
             DBaudit,
-            (DBaudit.finding_id == DBfinding.id_)
-            & (DBaudit.id_ == max_audit_subquery.c.audit_id),
+            (DBaudit.finding_id == DBfinding.id_) & (DBaudit.id_ == max_audit_subquery.c.audit_id),
             isouter=True,
         )
         query = query.where(

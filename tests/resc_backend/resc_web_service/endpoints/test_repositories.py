@@ -113,9 +113,7 @@ class TestRepositories(unittest.TestCase):
 
     @staticmethod
     def create_json_body(repository):
-        return json.loads(
-            TestRepositories.cast_db_repository_to_repository_create(repository).json()
-        )
+        return json.loads(TestRepositories.cast_db_repository_to_repository_create(repository).json())
 
     @staticmethod
     def cast_db_repository_to_repository_create(repository):
@@ -145,15 +143,9 @@ class TestRepositories(unittest.TestCase):
         assert FastAPICache.get_coder() is not None
         assert cached_response.headers.get("cache-control") is not None
 
-    @patch(
-        "resc_backend.resc_web_service.crud.repository.create_repository_if_not_exists"
-    )
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_post_repositories(
-        self, clear_cache_by_namespace, create_repository_if_not_exists
-    ):
+    @patch("resc_backend.resc_web_service.crud.repository.create_repository_if_not_exists")
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_post_repositories(self, clear_cache_by_namespace, create_repository_if_not_exists):
         db_repository = self.db_repositories[0]
         create_repository_if_not_exists.return_value = db_repository
         clear_cache_by_namespace.return_value = None
@@ -167,17 +159,13 @@ class TestRepositories(unittest.TestCase):
             db_connection=ANY,
             repository=self.cast_db_repository_to_repository_create(db_repository),
         )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_REPOSITORY)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_REPOSITORY)])
 
     @patch("resc_backend.resc_web_service.crud.repository.get_repository")
     def test_get_repositories_non_existing(self, get_repository):
         repository_id = 999
         get_repository.return_value = None
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}")
         assert response.status_code == 404, response.text
         get_repository.assert_called_once_with(ANY, repository_id=repository_id)
 
@@ -185,21 +173,15 @@ class TestRepositories(unittest.TestCase):
     def test_get_repositories(self, get_repository):
         repository_id = 0
         get_repository.return_value = self.db_repositories[repository_id]
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}")
         assert response.status_code == 200, response.text
         self.assert_repository(response.json(), self.db_repositories[repository_id])
         get_repository.assert_called_once_with(ANY, repository_id=repository_id)
 
     @patch("resc_backend.resc_web_service.crud.repository.get_repository")
     @patch("resc_backend.resc_web_service.crud.repository.update_repository")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_put_repositories(
-        self, clear_cache_by_namespace, update_repository, get_repository
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_put_repositories(self, clear_cache_by_namespace, update_repository, get_repository):
         repository_id = 1
         get_repository.return_value = self.db_repositories[repository_id]
         update_repository.return_value = self.db_repositories[1]
@@ -214,36 +196,22 @@ class TestRepositories(unittest.TestCase):
         get_repository.assert_called_once_with(ANY, repository_id=repository_id)
         update_repository.assert_called_once_with(
             db_connection=ANY,
-            repository=self.cast_db_repository_to_repository_create(
-                self.db_repositories[1]
-            ),
+            repository=self.cast_db_repository_to_repository_create(self.db_repositories[1]),
             repository_id=repository_id,
         )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_REPOSITORY)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_REPOSITORY)])
 
     @patch("resc_backend.resc_web_service.crud.repository.get_repository")
     @patch("resc_backend.resc_web_service.crud.repository.delete_repository")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_delete_repositories(
-        self, clear_cache_by_namespace, delete_repository, get_repository
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_delete_repositories(self, clear_cache_by_namespace, delete_repository, get_repository):
         repository_id = 1
         get_repository.return_value = self.db_repositories[repository_id]
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}/{repository_id}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}/{repository_id}")
         assert response.status_code == 200, response.text
         get_repository.assert_called_once_with(ANY, repository_id=repository_id)
-        delete_repository.assert_called_once_with(
-            ANY, repository_id=repository_id, delete_related=True
-        )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_REPOSITORY)]
-        )
+        delete_repository.assert_called_once_with(ANY, repository_id=repository_id, delete_related=True)
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_REPOSITORY)])
 
     @patch("resc_backend.resc_web_service.crud.repository.create_repository")
     def test_post_repositories_no_body(self, create_repository):
@@ -322,9 +290,7 @@ class TestRepositories(unittest.TestCase):
     def test_delete_repositories_invalid(self, update_repository, get_repository):
         repository_id = 999
         get_repository.return_value = None
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}/{repository_id}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}/{repository_id}")
         assert response.status_code == 404, response.text
         data = response.json()
         assert data["detail"] == "Repository not found"
@@ -358,10 +324,7 @@ class TestRepositories(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "skip"]
-        assert (
-            data["detail"][0]["msg"]
-            == "ensure this value is greater than or equal to 0"
-        )
+        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
         get_repositories.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_repositories")
@@ -373,16 +336,11 @@ class TestRepositories(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "limit"]
-        assert (
-            data["detail"][0]["msg"]
-            == "ensure this value is greater than or equal to 1"
-        )
+        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
         get_repositories.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_projects")
-    def test_get_distinct_projects_when_single_vcs_instance_selected(
-        self, get_distinct_projects
-    ):
+    def test_get_distinct_projects_when_single_vcs_instance_selected(self, get_distinct_projects):
         get_distinct_projects.return_value = self.db_repositories
         with self.client as client:
             response = client.get(
@@ -409,9 +367,7 @@ class TestRepositories(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_projects")
-    def test_get_distinct_projects_when_multiple_vcs_instance_selected(
-        self, get_distinct_projects
-    ):
+    def test_get_distinct_projects_when_multiple_vcs_instance_selected(self, get_distinct_projects):
         get_distinct_projects.return_value = self.db_repositories
         with self.client as client:
             response = client.get(
@@ -468,9 +424,7 @@ class TestRepositories(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_projects")
-    def test_get_distinct_projects_by_vcs_instance_and_repository_filter(
-        self, get_distinct_projects
-    ):
+    def test_get_distinct_projects_by_vcs_instance_and_repository_filter(self, get_distinct_projects):
         repository_name = "Test_Repository"
         with self.client as client:
             get_distinct_projects.return_value = self.db_repositories
@@ -503,10 +457,7 @@ class TestRepositories(unittest.TestCase):
     def test_get_distinct_projects_when_no_filter_selected(self, get_distinct_projects):
         with self.client as client:
             get_distinct_projects.return_value = self.db_repositories
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_repositories)
@@ -518,16 +469,13 @@ class TestRepositories(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/"
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_repositories")
-    def test_get_distinct_repositories_when_single_vcs_instance_selected(
-        self, get_distinct_repositories
-    ):
+    def test_get_distinct_repositories_when_single_vcs_instance_selected(self, get_distinct_repositories):
         get_distinct_repositories.return_value = self.db_repositories
         with self.client as client:
             response = client.get(
@@ -554,9 +502,7 @@ class TestRepositories(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_repositories")
-    def test_get_distinct_repositories_when_multiple_vcs_instance_selected(
-        self, get_distinct_repositories
-    ):
+    def test_get_distinct_repositories_when_multiple_vcs_instance_selected(self, get_distinct_repositories):
         get_distinct_repositories.return_value = self.db_repositories
         with self.client as client:
             response = client.get(
@@ -613,9 +559,7 @@ class TestRepositories(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_repositories")
-    def test_get_distinct_repositories_by_vcs_instance_and_project_name(
-        self, get_distinct_repositories
-    ):
+    def test_get_distinct_repositories_by_vcs_instance_and_project_name(self, get_distinct_repositories):
         project_name = "Test_Project"
         get_distinct_repositories.return_value = self.db_repositories
         with self.client as client:
@@ -645,15 +589,10 @@ class TestRepositories(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_repositories")
-    def test_get_distinct_repositories_when_no_filter_selected(
-        self, get_distinct_repositories
-    ):
+    def test_get_distinct_repositories_when_no_filter_selected(self, get_distinct_repositories):
         get_distinct_repositories.return_value = self.db_repositories
         with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_repositories)
@@ -665,16 +604,12 @@ class TestRepositories(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/"
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud."
-        "repository.get_findings_metadata_by_repository_id"
-    )
+    @patch("resc_backend.resc_web_service.crud." "repository.get_findings_metadata_by_repository_id")
     @patch("resc_backend.resc_web_service.crud.repository.get_repositories_count")
     @patch("resc_backend.resc_web_service.crud.repository.get_repositories")
     def test_get_all_repositories_with_findings_metadata(
@@ -718,9 +653,7 @@ class TestRepositories(unittest.TestCase):
                 "total_findings_count": 15,
             }
 
-            get_findings_metadata_by_repository_id.return_value = (
-                mocked_findings_meta_data
-            )
+            get_findings_metadata_by_repository_id.return_value = mocked_findings_meta_data
             response = get_findings_metadata_by_repository_id.return_value
             assert response["data"]["project_key"] == "dummmy_project"
             assert response["data"]["repository_id"] == "r2"
@@ -728,9 +661,7 @@ class TestRepositories(unittest.TestCase):
             assert response["data"]["repository_url"] == "https://fake-ado.com"
             assert response["data"]["vcs_instance"] == "AZURE_DEVOPS"
             assert response["data"]["last_scan_id"] == 1
-            assert (
-                response["data"]["last_scan_timestamp"] == "2023-05-23T15:52:22.270000"
-            )
+            assert response["data"]["last_scan_timestamp"] == "2023-05-23T15:52:22.270000"
             assert response["data"]["id_"] == 1
             assert response["true_positive"] == 1
             assert response["false_positive"] == 2
@@ -747,19 +678,12 @@ class TestRepositories(unittest.TestCase):
             self.assert_cache(cached_response)
             assert res.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.repository"
-        ".get_findings_metadata_by_repository_id"
-    )
+    @patch("resc_backend.resc_web_service.crud.repository" ".get_findings_metadata_by_repository_id")
     @patch("resc_backend.resc_web_service.crud.repository.get_repository")
-    def test_get_findings_metadata_for_repository(
-        self, get_repository, get_findings_metadata_by_repository_id
-    ):
+    def test_get_findings_metadata_for_repository(self, get_repository, get_findings_metadata_by_repository_id):
         repository_id = 1
         get_repository.return_value = self.db_repositories[repository_id]
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}")
         assert response.status_code == 200, response.text
         self.assert_repository(response.json(), self.db_repositories[repository_id])
         get_repository.assert_called_once_with(ANY, repository_id=repository_id)
@@ -781,19 +705,14 @@ class TestRepositories(unittest.TestCase):
         assert response["clarification_required"] == 5
         assert response["total_findings_count"] == 15
 
-    @patch(
-        "resc_backend.resc_web_service.crud"
-        ".repository.get_findings_metadata_by_repository_id"
-    )
+    @patch("resc_backend.resc_web_service.crud" ".repository.get_findings_metadata_by_repository_id")
     @patch("resc_backend.resc_web_service.crud.repository.get_repository")
     def test_get_findings_metadata_for_repository_non_existing(
         self, get_repository, get_findings_metadata_by_repository_id
     ):
         repository_id = 999
         get_repository.return_value = None
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}")
         assert response.status_code == 404, response.text
         get_repository.assert_called_once_with(ANY, repository_id=repository_id)
         get_findings_metadata_by_repository_id.assert_not_called()
@@ -803,9 +722,7 @@ class TestRepositories(unittest.TestCase):
     def test_get_scans_for_repository(self, get_scans, get_scans_count):
         get_scans.return_value = self.db_scans[:2]
         get_scans_count.return_value = len(self.db_scans[:2])
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/1{RWS_ROUTE_SCANS}/"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/1{RWS_ROUTE_SCANS}/")
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["total"] == len(self.db_scans[:2])

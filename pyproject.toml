@@ -1,0 +1,8 @@
+[tool.ruff]
+# easier on the lines
+line-length = 120
+indent-width = 4
+target-version = "py312"
+
+[tool.ruff.format]
+exclude = ["alembic/*"]

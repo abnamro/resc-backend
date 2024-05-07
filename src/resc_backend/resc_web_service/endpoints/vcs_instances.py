@@ -58,12 +58,8 @@ async def create_vcs_instance(
         )
     except IntegrityError as err:
         logger.debug(f"Error creating new vcs_instance object: {err}")
-        raise HTTPException(
-            status_code=400, detail="Error creating new vcs_instance object"
-        ) from err
-    vcs_instance = vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(
-        created_vcs_instance
-    )
+        raise HTTPException(status_code=400, detail="Error creating new vcs_instance object") from err
+    vcs_instance = vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(created_vcs_instance)
 
     # Clear cache related to VCS instances
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_VCS_INSTANCE)
@@ -96,14 +92,10 @@ def read_vcs_instance(
     - **return**: VCSInstanceRead
         The output will contain a VCSInstanceRead type object from the requested ID
     """
-    db_vcs_instance = vcs_instance_crud.get_vcs_instance(
-        db_connection, vcs_instance_id=vcs_instance_id
-    )
+    db_vcs_instance = vcs_instance_crud.get_vcs_instance(db_connection, vcs_instance_id=vcs_instance_id)
     if db_vcs_instance is None:
         raise HTTPException(status_code=404, detail="VCS Instance not found")
-    vcs_instance = vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(
-        db_vcs_instance
-    )
+    vcs_instance = vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(db_vcs_instance)
     return vcs_instance
 
 
@@ -146,11 +138,7 @@ def get_all_vcs_instances(
     )
     vcs_instances = []
     for db_vcs_instance in db_vcs_instances:
-        vcs_instances.append(
-            vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(
-                db_vcs_instance
-            )
-        )
+        vcs_instances.append(vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(db_vcs_instance))
 
     total_vcs_instances = vcs_instance_crud.get_vcs_instances_count(
         db_connection,
@@ -198,9 +186,7 @@ async def update_vcs_instance(
     - **return**: VCSInstanceRead
         The output will contain a VCSInstanceRead type object with the new properties
     """
-    db_vcs_instance = vcs_instance_crud.get_vcs_instance(
-        db_connection, vcs_instance_id=vcs_instance_id
-    )
+    db_vcs_instance = vcs_instance_crud.get_vcs_instance(db_connection, vcs_instance_id=vcs_instance_id)
     if db_vcs_instance is None:
         raise HTTPException(status_code=404, detail="VCS instance not found")
     db_vcs_instance = vcs_instance_crud.update_vcs_instance(
@@ -208,9 +194,7 @@ async def update_vcs_instance(
         vcs_instance_id=vcs_instance_id,
         vcs_instance=vcs_instance,
     )
-    vcs_instance = vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(
-        db_vcs_instance
-    )
+    vcs_instance = vcs_instance_schema.VCSInstanceRead.create_from_db_vcs_instance(db_vcs_instance)
 
     # Clear cache related to VCS instances
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_VCS_INSTANCE)
@@ -231,9 +215,7 @@ async def update_vcs_instance(
         503: {"description": ERROR_MESSAGE_503},
     },
 )
-async def delete_vcs_instance(
-    vcs_instance_id: int, db_connection: Session = Depends(get_db_connection)
-):
+async def delete_vcs_instance(vcs_instance_id: int, db_connection: Session = Depends(get_db_connection)):
     """
         Delete a VCS instance by ID
 
@@ -241,14 +223,10 @@ async def delete_vcs_instance(
     - **vcs_instance_id**: ID of the VCS instance to delete
     - **return**: The output will contain a success or error message based on the success of the deletion
     """
-    db_vcs_instance = vcs_instance_crud.get_vcs_instance(
-        db_connection, vcs_instance_id=vcs_instance_id
-    )
+    db_vcs_instance = vcs_instance_crud.get_vcs_instance(db_connection, vcs_instance_id=vcs_instance_id)
     if db_vcs_instance is None:
         raise HTTPException(status_code=404, detail="VCS instance not found")
-    vcs_instance_crud.delete_vcs_instance(
-        db_connection, vcs_instance_id=vcs_instance_id, delete_related=True
-    )
+    vcs_instance_crud.delete_vcs_instance(db_connection, vcs_instance_id=vcs_instance_id, delete_related=True)
 
     # Clear cache related to VCS instances
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_VCS_INSTANCE)

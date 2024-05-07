@@ -30,9 +30,7 @@ def get_scan(db_connection: Session, scan_id: int) -> DBscan:
     return scan
 
 
-def get_latest_scan_for_repository(
-    db_connection: Session, repository_id: int
-) -> DBscan:
+def get_latest_scan_for_repository(db_connection: Session, repository_id: int) -> DBscan:
     """
         Retrieve the most recent scan of a given repository object
     :param db_connection:
@@ -73,9 +71,7 @@ def get_scans(
     :return: [DBscan]
         List of DBScan objects
     """
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     query = db_connection.query(DBscan)
 
     if repository_id > 0:
@@ -104,9 +100,7 @@ def get_scans_count(db_connection: Session, repository_id: int = -1) -> int:
     return total_count
 
 
-def update_scan(
-    db_connection: Session, scan_id: int, scan: scan_schema.ScanCreate
-) -> DBscan:
+def update_scan(db_connection: Session, scan_id: int, scan: scan_schema.ScanCreate) -> DBscan:
     db_scan = db_connection.query(DBscan).filter_by(id_=scan_id).first()
     db_scan.scan_type = scan.scan_type
     db_scan.last_scanned_commit = scan.last_scanned_commit
@@ -158,9 +152,7 @@ def get_repository_findings_metadata_for_latest_scan(
         findings_metadata containing the count for each status
     """
     scan_ids_latest_to_base = []
-    scans = get_scans(
-        db_connection=db_connection, repository_id=repository_id, limit=1000000
-    )
+    scans = get_scans(db_connection=db_connection, repository_id=repository_id, limit=1000000)
     scans.sort(key=lambda x: x.timestamp, reverse=True)
     for scan in scans:
         if scan.timestamp <= scan_timestamp:
@@ -168,9 +160,9 @@ def get_repository_findings_metadata_for_latest_scan(
             if scan.scan_type == ScanType.BASE:
                 break
 
-    true_positive_count = false_positive_count = not_analyzed_count = (
-        under_review_count
-    ) = clarification_required_count = 0
+    true_positive_count = false_positive_count = not_analyzed_count = under_review_count = (
+        clarification_required_count
+    ) = 0
     if len(scan_ids_latest_to_base) > 0:
         findings_count_by_status = finding_crud.get_findings_count_by_status(
             db_connection,
@@ -211,9 +203,7 @@ def get_repository_findings_metadata_for_latest_scan(
     return findings_metadata
 
 
-def delete_repository_findings_not_linked_to_any_scan(
-    db_connection: Session, repository_id: int
-):
+def delete_repository_findings_not_linked_to_any_scan(db_connection: Session, repository_id: int):
     """
         Delete findings for a given repository which are not linked to any scans
     :param db_connection:
@@ -254,9 +244,7 @@ def delete_scan(
     query.delete(synchronize_session=False)
     db_connection.commit()
 
-    delete_repository_findings_not_linked_to_any_scan(
-        db_connection, repository_id=repository_id
-    )
+    delete_repository_findings_not_linked_to_any_scan(db_connection, repository_id=repository_id)
 
 
 def delete_scans_by_repository_id(db_connection: Session, repository_id: int):
@@ -267,9 +255,7 @@ def delete_scans_by_repository_id(db_connection: Session, repository_id: int):
     :param repository_id:
         id of the repository
     """
-    db_connection.query(DBscan).where(DBscan.repository_id == repository_id).delete(
-        synchronize_session=False
-    )
+    db_connection.query(DBscan).where(DBscan.repository_id == repository_id).delete(synchronize_session=False)
     db_connection.commit()
 
 

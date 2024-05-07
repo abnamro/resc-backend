@@ -25,16 +25,12 @@ def upload_rule_pack_toml_file(url: str, rule_file_path: str):
                 "application/octet-stream",
             )
         }
-        response = requests.post(
-            url=url, files=files, proxies={"http": "", "https": ""}, timeout=10
-        )
+        response = requests.post(url=url, files=files, proxies={"http": "", "https": ""}, timeout=10)
         toml_file.close()
     return response
 
 
-def download_rule_pack_toml_file(
-    rws_url: str, rule_pack_version: Optional[str] = ""
-) -> Response:
+def download_rule_pack_toml_file(rws_url: str, rule_pack_version: Optional[str] = "") -> Response:
     params = {}
     if rule_pack_version:
         params = {"rule_pack_version": rule_pack_version}
@@ -45,9 +41,7 @@ def download_rule_pack_toml_file(
     )
 
     if response.status_code == 200:
-        logger.debug(
-            f"Rule pack version: {rule_pack_version} has been successfully downloaded"
-        )
+        logger.debug(f"Rule pack version: {rule_pack_version} has been successfully downloaded")
     else:
         logger.error(
             f"Downloading rule pack version {rule_pack_version} failed with "
@@ -67,7 +61,5 @@ def get_rule_packs(
     params = {"active": active, "skip": skip, "limit": limit}
     if version:
         params["version"] = version
-    response = requests.get(
-        api_url, params=params, proxies={"http": "", "https": ""}, timeout=10
-    )
+    response = requests.get(api_url, params=params, proxies={"http": "", "https": ""}, timeout=10)
     return response

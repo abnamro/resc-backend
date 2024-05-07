@@ -20,9 +20,7 @@ from resc_backend.resc_web_service.schema import rule_pack as rule_pack_schema
 logger = logging.getLogger(__name__)
 
 
-def get_rule_pack(
-    db_connection: Session, version: Optional[str]
-) -> rule_pack_schema.RulePackRead:
+def get_rule_pack(db_connection: Session, version: Optional[str]) -> rule_pack_schema.RulePackRead:
     """
         Get active rule pack from database
     :param db_connection:
@@ -42,9 +40,7 @@ def get_rule_pack(
     return rule_pack
 
 
-def create_rule_pack_version(
-    db_connection: Session, rule_pack: rule_pack_schema.RulePackCreate
-):
+def create_rule_pack_version(db_connection: Session, rule_pack: rule_pack_schema.RulePackCreate):
     """
         Create rule pack version in database
     :param db_connection:
@@ -104,18 +100,14 @@ def get_rule_packs(
         The output will contain a PaginationModel containing the list of RulePackRead type objects,
         or an empty list if no rule pack was found
     """
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     query = db_connection.query(DBrulePack)
 
     if version:
         query = query.where(DBrulePack.version == version)
     if active is not None:
         query = query.where(DBrulePack.active == active)
-    rule_packs = (
-        query.order_by(DBrulePack.version.desc()).offset(skip).limit(limit_val).all()
-    )
+    rule_packs = query.order_by(DBrulePack.version.desc()).offset(skip).limit(limit_val).all()
     return rule_packs
 
 
@@ -154,9 +146,7 @@ def get_rule_packs_tags(db_connection: Session, versions: list) -> List[str]:
     return rule_packs_tags
 
 
-def get_total_rule_packs_count(
-    db_connection: Session, version: str = None, active: bool = None
-) -> int:
+def get_total_rule_packs_count(db_connection: Session, version: str = None, active: bool = None) -> int:
     """
         Retrieve total count of rule packs from database
     :param db_connection:
@@ -178,9 +168,7 @@ def get_total_rule_packs_count(
     return total_count
 
 
-def make_older_rule_packs_to_inactive(
-    latest_rule_pack_version: str, db_connection: Session
-):
+def make_older_rule_packs_to_inactive(latest_rule_pack_version: str, db_connection: Session):
     """
         Make older rule packs to inactive
     :param latest_rule_pack_version:
@@ -188,9 +176,5 @@ def make_older_rule_packs_to_inactive(
     :param db_connection:
         Session of the database connection
     """
-    db_connection.execute(
-        update(DBrulePack)
-        .where(DBrulePack.version != latest_rule_pack_version)
-        .values(active=False)
-    )
+    db_connection.execute(update(DBrulePack).where(DBrulePack.version != latest_rule_pack_version).values(active=False))
     db_connection.commit()

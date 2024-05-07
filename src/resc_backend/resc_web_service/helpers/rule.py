@@ -132,9 +132,7 @@ def get_mapped_global_allow_list_obj(toml_rule_dictionary: dict) -> RuleAllowLis
     global_allow_list_obj = None
     if "allowlist" in toml_rule_dictionary:
         global_allow_list = toml_rule_dictionary.get("allowlist")
-        global_allow_list_obj = map_dictionary_to_rule_allow_list_object(
-            global_allow_list
-        )
+        global_allow_list_obj = map_dictionary_to_rule_allow_list_object(global_allow_list)
     else:
         logger.info("No global allow list is present in the toml file!")
     return global_allow_list_obj
@@ -152,11 +150,7 @@ def map_dictionary_to_rule_allow_list_object(
     """
     rule_allow_list = None
     if allow_list_dictionary:
-        description = (
-            allow_list_dictionary["description"]
-            if "description" in allow_list_dictionary
-            else None
-        )
+        description = allow_list_dictionary["description"] if "description" in allow_list_dictionary else None
         regexes = None
         paths = None
         commits = None
@@ -210,9 +204,7 @@ def create_toml_rule_file(parsed_toml_dictionary: dict):
     doc.add(comment("This is a gitleaks configuration file."))
     doc.add(comment("Rules and allowlists are defined within this file."))
     doc.add(comment("Rules instruct gitleaks on what should be considered a secret."))
-    doc.add(
-        comment("Allowlists instruct gitleaks on what is allowed, i.e. not a secret.")
-    )
+    doc.add(comment("Allowlists instruct gitleaks on what is allowed, i.e. not a secret."))
     doc.add(nl())
 
     if "title" in parsed_toml_dictionary:
@@ -223,17 +215,13 @@ def create_toml_rule_file(parsed_toml_dictionary: dict):
     doc.add(nl())
 
     # Global allow list table
-    global_allow_list_table = create_allow_list_toml_table(
-        input_dictionary=parsed_toml_dictionary, key="allowlist"
-    )
+    global_allow_list_table = create_allow_list_toml_table(input_dictionary=parsed_toml_dictionary, key="allowlist")
     if global_allow_list_table:
         doc.add("allowlist", global_allow_list_table)
         doc.add(nl())
 
     # Rules table
-    rule_array_table = create_rule_array_toml_table(
-        rule_dictionary=parsed_toml_dictionary
-    )
+    rule_array_table = create_rule_array_toml_table(rule_dictionary=parsed_toml_dictionary)
     doc.add("rules", rule_array_table)
 
     toml_string = tomlkit.dumps(doc)
@@ -341,13 +329,9 @@ def create_rule_array_toml_table(rule_dictionary: dict) -> aot():
             if "secret_group" in rule_dict:
                 rule_table.add("secretGroup", rule_dict["secret_group"])
             if "regex" in rule_dict:
-                rule_table.add(
-                    "regex", String.from_raw(rule_dict["regex"], StringType.MLL)
-                )
+                rule_table.add("regex", String.from_raw(rule_dict["regex"], StringType.MLL))
             if "path" in rule_dict:
-                rule_table.add(
-                    "path", String.from_raw(rule_dict["path"], StringType.MLL)
-                )
+                rule_table.add("path", String.from_raw(rule_dict["path"], StringType.MLL))
             if "tags" in rule_dict:
                 multiline_tag_array = get_multiline_array_for_toml_file(
                     input_dictionary=rule_dict,
@@ -367,9 +351,7 @@ def create_rule_array_toml_table(rule_dictionary: dict) -> aot():
 
             # Rule Allow List Table
             if "allow_list" in rule_dict:
-                allow_list_table = create_allow_list_toml_table(
-                    input_dictionary=rule_dict, key="allow_list"
-                )
+                allow_list_table = create_allow_list_toml_table(input_dictionary=rule_dict, key="allow_list")
                 rule_table.append("allowlist", allow_list_table)
 
             rule_array_table.append(rule_table)
@@ -389,24 +371,17 @@ def validate_uploaded_file_and_read_content(rule_file: File) -> str:
     # File name validation
     is_valid_file_name = bool(re.match(FILE_NAME_REGEX, file_name))
     if not is_valid_file_name:
-        raise HTTPException(
-            500, detail=f"Invalid characters in File name - {file_name}"
-        )
+        raise HTTPException(500, detail=f"Invalid characters in File name - {file_name}")
 
     # File name max length validation
     if len(file_name) > 255:
-        raise HTTPException(
-            500, detail="File name value exceeds maximum length of 255 characters"
-        )
+        raise HTTPException(500, detail="File name value exceeds maximum length of 255 characters")
 
     # File extension validation
-    if (
-        rule_file.content_type != "application/octet-stream"
-        or not rule_file.filename.lower().endswith(ALLOWED_EXTENSION)
+    if rule_file.content_type != "application/octet-stream" or not rule_file.filename.lower().endswith(
+        ALLOWED_EXTENSION
     ):
-        raise HTTPException(
-            500, detail="Invalid document type, only TOML file is supported"
-        )
+        raise HTTPException(500, detail="Invalid document type, only TOML file is supported")
 
     # File size validation
     max_size: int = 1000000

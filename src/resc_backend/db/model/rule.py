@@ -27,11 +27,7 @@ class DBrule(Base):
     regex = Column(Text, nullable=True)
     path = Column(Text, nullable=True)
     keywords = Column(Text, nullable=True)
-    __table_args__ = (
-        UniqueConstraint(
-            "rule_name", "rule_pack", name="unique_rule_name_per_rule_pack_version"
-        ),
-    )
+    __table_args__ = (UniqueConstraint("rule_name", "rule_pack", name="unique_rule_name_per_rule_pack_version"),)
 
     def __init__(
         self,

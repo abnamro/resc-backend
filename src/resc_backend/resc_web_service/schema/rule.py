@@ -20,9 +20,7 @@ class RuleCreate(RuleBase):
     allow_list: Optional[conint(gt=0)] = None
 
     @classmethod
-    def create_from_base_class(
-        cls, base_object: RuleBase, rule_pack: str, allow_list=int
-    ):
+    def create_from_base_class(cls, base_object: RuleBase, rule_pack: str, allow_list=int):
         return cls(**(dict(base_object)), rule_pack=rule_pack, allow_list=allow_list)
 
 

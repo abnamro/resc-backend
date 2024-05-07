@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_logging_settings_path():
-    if path.isfile(sysconfig.get_path('purelib') + "/resc"):
-        base_dir = sysconfig.get_path('purelib') + "/resc"
+    if path.isfile(sysconfig.get_path("purelib") + "/resc"):
+        base_dir = sysconfig.get_path("purelib") + "/resc"
     else:
         base_dir = path.dirname(__file__)
 

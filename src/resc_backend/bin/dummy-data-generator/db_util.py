@@ -83,9 +83,7 @@ class DbUtil:
         specified attribute of the class 'klass'.
         ex: id_, name, version"""
         try:
-            return [
-                r[0] for r in self.session.query(klass.__getattribute__(klass, attr))
-            ]
+            return [r[0] for r in self.session.query(klass.__getattribute__(klass, attr))]
         except AttributeError as ex:
             logger.error(f"{klass} does not have any attribute [{attr}].")
             self.handle_and_exit(ex)
@@ -94,13 +92,9 @@ class DbUtil:
 
     def get_data_for_multiple_attr(self, table, columns):
         try:
-            return self.session.query(
-                *(getattr(table, column) for column in columns)
-            ).all()
+            return self.session.query(*(getattr(table, column) for column in columns)).all()
         except AttributeError as ex:
-            logger.error(
-                f"{table} does not have the one more attributes in the attribute list."
-            )
+            logger.error(f"{table} does not have the one more attributes in the attribute list.")
             self.handle_and_exit(ex)
         except pyodbc.Error as err:
             self.handle_and_exit(err)

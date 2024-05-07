@@ -102,9 +102,7 @@ def get_all_detailed_findings(
     parsed_query_string_params = dict(urllib.parse.parse_qsl(query_string))
 
     if parsed_query_string_params.get("scan_ids"):
-        parsed_query_string_params["scan_ids"] = json.loads(
-            parsed_query_string_params["scan_ids"]
-        )
+        parsed_query_string_params["scan_ids"] = json.loads(parsed_query_string_params["scan_ids"])
     if parsed_query_string_params.get("vcs_providers"):
         parsed_query_string_params["vcs_providers"] = json.loads(
             parsed_query_string_params["vcs_providers"].replace("'", '"')
@@ -118,9 +116,7 @@ def get_all_detailed_findings(
             parsed_query_string_params["rule_names"].replace("'", '"')
         )
     if parsed_query_string_params.get("rule_tags"):
-        parsed_query_string_params["rule_tags"] = json.loads(
-            parsed_query_string_params["rule_tags"].replace("'", '"')
-        )
+        parsed_query_string_params["rule_tags"] = json.loads(parsed_query_string_params["rule_tags"].replace("'", '"'))
     if parsed_query_string_params.get("rule_pack_versions"):
         parsed_query_string_params["rule_pack_versions"] = json.loads(
             parsed_query_string_params["rule_pack_versions"].replace("'", '"')
@@ -131,9 +127,7 @@ def get_all_detailed_findings(
     findings = detailed_finding_crud.get_detailed_findings(
         db_connection, findings_filter=findings_filter, skip=skip, limit=limit
     )
-    total_findings = detailed_finding_crud.get_detailed_findings_count(
-        db_connection, findings_filter=findings_filter
-    )
+    total_findings = detailed_finding_crud.get_detailed_findings_count(db_connection, findings_filter=findings_filter)
 
     return PaginationModel[detailed_finding_schema.DetailedFindingRead](
         data=findings, total=total_findings, limit=limit, skip=skip
@@ -164,9 +158,7 @@ def read_finding(
     - **return**: [DetailedFindingRead]
         The output will contain the details of a finding
     """
-    db_finding = detailed_finding_crud.get_detailed_finding(
-        db_connection, finding_id=finding_id
-    )
+    db_finding = detailed_finding_crud.get_detailed_finding(db_connection, finding_id=finding_id)
     if db_finding is None:
         raise HTTPException(status_code=404, detail="Finding not found")
     return db_finding

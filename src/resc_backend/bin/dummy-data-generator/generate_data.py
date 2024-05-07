@@ -114,18 +114,13 @@ class GenerateData:
     def create_chunks(size: int, chunk_size: int):
         """Creates a list of lists based on an arbitrary length."""
         entirety = [i for i in range(1, size + 1)]
-        chunked_lists = [
-            entirety[i : i + chunk_size] for i in range(0, size, chunk_size)
-        ]
+        chunked_lists = [entirety[i : i + chunk_size] for i in range(0, size, chunk_size)]
         return chunked_lists
 
     @staticmethod
     def create_chunks_from_list(list_to_be_chunked: [], chunk_size: int):
         """Creates a list of lists of arbitrary length from a list."""
-        chunked_lists = [
-            list_to_be_chunked[i : i + chunk_size]
-            for i in range(0, len(list_to_be_chunked), chunk_size)
-        ]
+        chunked_lists = [list_to_be_chunked[i : i + chunk_size] for i in range(0, len(list_to_be_chunked), chunk_size)]
         return chunked_lists
 
     def init_db(self):
@@ -133,9 +128,7 @@ class GenerateData:
         if not self.db_util.is_db_connected():
             logger.error("Failed in establishing a db connection.")
             sys.exit(-1)
-        proceed_prompt = input(
-            "All the existing data from the database tables will be dropped.Proceed ? [y/n]"
-        )
+        proceed_prompt = input("All the existing data from the database tables will be dropped.Proceed ? [y/n]")
         logger.info(f"Received [{proceed_prompt}] as response.")
         if proceed_prompt not in ("y", "Y", "yes", "Yes", "YES"):
             logger.info("Won't proceed. Exiting program.")
@@ -146,9 +139,7 @@ class GenerateData:
         self.init_db()
         start = datetime.now()
         self.generate_rule_allow_list()
-        self.generate_rule_pack(
-            property_values["active_rule_pack"], property_values["additional"]
-        )
+        self.generate_rule_pack(property_values["active_rule_pack"], property_values["additional"])
         self.generate_rules(int(property_values["rules"]))
         self.generate_tags()
         self.generate_rule_tags()
@@ -163,14 +154,10 @@ class GenerateData:
         self.db_util.shut_down()
 
     def generate_rule_allow_list(self):
-        rule_allow_list = [
-            DBruleAllowList(description="test rule allow list", regexes="*.*")
-        ]
+        rule_allow_list = [DBruleAllowList(description="test rule allow list", regexes="*.*")]
         self.db_util.persist_data(rule_allow_list)
         # caching rule_allow_list ids for future use
-        self.rule_allow_list_ids = self.db_util.get_data_for_single_attr(
-            DBruleAllowList, "id_"
-        )
+        self.rule_allow_list_ids = self.db_util.get_data_for_single_attr(DBruleAllowList, "id_")
         logger.info(f"Generated [{DBruleAllowList.__tablename__}]")
 
     def generate_rule_pack(self, active: str, additional: str):
@@ -214,9 +201,7 @@ class GenerateData:
     def generate_rule_tags(self):
         rule_ids = self.db_util.get_data_for_single_attr(DBrule, "id_")
         tag_ids = self.db_util.get_data_for_single_attr(DBtag, "id_")
-        rule_tags = [
-            dict(rule_id=rule_id, tag_id=random.choice(tag_ids)) for rule_id in rule_ids
-        ]
+        rule_tags = [dict(rule_id=rule_id, tag_id=random.choice(tag_ids)) for rule_id in rule_ids]
         self.db_util.bulk_persist_data(DBruleTag, rule_tags)
         logger.info(f"Generated [{DBruleTag.__tablename__}]")
 
@@ -278,9 +263,7 @@ class GenerateData:
                     )
                 )
             # now that every repo has a BASE scan, incremental scans can also be generated for the same rule-pack.
-            remaining_scans_per_repo = amount_to_generate - len(
-                scans_allocated_per_repo
-            )
+            remaining_scans_per_repo = amount_to_generate - len(scans_allocated_per_repo)
             for _ in range(0, remaining_scans_per_repo):
                 scan_type = random.choice(self.scan_types)
                 scans_allocated_per_repo.append(
@@ -324,15 +307,11 @@ class GenerateData:
                 )
             self.db_util.bulk_persist_data(DBfinding, findings)
         # caching finding ids for further use
-        self.finding_ids = self.db_util.get_data_for_multiple_attr(
-            DBfinding, ["id_", "repository_id"]
-        )
+        self.finding_ids = self.db_util.get_data_for_multiple_attr(DBfinding, ["id_", "repository_id"])
         logger.info(f"Generated [{DBfinding.__tablename__}]")
 
     def generate_scan_findings(self):
-        scan_repo_ids = self.db_util.get_data_for_multiple_attr(
-            DBscan, ["id_", "repository_id"]
-        )
+        scan_repo_ids = self.db_util.get_data_for_multiple_attr(DBscan, ["id_", "repository_id"])
         # required because the repository associated with a finding needs to match the repository of the scan
         # group scan_ids by repository
         repo_scan_ids = defaultdict(list)
@@ -341,21 +320,15 @@ class GenerateData:
 
         chunk_size = GenerateData.determine_chunk_size(len(self.finding_ids))
         # cache for audits
-        self.finding_id_chunks = GenerateData.create_chunks_from_list(
-            self.finding_ids, chunk_size
-        )
+        self.finding_id_chunks = GenerateData.create_chunks_from_list(self.finding_ids, chunk_size)
         for chunk in self.finding_id_chunks:
             scan_findings = []
             for finding_id, repository_id in chunk:
                 scan_ids = repo_scan_ids.get(repository_id)
                 if scan_ids:
-                    scan_findings.append(
-                        dict(finding_id=finding_id, scan_id=random.choice(scan_ids))
-                    )
+                    scan_findings.append(dict(finding_id=finding_id, scan_id=random.choice(scan_ids)))
                 else:
-                    logger.info(
-                        f"No scans associated with repository_id [{repository_id}]"
-                    )
+                    logger.info(f"No scans associated with repository_id [{repository_id}]")
             self.db_util.bulk_persist_data(DBscanFinding, scan_findings)
         logger.info(f"Generated [{DBscanFinding.__tablename__}]")
 
@@ -384,22 +357,16 @@ class GenerateData:
         """Assign is_latest to true to the latest audits."""
         conn = self.db_util.session.get_bind()
 
-        audit: Table = table(
-            TABLE_AUDIT, column("id"), column("is_latest"), column("finding_id")
-        )
+        audit: Table = table(TABLE_AUDIT, column("id"), column("is_latest"), column("finding_id"))
 
         # Create a sub query with group by on finding.
-        max_audit_subquery = select(
-            audit.c.finding_id, func.max(audit.c.id).label("audit_id")
-        )
+        max_audit_subquery = select(audit.c.finding_id, func.max(audit.c.id).label("audit_id"))
         max_audit_subquery = max_audit_subquery.group_by(audit.c.finding_id)
         max_audit_subquery = max_audit_subquery.subquery()
 
         # Select the id from previously selected tupples.
         latest_audits_query = select(audit.c.id)
-        latest_audits_query = latest_audits_query.join(
-            max_audit_subquery, max_audit_subquery.c.audit_id == audit.c.id
-        )
+        latest_audits_query = latest_audits_query.join(max_audit_subquery, max_audit_subquery.c.audit_id == audit.c.id)
         latest_audits = conn.execute(latest_audits_query).scalars().all()
 
         # Iterate over those ids by chunk.
@@ -435,15 +402,11 @@ class GenerateData:
         # For EACH rule pack, we apply the modification.
         # We do this because the latest scans need to be defined PER rule pack.
         for rulepack in rulepacks:
-            max_base_scan_subquery = select(
-                scan.c.repository_id, func.max(scan.c.id).label("latest_base_scan_id")
-            )
+            max_base_scan_subquery = select(scan.c.repository_id, func.max(scan.c.id).label("latest_base_scan_id"))
             max_base_scan_subquery = max_base_scan_subquery.where(
                 scan.c.scan_type == ScanType.BASE, scan.c.rule_pack == rulepack
             )
-            max_base_scan_subquery = max_base_scan_subquery.group_by(
-                scan.c.repository_id
-            )
+            max_base_scan_subquery = max_base_scan_subquery.group_by(scan.c.repository_id)
             max_base_scan_subquery = max_base_scan_subquery.subquery()
 
             # We select the scan ids matching those needing to be updated for that rulepack
@@ -482,12 +445,8 @@ if __name__ == "__main__":
     values["scans"] = args.max_scans_per_repo_generate_amount
     values["findings"] = args.findings_generate_amount
 
-    if values["additional"] and int(
-        values["scans"] < 1 + len(values["additional"].split(","))
-    ):
-        print(
-            "Max scans per repo should be greater than or equal to total number of rule-packs."
-        )
+    if values["additional"] and int(values["scans"] < 1 + len(values["additional"].split(","))):
+        print("Max scans per repo should be greater than or equal to total number of rule-packs.")
         sys.exit(-1)
 
     total_scans_to_generate = int(values["repos"]) * int(values["scans"])

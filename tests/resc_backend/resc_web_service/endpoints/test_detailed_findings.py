@@ -80,10 +80,7 @@ class TestDetailedFindings(unittest.TestCase):
         assert data["column_end"] == detailed_finding.column_end
         assert data["commit_id"] == detailed_finding.commit_id
         assert data["commit_message"] == detailed_finding.commit_message
-        assert (
-            datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f")
-            == detailed_finding.commit_timestamp
-        )
+        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == detailed_finding.commit_timestamp
         assert data["author"] == detailed_finding.author
         assert data["email"] == detailed_finding.email
         assert data["rule_name"] == detailed_finding.rule_name
@@ -93,17 +90,11 @@ class TestDetailedFindings(unittest.TestCase):
         assert data["project_key"] == detailed_finding.project_key
         assert data["repository_name"] == detailed_finding.repository_name
         assert data["repository_url"] == detailed_finding.repository_url
-        assert (
-            datetime.strptime(data["timestamp"], "%Y-%m-%dT%H:%M:%S")
-            == detailed_finding.timestamp
-        )
+        assert datetime.strptime(data["timestamp"], "%Y-%m-%dT%H:%M:%S") == detailed_finding.timestamp
         assert data["vcs_provider"] == detailed_finding.vcs_provider
         assert data["last_scanned_commit"] == detailed_finding.last_scanned_commit
         assert data["commit_url"] == detailed_finding.commit_url
-        assert (
-            datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S")
-            == detailed_finding.event_sent_on
-        )
+        assert datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S") == detailed_finding.event_sent_on
 
     @staticmethod
     def assert_cache(cached_response):
@@ -118,9 +109,7 @@ class TestDetailedFindings(unittest.TestCase):
     def test_get_detailed_finding_non_existing(self, get_finding):
         finding_id = 999
         get_finding.return_value = None
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETAILED_FINDINGS}/{finding_id}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETAILED_FINDINGS}/{finding_id}")
         assert response.status_code == 404, response.text
         get_finding.assert_called_once_with(ANY, finding_id=finding_id)
 
@@ -128,23 +117,17 @@ class TestDetailedFindings(unittest.TestCase):
     def test_get_finding(self, get_finding):
         detailed_finding = self.detailed_findings[0]
         get_finding.return_value = detailed_finding
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETAILED_FINDINGS}/{detailed_finding.id_}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETAILED_FINDINGS}/{detailed_finding.id_}")
         assert response.status_code == 200, response.text
         self.assert_detailed_finding(response.json(), detailed_finding)
         get_finding.assert_called_once_with(ANY, finding_id=detailed_finding.id_)
 
-    @patch(
-        "resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count"
-    )
+    @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
     def test_get_multiple_findings(self, get_findings, get_findings_count):
         number_of_findings = 3
         get_findings.return_value = self.detailed_findings[:number_of_findings]
-        get_findings_count.return_value = len(
-            self.detailed_findings[:number_of_findings]
-        )
+        get_findings_count.return_value = len(self.detailed_findings[:number_of_findings])
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETAILED_FINDINGS}",
@@ -177,10 +160,7 @@ class TestDetailedFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
-            assert (
-                data["detail"][0]["msg"]
-                == "ensure this value is greater than or equal to 0"
-            )
+            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -201,10 +181,7 @@ class TestDetailedFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
-            assert (
-                data["detail"][0]["msg"]
-                == "ensure this value is greater than or equal to 1"
-            )
+            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -215,13 +192,9 @@ class TestDetailedFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count"
-    )
+    @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
-    def test_get_detailed_findings_by_rule(
-        self, get_detailed_findings, get_total_findings_count
-    ):
+    def test_get_detailed_findings_by_rule(self, get_detailed_findings, get_total_findings_count):
         rule_name = "['rule_name']"
         count = 0
         get_total_findings_count.return_value = count
@@ -253,13 +226,9 @@ class TestDetailedFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count"
-    )
+    @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
-    def test_get_detailed_findings_by_rule_pack_versions(
-        self, get_detailed_findings, get_total_findings_count
-    ):
+    def test_get_detailed_findings_by_rule_pack_versions(self, get_detailed_findings, get_total_findings_count):
         rule_pack_versions = "['2']"
         count = 0
         get_total_findings_count.return_value = count
@@ -291,13 +260,9 @@ class TestDetailedFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count"
-    )
+    @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
-    def test_get_detailed_findings_by_vcs_provider(
-        self, get_detailed_findings, get_total_findings_count
-    ):
+    def test_get_detailed_findings_by_vcs_provider(self, get_detailed_findings, get_total_findings_count):
         vcs_provider = "['BITBUCKET']"
         count = 0
         get_total_findings_count.return_value = count
@@ -330,13 +295,9 @@ class TestDetailedFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count"
-    )
+    @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
-    def test_get_detailed_findings_by_start_date_range(
-        self, get_detailed_findings, get_total_findings_count
-    ):
+    def test_get_detailed_findings_by_start_date_range(self, get_detailed_findings, get_total_findings_count):
         start_date_time = "1970-11-11T00:00:00"
         count = 0
         get_total_findings_count.return_value = count
@@ -352,19 +313,11 @@ class TestDetailedFindings(unittest.TestCase):
             assert data["total"] == 0
             get_total_findings_count.assert_called_once_with(
                 ANY,
-                findings_filter=FindingsFilter(
-                    start_date_time=datetime.strptime(
-                        start_date_time, "%Y-%m-%dT%H:%M:%S"
-                    )
-                ),
+                findings_filter=FindingsFilter(start_date_time=datetime.strptime(start_date_time, "%Y-%m-%dT%H:%M:%S")),
             )
             get_detailed_findings.assert_called_once_with(
                 ANY,
-                findings_filter=FindingsFilter(
-                    start_date_time=datetime.strptime(
-                        start_date_time, "%Y-%m-%dT%H:%M:%S"
-                    )
-                ),
+                findings_filter=FindingsFilter(start_date_time=datetime.strptime(start_date_time, "%Y-%m-%dT%H:%M:%S")),
                 skip=0,
                 limit=1,
             )
@@ -377,13 +330,9 @@ class TestDetailedFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count"
-    )
+    @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
-    def test_get_detailed_findings_by_end_date_range(
-        self, get_detailed_findings, get_total_findings_count
-    ):
+    def test_get_detailed_findings_by_end_date_range(self, get_detailed_findings, get_total_findings_count):
         end_date_time = "1970-11-11T00:00:00"
         count = 0
         get_total_findings_count.return_value = count
@@ -399,15 +348,11 @@ class TestDetailedFindings(unittest.TestCase):
             assert data["total"] == 0
             get_total_findings_count.assert_called_once_with(
                 ANY,
-                findings_filter=FindingsFilter(
-                    end_date_time=datetime.strptime(end_date_time, "%Y-%m-%dT%H:%M:%S")
-                ),
+                findings_filter=FindingsFilter(end_date_time=datetime.strptime(end_date_time, "%Y-%m-%dT%H:%M:%S")),
             )
             get_detailed_findings.assert_called_once_with(
                 ANY,
-                findings_filter=FindingsFilter(
-                    end_date_time=datetime.strptime(end_date_time, "%Y-%m-%dT%H:%M:%S")
-                ),
+                findings_filter=FindingsFilter(end_date_time=datetime.strptime(end_date_time, "%Y-%m-%dT%H:%M:%S")),
                 skip=0,
                 limit=1,
             )
@@ -420,13 +365,9 @@ class TestDetailedFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count"
-    )
+    @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
-    def test_get_detailed_findings_by_all_filters(
-        self, get_detailed_findings, get_total_findings_count
-    ):
+    def test_get_detailed_findings_by_all_filters(self, get_detailed_findings, get_total_findings_count):
         scan_ids: List[int] = [1, 2]
         vcs_providers: List[str] = [
             VCSProviders.AZURE_DEVOPS.value,
@@ -461,9 +402,7 @@ class TestDetailedFindings(unittest.TestCase):
             data = response.json()
             assert len(data["data"]) == 0
             assert data["total"] == 0
-            get_total_findings_count.assert_called_once_with(
-                ANY, findings_filter=FindingsFilter(**all_params)
-            )
+            get_total_findings_count.assert_called_once_with(ANY, findings_filter=FindingsFilter(**all_params))
             get_detailed_findings.assert_called_once_with(
                 ANY, findings_filter=FindingsFilter(**all_params), skip=0, limit=1
             )

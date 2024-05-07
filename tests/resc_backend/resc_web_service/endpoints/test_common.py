@@ -54,9 +54,7 @@ class TestFindings(unittest.TestCase):
 
     def test_get_supported_vcs_providers(self):
         with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == 3
@@ -65,9 +63,7 @@ class TestFindings(unittest.TestCase):
             assert data[2] == GITHUB_PUBLIC
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}"
-            )
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
