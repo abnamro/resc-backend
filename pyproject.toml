@@ -3,6 +3,6 @@
 line-length = 120
 indent-width = 4
 target-version = "py312"
-extend-exclude = ["alembic"]
 
 [tool.ruff.format]
+exclude = ["alembic/*"]
