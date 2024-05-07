@@ -71,8 +71,7 @@ class TestDetailedFindings(unittest.TestCase):
         detailed_findings = self.detailed_findings_ado
         for index, finding in enumerate(detailed_findings):
             assert (
-                detailed_findings[index].commit_url
-                == f"http://fake.repo.com/{index + 1}/commit/commit_id_{index + 1}"
+                detailed_findings[index].commit_url == f"http://fake.repo.com/{index + 1}/commit/commit_id_{index + 1}"
                 f"?path=/file_path_{index + 1}"
             )
 
@@ -80,8 +79,7 @@ class TestDetailedFindings(unittest.TestCase):
         detailed_findings = self.detailed_findings_bitbucket
         for idx, finding in enumerate(detailed_findings):
             assert (
-                detailed_findings[idx].commit_url
-                == f"https://dummy-bitbucket-instance.com"
+                detailed_findings[idx].commit_url == f"https://dummy-bitbucket-instance.com"
                 f"/projects/project_key_{idx + 1}"
                 f"/repos/repository_name_{idx + 1}"
                 f"/browse/file_path_{idx + 1}?at=commit_id_{idx + 1}"

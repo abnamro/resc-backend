@@ -25,6 +25,4 @@ def test_create_vcs_instance(post):
 
     _ = create_vcs_instance(url, vcs_instance)
     post.assert_called_once()
-    post.assert_called_with(
-        expected_url, data=expected_json, proxies={"http": "", "https": ""}, timeout=10
-    )
+    post.assert_called_with(expected_url, data=expected_json, proxies={"http": "", "https": ""}, timeout=10)

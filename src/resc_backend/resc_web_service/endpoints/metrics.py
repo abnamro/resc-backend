@@ -49,9 +49,7 @@ logger = logging.getLogger(__name__)
     summary="Get count of audit status over time for given weeks per vcs provider",
     status_code=status.HTTP_200_OK,
     responses={
-        200: {
-            "description": "Retrieve count of audit status over time for given weeks per vcs provider"
-        },
+        200: {"description": "Retrieve count of audit status over time for given weeks per vcs provider"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -73,9 +71,7 @@ def get_finding_audit_count_over_time(
     audit_counts = finding_crud.get_finding_audit_status_count_over_time(
         db_connection=db_connection, status=audit_status, weeks=weeks
     )
-    output = convert_rows_to_finding_count_over_time(
-        count_over_time=audit_counts, weeks=weeks
-    )
+    output = convert_rows_to_finding_count_over_time(count_over_time=audit_counts, weeks=weeks)
     return output
 
 
@@ -85,9 +81,7 @@ def get_finding_audit_count_over_time(
     summary="Get count of findings over time for given weeks per vcs provider",
     status_code=status.HTTP_200_OK,
     responses={
-        200: {
-            "description": "Retrieve count of findings over time for given weeks per vcs provider"
-        },
+        200: {"description": "Retrieve count of findings over time for given weeks per vcs provider"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -105,12 +99,8 @@ def get_finding_total_count_over_time(
     - **return**: [DateCountModel]
         The output will contain a list of DateCountModel type objects
     """
-    audit_counts = finding_crud.get_finding_count_by_vcs_provider_over_time(
-        db_connection=db_connection, weeks=weeks
-    )
-    output = convert_rows_to_finding_count_over_time(
-        count_over_time=audit_counts, weeks=weeks
-    )
+    audit_counts = finding_crud.get_finding_count_by_vcs_provider_over_time(db_connection=db_connection, weeks=weeks)
+    output = convert_rows_to_finding_count_over_time(count_over_time=audit_counts, weeks=weeks)
     return output
 
 
@@ -120,9 +110,7 @@ def get_finding_total_count_over_time(
     summary="Get count of UnTriaged findings over time for given weeks per vcs provider",
     status_code=status.HTTP_200_OK,
     responses={
-        200: {
-            "description": "Retrieve count of UnTriaged findings over time for given weeks per vcs provider"
-        },
+        200: {"description": "Retrieve count of UnTriaged findings over time for given weeks per vcs provider"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -143,15 +131,11 @@ def get_finding_un_triaged_count_over_time(
     audit_counts = finding_crud.get_un_triaged_finding_count_by_vcs_provider_over_time(
         db_connection=db_connection, weeks=weeks
     )
-    output = convert_rows_to_finding_count_over_time(
-        count_over_time=audit_counts, weeks=weeks
-    )
+    output = convert_rows_to_finding_count_over_time(count_over_time=audit_counts, weeks=weeks)
     return output
 
 
-def convert_rows_to_finding_count_over_time(
-    count_over_time: dict, weeks: int
-) -> list[FindingCountOverTime]:
+def convert_rows_to_finding_count_over_time(count_over_time: dict, weeks: int) -> list[FindingCountOverTime]:
     """
         Convert the rows from the database to the format of list[FindingCountOverTime]
     :param count_over_time:
@@ -169,9 +153,7 @@ def convert_rows_to_finding_count_over_time(
     for week in range(0, weeks):
         nth_week = datetime.utcnow() - timedelta(weeks=week)
         week = f"{nth_week.isocalendar().year} W{nth_week.isocalendar().week:02d}"
-        week_groups[week] = {
-            vcs_provider_type: 0 for vcs_provider_type in vcs_provider_types + ["total"]
-        }
+        week_groups[week] = {vcs_provider_type: 0 for vcs_provider_type in vcs_provider_types + ["total"]}
 
     # loop over the counts from the database
     for data in count_over_time:
@@ -184,9 +166,7 @@ def convert_rows_to_finding_count_over_time(
     # Convert to the output format
     output = []
     for week in sorted(week_groups.keys()):
-        week_data = FindingCountOverTime(
-            time_period=week, total=week_groups[week]["total"]
-        )
+        week_data = FindingCountOverTime(time_period=week, total=week_groups[week]["total"])
         for vcs_provider_type in vcs_provider_types:
             setattr(
                 week_data.vcs_provider_finding_count,
@@ -204,9 +184,7 @@ def convert_rows_to_finding_count_over_time(
     summary="Get count of Audits by Auditor over time for given weeks",
     status_code=status.HTTP_200_OK,
     responses={
-        200: {
-            "description": "Retrieve count of Audits by Auditor over time for given weeks"
-        },
+        200: {"description": "Retrieve count of Audits by Auditor over time for given weeks"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -223,9 +201,7 @@ def get_audit_count_by_auditor_over_time(
     - **return**: [AuditCountOverTime]
         The output will contain a list of AuditCountOverTime type objects
     """
-    audit_counts = audit_crud.get_audit_count_by_auditor_over_time(
-        db_connection=db_connection, weeks=weeks
-    )
+    audit_counts = audit_crud.get_audit_count_by_auditor_over_time(db_connection=db_connection, weeks=weeks)
 
     # get the unique auditors from the data
     auditors_default = {}
@@ -237,18 +213,16 @@ def get_audit_count_by_auditor_over_time(
     for week in range(0, weeks):
         nth_week = datetime.utcnow() - timedelta(weeks=week)
         week = f"{nth_week.isocalendar().year} W{nth_week.isocalendar().week:02d}"
-        weekly_audit_counts[week] = AuditCountOverTime(
-            time_period=week, audit_by_auditor_count=dict(auditors_default)
-        )
+        weekly_audit_counts[week] = AuditCountOverTime(time_period=week, audit_by_auditor_count=dict(auditors_default))
     weekly_audit_counts = dict(sorted(weekly_audit_counts.items()))
 
     # set the counts based on the data from the database
     for audit in audit_counts:
         audit_week = f"{getattr(audit, 'year')} W{getattr(audit, 'week'):02d}"
         if audit_week in weekly_audit_counts:
-            weekly_audit_counts.get(audit_week).audit_by_auditor_count[
-                getattr(audit, "auditor")
-            ] = getattr(audit, "audit_count")
+            weekly_audit_counts.get(audit_week).audit_by_auditor_count[getattr(audit, "auditor")] = getattr(
+                audit, "audit_count"
+            )
             weekly_audit_counts.get(audit_week).total += getattr(audit, "audit_count")
 
     sorted_weekly_audit_counts = dict(sorted(weekly_audit_counts.items()))
@@ -320,17 +294,13 @@ def determine_audit_rank_current_week(auditor: str, db_connection: Session) -> i
         The output will be an integer nr of the ranking this week, defaulting to 0 if no audit was done by the auditor
     """
     audit_rank = 0
-    audit_counts_db = audit_crud.get_audit_count_by_auditor_over_time(
-        db_connection=db_connection, weeks=0
-    )
+    audit_counts_db = audit_crud.get_audit_count_by_auditor_over_time(db_connection=db_connection, weeks=0)
 
     auditor_counts = {}
     for audit in audit_counts_db:
         auditor_counts[getattr(audit, "auditor")] = getattr(audit, "audit_count")
 
-    sorted_auditor_counts = sorted(
-        auditor_counts.items(), key=lambda x: x[1], reverse=True
-    )
+    sorted_auditor_counts = sorted(auditor_counts.items(), key=lambda x: x[1], reverse=True)
     for auditor_count in dict(sorted_auditor_counts):
         audit_rank += 1
         if auditor_count == auditor:

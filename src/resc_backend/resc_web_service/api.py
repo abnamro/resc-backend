@@ -64,9 +64,7 @@ def generate_logger_config(log_file_path, debug=True):
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {
-            "generic-log-formatter": {
-                "format": "[%(levelname)s] [%(name)s] [%(asctime)s] %(message)s"
-            },
+            "generic-log-formatter": {"format": "[%(levelname)s] [%(name)s] [%(asctime)s] %(message)s"},
         },
         "handlers": {
             "console": {
@@ -136,9 +134,7 @@ app.include_router(common.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(rules.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(rule_packs.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
-app.include_router(
-    detailed_findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH
-)
+app.include_router(detailed_findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(repositories.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(scans.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(vcs_instances.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
@@ -160,9 +156,7 @@ def app_startup():
 
         logger.info("Database is connected, expected table(s) found")
     except RetryError as exc:
-        raise SystemExit(
-            "Error while connecting to the database, retry timed out"
-        ) from exc
+        raise SystemExit("Error while connecting to the database, retry timed out") from exc
 
 
 @app.on_event("shutdown")

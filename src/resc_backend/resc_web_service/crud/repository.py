@@ -28,9 +28,7 @@ from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
 
 def _get_max_base_scan(db_connection: Session) -> Query:
-    subquery: Query = db_connection.query(
-        DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
-    )
+    subquery: Query = db_connection.query(DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id"))
     subquery = subquery.where(DBscan.scan_type == ScanType.BASE)
     subquery = subquery.where(DBscan.is_latest == True)  # noqa: E712
     subquery = subquery.group_by(DBscan.repository_id)
@@ -65,14 +63,10 @@ def get_repositories(
     :return: repositories
         list of DBrepository objects
     """
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
 
     # Get the latest scan for repository
-    sub_query: Query = db_connection.query(
-        DBscan.repository_id, func.max(DBscan.timestamp).label("max_timestamp")
-    )
+    sub_query: Query = db_connection.query(DBscan.repository_id, func.max(DBscan.timestamp).label("max_timestamp"))
     sub_query = sub_query.where(DBscan.is_latest == True)  # noqa: E712
     sub_query = sub_query.group_by(DBscan.repository_id)
     sub_query = sub_query.subquery()
@@ -96,8 +90,7 @@ def get_repositories(
     )
     query = query.join(
         DBscan,
-        (DBscan.repository_id == sub_query.c.repository_id)
-        & (DBscan.timestamp == sub_query.c.max_timestamp),
+        (DBscan.repository_id == sub_query.c.repository_id) & (DBscan.timestamp == sub_query.c.max_timestamp),
         isouter=True,
     )
 
@@ -113,9 +106,7 @@ def get_repositories(
             DBscan,
             DBrepository.id_ == DBscan.repository_id,
         )
-        sub_query = sub_query.where(
-            DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id
-        )
+        sub_query = sub_query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
         sub_query = sub_query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
         sub_query = sub_query.distinct()
 
@@ -172,9 +163,7 @@ def get_repositories_count(
             DBscan,
             DBrepository.id_ == DBscan.repository_id,
         )
-        sub_query = sub_query.where(
-            DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id
-        )
+        sub_query = sub_query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
         sub_query = sub_query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
         sub_query = sub_query.distinct()
 
@@ -182,9 +171,7 @@ def get_repositories_count(
         query = query.where(DBrepository.id_.in_(sub_query))
 
     if vcs_providers and vcs_providers is not None:
-        query = query.join(
-            DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-        )
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
         query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
 
     if project_filter:
@@ -198,11 +185,7 @@ def get_repositories_count(
 
 
 def get_repository(db_connection: Session, repository_id: int):
-    repository = (
-        db_connection.query(DBrepository)
-        .where(DBrepository.id_ == repository_id)
-        .first()
-    )
+    repository = db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).first()
     return repository
 
 
@@ -211,9 +194,7 @@ def update_repository(
     repository_id: int,
     repository: repository_schema.RepositoryCreate,
 ):
-    db_repository = (
-        db_connection.query(DBrepository).filter_by(id_=repository_id).first()
-    )
+    db_repository = db_connection.query(DBrepository).filter_by(id_=repository_id).first()
 
     db_repository.repository_name = repository.repository_name
     db_repository.repository_url = repository.repository_url
@@ -224,9 +205,7 @@ def update_repository(
     return db_repository
 
 
-def create_repository(
-    db_connection: Session, repository: repository_schema.RepositoryCreate
-):
+def create_repository(db_connection: Session, repository: repository_schema.RepositoryCreate):
     db_repository = DBrepository(
         project_key=repository.project_key,
         repository_id=repository.repository_id,
@@ -240,9 +219,7 @@ def create_repository(
     return db_repository
 
 
-def create_repository_if_not_exists(
-    db_connection: Session, repository: repository_schema.RepositoryCreate
-):
+def create_repository_if_not_exists(db_connection: Session, repository: repository_schema.RepositoryCreate):
     # Query the database to see if the repository object exists based on the unique constraint parameters
     query: Query = db_connection.query(DBrepository)
     query = query.where(DBrepository.project_key == repository.project_key)
@@ -292,9 +269,7 @@ def get_distinct_projects(
         query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
 
     if vcs_providers and vcs_providers is not None:
-        query = query.join(
-            DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-        )
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
         query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
 
     if repository_filter:
@@ -340,9 +315,7 @@ def get_distinct_repositories(
         query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
 
     if vcs_providers and vcs_providers is not None:
-        query = query.join(
-            DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance
-        )
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
         query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
 
     if project_name:
@@ -353,9 +326,7 @@ def get_distinct_repositories(
     return distinct_repositories
 
 
-def get_findings_metadata_by_repository_id(
-    db_connection: Session, repository_ids: list[int]
-):
+def get_findings_metadata_by_repository_id(db_connection: Session, repository_ids: list[int]):
     """
         Retrieves the finding metadata for a repository id from the database with most recent scan information
     :param db_connection:
@@ -365,9 +336,7 @@ def get_findings_metadata_by_repository_id(
     :return: findings_metadata
         findings_metadata containing the count for each status
     """
-    query = db_connection.query(
-        DBrepository.id_, DBaudit.status, func.count(DBscanFinding.finding_id)
-    )
+    query = db_connection.query(DBrepository.id_, DBaudit.status, func.count(DBscanFinding.finding_id))
 
     last_scan_sub_query = _get_max_base_scan(db_connection)
     query = query.join(
@@ -412,16 +381,12 @@ def get_findings_metadata_by_repository_id(
         elif status_count[1] == FindingStatus.UNDER_REVIEW.value:
             repo_count_dict[status_count[0]]["under_review"] += status_count[2]
         elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
-            repo_count_dict[status_count[0]]["clarification_required"] += status_count[
-                2
-            ]
+            repo_count_dict[status_count[0]]["clarification_required"] += status_count[2]
 
     return repo_count_dict
 
 
-def delete_repository(
-    db_connection: Session, repository_id: int, delete_related: bool = False
-):
+def delete_repository(db_connection: Session, repository_id: int, delete_related: bool = False):
     """
         Delete a repository object
     :param db_connection:
@@ -432,24 +397,14 @@ def delete_repository(
         if related records need to be deleted
     """
     if delete_related:
-        scan_finding_crud.delete_scan_finding_by_repository_id(
-            db_connection, repository_id=repository_id
-        )
-        finding_crud.delete_findings_by_repository_id(
-            db_connection, repository_id=repository_id
-        )
-        scan_crud.delete_scans_by_repository_id(
-            db_connection, repository_id=repository_id
-        )
-    db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).delete(
-        synchronize_session=False
-    )
+        scan_finding_crud.delete_scan_finding_by_repository_id(db_connection, repository_id=repository_id)
+        finding_crud.delete_findings_by_repository_id(db_connection, repository_id=repository_id)
+        scan_crud.delete_scans_by_repository_id(db_connection, repository_id=repository_id)
+    db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).delete(synchronize_session=False)
     db_connection.commit()
 
 
-def delete_repositories_by_vcs_instance_id(
-    db_connection: Session, vcs_instance_id: int
-):
+def delete_repositories_by_vcs_instance_id(db_connection: Session, vcs_instance_id: int):
     """
         Delete repositories for a given vcs instance
     :param db_connection:

@@ -10,9 +10,7 @@ class DBVcsInstance(Base):
     __tablename__ = "vcs_instance"
     id_ = Column("id", Integer, primary_key=True)
     name = Column(String(200), nullable=False)
-    provider_type = Column(
-        Enum(BITBUCKET, AZURE_DEVOPS, GITHUB_PUBLIC, name="provider_type")
-    )
+    provider_type = Column(Enum(BITBUCKET, AZURE_DEVOPS, GITHUB_PUBLIC, name="provider_type"))
     scheme = Column(String(50), nullable=False)
     hostname = Column(String(200), nullable=False)
     port = Column(Integer, nullable=False)

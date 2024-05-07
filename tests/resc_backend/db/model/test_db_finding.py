@@ -51,9 +51,7 @@ class TestFinding(unittest.TestCase):
 
         self.rule_pack = DBrulePack(version="1.2")
 
-        self.rule = DBrule(
-            rule_pack="1.2", rule_name="fake rule", description="fake1, fake2, fake3"
-        )
+        self.rule = DBrule(rule_pack="1.2", rule_name="fake rule", description="fake1, fake2, fake3")
 
         self.scan = DBscan(
             repository_id=1,

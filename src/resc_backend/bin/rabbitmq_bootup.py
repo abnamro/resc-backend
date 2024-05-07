@@ -22,14 +22,10 @@ logger = logging.getLogger(__name__)
 def create_cli_argparser() -> ArgumentParser:
     rabbitmq_service_host = f"{env_variables[RESC_RABBITMQ_SERVICE_HOST]}"
     rabbitmq_service_port = f"{env_variables[RESC_RABBITMQ_SERVICE_PORT_MGMT]}"
-    rabbitmq_api_base_url = (
-        "http://" + rabbitmq_service_host + ":" + rabbitmq_service_port
-    )
+    rabbitmq_api_base_url = "http://" + rabbitmq_service_host + ":" + rabbitmq_service_port
 
     parser: ArgumentParser = ArgumentParser()
-    parser.add_argument(
-        "--rabbitmq-url", type=str, default=rabbitmq_api_base_url, help="RabbitMQ URL"
-    )
+    parser.add_argument("--rabbitmq-url", type=str, default=rabbitmq_api_base_url, help="RabbitMQ URL")
 
     return parser
 
@@ -52,9 +48,7 @@ def bootstrap_rabbitmq_users():
     args: Namespace = parser.parse_args()
     args = validate_cli_arguments(args)
     if not args:
-        logger.error(
-            "CLI arguments validation failed while bootstrapping rabbitmq users"
-        )
+        logger.error("CLI arguments validation failed while bootstrapping rabbitmq users")
         sys.exit(-1)
 
     server_up = wait_for_rabbitmq_server_to_up(rabbitmq_api_base_url=args.rabbitmq_url)

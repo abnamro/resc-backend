@@ -27,14 +27,10 @@ class DBscan(Base):
     id_ = Column("id", Integer, primary_key=True)
     repository_id = Column(Integer, ForeignKey(REPOSITORY_ID))
     rule_pack = Column(String(100), ForeignKey(DBrulePack.version), nullable=False)
-    scan_type = Column(
-        Enum(ScanType), default=ScanType.BASE, server_default=BASE_SCAN, nullable=False
-    )
+    scan_type = Column(Enum(ScanType), default=ScanType.BASE, server_default=BASE_SCAN, nullable=False)
     last_scanned_commit = Column(String(100), nullable=False)
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
-    increment_number = Column(
-        Integer, server_default=text("0"), default=0, nullable=False
-    )
+    increment_number = Column(Integer, server_default=text("0"), default=0, nullable=False)
     is_latest = Column(Boolean, nullable=False, default=False, server_default=text("0"))
 
     def __init__(

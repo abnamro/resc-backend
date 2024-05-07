@@ -48,9 +48,7 @@ def create_audit(
         The output will contain the audit that was created
     """
     # UPDATE FINDING to set is_latest to FALSE.
-    db_connection.execute(
-        update(DBaudit).where(DBaudit.finding_id == finding_id).values(is_latest=False)
-    )
+    db_connection.execute(update(DBaudit).where(DBaudit.finding_id == finding_id).values(is_latest=False))
 
     # Insert new Audit.
     db_audit = DBaudit(
@@ -87,9 +85,7 @@ def get_finding_audits(
     :return: [DBaudit]
         The output will contain the list of audit items for the given finding
     """
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     query = select(DBaudit).where(DBaudit.finding_id == finding_id)
     query = query.order_by(DBaudit.id_.desc()).offset(skip).limit(limit_val)
     finding_audits = db_connection.execute(query).scalars().all()
@@ -111,9 +107,7 @@ def get_finding_audits_count(db_connection: Session, finding_id: int) -> int:
     return total_count
 
 
-def get_audit_count_by_auditor_over_time(
-    db_connection: Session, weeks: int = 13
-) -> list[Row]:
+def get_audit_count_by_auditor_over_time(db_connection: Session, weeks: int = 13) -> list[Row]:
     """
         Retrieve count audits by auditor over time for given weeks
     :param db_connection:
@@ -135,14 +129,8 @@ def get_audit_count_by_auditor_over_time(
         .filter(
             (extract(YEAR, DBaudit.timestamp) > extract(YEAR, last_nth_week_date_time))
             | (
-                (
-                    extract(YEAR, DBaudit.timestamp)
-                    == extract(YEAR, last_nth_week_date_time)
-                )
-                & (
-                    extract(WEEK, DBaudit.timestamp)
-                    >= extract(WEEK, last_nth_week_date_time)
-                )
+                (extract(YEAR, DBaudit.timestamp) == extract(YEAR, last_nth_week_date_time))
+                & (extract(WEEK, DBaudit.timestamp) >= extract(WEEK, last_nth_week_date_time))
             )
         )
         .group_by(
@@ -161,9 +149,7 @@ def get_audit_count_by_auditor_over_time(
     return finding_audits
 
 
-def get_personal_audit_count(
-    db_connection: Session, auditor: str, time_period: TimePeriod
-) -> int:
+def get_personal_audit_count(db_connection: Session, auditor: str, time_period: TimePeriod) -> int:
     """
         Get count of Audit entries for finding
     :param db_connection:
@@ -180,31 +166,19 @@ def get_personal_audit_count(
     total_count = db_connection.query(func.count(DBaudit.id_))
 
     if time_period in (time_period.DAY, time_period.MONTH, time_period.YEAR):
-        total_count = total_count.filter(
-            extract(YEAR, DBaudit.timestamp) == extract(YEAR, date_today)
-        )
+        total_count = total_count.filter(extract(YEAR, DBaudit.timestamp) == extract(YEAR, date_today))
 
         if time_period in (time_period.DAY, time_period.MONTH):
-            total_count = total_count.filter(
-                extract(MONTH, DBaudit.timestamp) == extract(MONTH, date_today)
-            )
+            total_count = total_count.filter(extract(MONTH, DBaudit.timestamp) == extract(MONTH, date_today))
 
             if time_period == time_period.DAY:
-                total_count = total_count.filter(
-                    extract(DAY, DBaudit.timestamp) == extract(DAY, date_today)
-                )
+                total_count = total_count.filter(extract(DAY, DBaudit.timestamp) == extract(DAY, date_today))
 
     if time_period in (time_period.WEEK, time_period.LAST_WEEK):
         date_last_week = datetime.utcnow() - timedelta(weeks=1)
-        date_week = (
-            date_last_week if time_period == time_period.LAST_WEEK else date_today
-        )
-        total_count = total_count.filter(
-            extract(YEAR, DBaudit.timestamp) == extract(YEAR, date_week)
-        )
-        total_count = total_count.filter(
-            extract(WEEK, DBaudit.timestamp) == extract(WEEK, date_week)
-        )
+        date_week = date_last_week if time_period == time_period.LAST_WEEK else date_today
+        total_count = total_count.filter(extract(YEAR, DBaudit.timestamp) == extract(YEAR, date_week))
+        total_count = total_count.filter(extract(WEEK, DBaudit.timestamp) == extract(WEEK, date_week))
 
     total_count = total_count.filter(DBaudit.auditor == auditor).scalar()
     return total_count

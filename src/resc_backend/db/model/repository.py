@@ -23,9 +23,7 @@ class DBrepository(Base):
         ),
     )
 
-    def __init__(
-        self, project_key, repository_id, repository_name, repository_url, vcs_instance
-    ):
+    def __init__(self, project_key, repository_id, repository_name, repository_url, vcs_instance):
         self.project_key = project_key
         self.repository_id = repository_id
         self.repository_name = repository_name

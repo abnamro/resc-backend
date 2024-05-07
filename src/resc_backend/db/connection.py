@@ -35,15 +35,11 @@ echo_queries = os.getenv("SQL_ALCHEMY_ECHO_QUERIES", "False").lower() in (
     "y",
 )
 pool_size = int(os.environ.get("SQL_ALCHEMY_POOL_SIZE", SQL_ALCHEMY_POOL_SIZE_DEFAULT))
-max_overflow = int(
-    os.environ.get("SQL_ALCHEMY_MAX_OVERFLOW", SQL_ALCHEMY_MAX_OVERFLOW_DEFAULT)
-)
+max_overflow = int(os.environ.get("SQL_ALCHEMY_MAX_OVERFLOW", SQL_ALCHEMY_MAX_OVERFLOW_DEFAULT))
 
 if DB_CONNECTION_STRING:
     logger.info("Using provided environment variable to connect to the Database")
-    use_azure_token_auth = os.environ.get(
-        "DB_USE_AZURE_TOKEN_AUTH", "False"
-    ).lower() in ("true", "1", "y")
+    use_azure_token_auth = os.environ.get("DB_USE_AZURE_TOKEN_AUTH", "False").lower() in ("true", "1", "y")
     if use_azure_token_auth:
         engine = create_azure_engine(
             connection_string=DB_CONNECTION_STRING,
@@ -59,12 +55,8 @@ if DB_CONNECTION_STRING:
             max_overflow=max_overflow,
         )
 else:
-    DATABASE_URL = "sqlite:///" + os.path.join(
-        basedir, "db.sqlite?check_same_thread=False"
-    )
-    logger.info(
-        f"Database environment variables were not provided, defaulting to {DATABASE_URL}"
-    )
+    DATABASE_URL = "sqlite:///" + os.path.join(basedir, "db.sqlite?check_same_thread=False")
+    logger.info(f"Database environment variables were not provided, defaulting to {DATABASE_URL}")
     engine = create_engine(DATABASE_URL, echo=echo_queries)
     Base.metadata.create_all(engine, checkfirst=True)
 

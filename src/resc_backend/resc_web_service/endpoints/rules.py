@@ -38,28 +38,20 @@ logger = logging.getLogger(__name__)
     summary="Get unique rules from findings",
     status_code=status.HTTP_200_OK,
     responses={
-        200: {
-            "description": "Retrieve all the unique detected rules across all the findings"
-        },
+        200: {"description": "Retrieve all the unique detected rules across all the findings"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
 )
 @cache(namespace=CACHE_NAMESPACE_RULE, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_rules_from_findings(
-    finding_statuses: List[FindingStatus] = Query(
-        None, alias="findingstatus", title="FindingStatuses"
-    ),
-    vcs_providers: List[VCSProviders] = Query(
-        None, alias="vcsprovider", title="VCSProviders"
-    ),
+    finding_statuses: List[FindingStatus] = Query(None, alias="findingstatus", title="FindingStatuses"),
+    vcs_providers: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     project_name: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_name: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     start_date_time: Optional[datetime] = Query(None),
     end_date_time: Optional[datetime] = Query(None),
-    rule_pack_versions: Optional[List[str]] = Query(
-        None, alias="rule_pack_version", title="RulePackVersion"
-    ),
+    rule_pack_versions: Optional[List[str]] = Query(None, alias="rule_pack_version", title="RulePackVersion"),
     db_connection: Session = Depends(get_db_connection),
 ) -> List[str]:
     """
@@ -102,9 +94,7 @@ def get_distinct_rules_from_findings(
 )
 @cache(namespace=CACHE_NAMESPACE_FINDING, expire=REDIS_CACHE_EXPIRE)
 def get_rules_finding_status_count(
-    rule_pack_versions: Optional[List[str]] = Query(
-        None, alias="rule_pack_version", title="RulePackVersion"
-    ),
+    rule_pack_versions: Optional[List[str]] = Query(None, alias="rule_pack_version", title="RulePackVersion"),
     rule_tags: Optional[List[str]] = Query(None, alias="rule_tag", title="RuleTag"),
     db_connection: Session = Depends(get_db_connection),
 ) -> List[RuleFindingCountModel]:
@@ -126,24 +116,16 @@ def get_rules_finding_status_count(
             rule_name=rule_name, finding_count=rule_counts["total_findings_count"]
         )
         rule_finding_count.finding_statuses_count.append(
-            StatusCount(
-                status=FindingStatus.TRUE_POSITIVE.value, count=rule_counts["true_positive"]
-            )
+            StatusCount(status=FindingStatus.TRUE_POSITIVE.value, count=rule_counts["true_positive"])
         )
         rule_finding_count.finding_statuses_count.append(
-            StatusCount(
-                status=FindingStatus.FALSE_POSITIVE.value, count=rule_counts["false_positive"]
-            )
+            StatusCount(status=FindingStatus.FALSE_POSITIVE.value, count=rule_counts["false_positive"])
         )
         rule_finding_count.finding_statuses_count.append(
-            StatusCount(
-                status=FindingStatus.NOT_ANALYZED.value, count=rule_counts["not_analyzed"]
-            )
+            StatusCount(status=FindingStatus.NOT_ANALYZED.value, count=rule_counts["not_analyzed"])
         )
         rule_finding_count.finding_statuses_count.append(
-            StatusCount(
-                status=FindingStatus.UNDER_REVIEW.value, count=rule_counts["under_review"]
-            )
+            StatusCount(status=FindingStatus.UNDER_REVIEW.value, count=rule_counts["under_review"])
         )
         rule_finding_count.finding_statuses_count.append(
             StatusCount(

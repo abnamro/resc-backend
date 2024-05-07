@@ -20,11 +20,7 @@ from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
 
 def get_vcs_instance(db_connection: Session, vcs_instance_id: int):
-    vcs_instance = (
-        db_connection.query(DBVcsInstance)
-        .filter(DBVcsInstance.id_ == vcs_instance_id)
-        .first()
-    )
+    vcs_instance = db_connection.query(DBVcsInstance).filter(DBVcsInstance.id_ == vcs_instance_id).first()
     return vcs_instance
 
 
@@ -50,9 +46,7 @@ def get_vcs_instances(
     :return: [DBVcsInstance]
         List of DBVcsInstance objects
     """
-    limit_val = (
-        MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    )
+    limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     query = db_connection.query(DBVcsInstance)
 
     if vcs_provider_type:
@@ -61,9 +55,7 @@ def get_vcs_instances(
     if vcs_instance_name:
         query = query.filter(DBVcsInstance.name == vcs_instance_name)
 
-    vcs_instances = (
-        query.order_by(DBVcsInstance.id_).offset(skip).limit(limit_val).all()
-    )
+    vcs_instances = query.order_by(DBVcsInstance.id_).offset(skip).limit(limit_val).all()
     return vcs_instances
 
 
@@ -100,9 +92,7 @@ def update_vcs_instance(
     vcs_instance_id: int,
     vcs_instance: vcs_instance_schema.VCSInstanceCreate,
 ) -> DBVcsInstance:
-    db_vcs_instance: DBVcsInstance = (
-        db_connection.query(DBVcsInstance).filter_by(id_=vcs_instance_id).first()
-    )
+    db_vcs_instance: DBVcsInstance = db_connection.query(DBVcsInstance).filter_by(id_=vcs_instance_id).first()
     db_vcs_instance.name = vcs_instance.name
     db_vcs_instance.provider_type = vcs_instance.provider_type
     db_vcs_instance.port = vcs_instance.port
@@ -117,9 +107,7 @@ def update_vcs_instance(
     return db_vcs_instance
 
 
-def create_vcs_instance(
-    db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate
-) -> DBVcsInstance:
+def create_vcs_instance(db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate) -> DBVcsInstance:
     db_vcs_instance = DBVcsInstance(
         name=vcs_instance.name,
         provider_type=vcs_instance.provider_type,
@@ -136,9 +124,7 @@ def create_vcs_instance(
     return db_vcs_instance
 
 
-def create_vcs_instance_if_not_exists(
-    db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate
-):
+def create_vcs_instance_if_not_exists(db_connection: Session, vcs_instance: vcs_instance_schema.VCSInstanceCreate):
     # Query the database to see if the vcs_instance object exists based on the unique constraint parameters
     db_select_vcs_instance = (
         db_connection.query(DBVcsInstance)
@@ -158,9 +144,7 @@ def create_vcs_instance_if_not_exists(
     return create_vcs_instance(db_connection, vcs_instance)
 
 
-def delete_vcs_instance(
-    db_connection: Session, vcs_instance_id: int, delete_related: bool = False
-):
+def delete_vcs_instance(db_connection: Session, vcs_instance_id: int, delete_related: bool = False):
     """
         Delete a vcs instance object
     :param db_connection:
@@ -171,20 +155,10 @@ def delete_vcs_instance(
         if related records need to be deleted
     """
     if delete_related:
-        scan_finding_crud.delete_scan_finding_by_vcs_instance_id(
-            db_connection, vcs_instance_id=vcs_instance_id
-        )
-        finding_crud.delete_findings_by_vcs_instance_id(
-            db_connection, vcs_instance_id=vcs_instance_id
-        )
-        scan_crud.delete_scans_by_vcs_instance_id(
-            db_connection, vcs_instance_id=vcs_instance_id
-        )
-        repository_crud.delete_repositories_by_vcs_instance_id(
-            db_connection, vcs_instance_id=vcs_instance_id
-        )
-    db_vcs_instance = (
-        db_connection.query(DBVcsInstance).filter_by(id_=vcs_instance_id).first()
-    )
+        scan_finding_crud.delete_scan_finding_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
+        finding_crud.delete_findings_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
+        scan_crud.delete_scans_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
+        repository_crud.delete_repositories_by_vcs_instance_id(db_connection, vcs_instance_id=vcs_instance_id)
+    db_vcs_instance = db_connection.query(DBVcsInstance).filter_by(id_=vcs_instance_id).first()
     db_connection.delete(db_vcs_instance)
     db_connection.commit()

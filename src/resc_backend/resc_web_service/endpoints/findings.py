@@ -73,9 +73,7 @@ def get_all_findings(
 
     total_findings = finding_crud.get_total_findings_count(db_connection)
 
-    return PaginationModel[finding_schema.FindingRead](
-        data=findings, total=total_findings, limit=limit, skip=skip
-    )
+    return PaginationModel[finding_schema.FindingRead](data=findings, total=total_findings, limit=limit, skip=skip)
 
 
 @router.post(
@@ -112,9 +110,7 @@ async def create_findings(
           The output will contain the number of successful created findings
     """
     try:
-        created_findings = finding_crud.create_findings(
-            db_connection=db_connection, findings=findings
-        )
+        created_findings = finding_crud.create_findings(db_connection=db_connection, findings=findings)
 
         # Clear cache related to findings
         await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
@@ -147,9 +143,7 @@ def read_finding(finding_id: int, db_connection: Session = Depends(get_db_connec
     db_finding = finding_crud.get_finding(db_connection, finding_id=finding_id)
     if db_finding is None:
         raise HTTPException(status_code=404, detail="Finding not found")
-    db_scan_findings = scan_finding_crud.get_scan_findings(
-        db_connection, finding_id=finding_id
-    )
+    db_scan_findings = scan_finding_crud.get_scan_findings(db_connection, finding_id=finding_id)
     scan_ids = [x.scan_id for x in db_scan_findings]
     return FindingRead.create_from_db_entities(db_finding=db_finding, scan_ids=scan_ids)
 
@@ -179,9 +173,7 @@ async def patch_finding(
     - **event_sent_on**: Event sent timestamp
     """
     db_finding = finding_crud.get_finding(db_connection, finding_id=finding_id)
-    db_sca_findings = scan_finding_crud.get_scan_findings(
-        db_connection, finding_id=finding_id
-    )
+    db_sca_findings = scan_finding_crud.get_scan_findings(db_connection, finding_id=finding_id)
     scan_ids = [x.scan_id for x in db_sca_findings]
 
     # Clear cache related to findings
@@ -189,9 +181,7 @@ async def patch_finding(
     if db_finding is None:
         raise HTTPException(status_code=404, detail="Finding not found")
     return FindingRead.create_from_db_entities(
-        finding_crud.patch_finding(
-            db_connection, finding_id=finding_id, finding_update=finding_update
-        ),
+        finding_crud.patch_finding(db_connection, finding_id=finding_id, finding_update=finding_update),
         scan_ids,
     )
 
@@ -207,9 +197,7 @@ async def patch_finding(
         503: {"description": ERROR_MESSAGE_503},
     },
 )
-async def delete_finding(
-    finding_id: int, db_connection: Session = Depends(get_db_connection)
-):
+async def delete_finding(finding_id: int, db_connection: Session = Depends(get_db_connection)):
     """
         Delete a finding object
 
@@ -220,9 +208,7 @@ async def delete_finding(
     db_finding = finding_crud.get_finding(db_connection, finding_id=finding_id)
     if db_finding is None:
         raise HTTPException(status_code=404, detail="Finding not found")
-    finding_crud.delete_finding(
-        db_connection, finding_id=finding_id, delete_related=True
-    )
+    finding_crud.delete_finding(db_connection, finding_id=finding_id, delete_related=True)
 
     # Clear cache related to findings
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
@@ -240,9 +226,7 @@ async def delete_finding(
     },
 )
 @cache(namespace=CACHE_NAMESPACE_FINDING, expire=REDIS_CACHE_EXPIRE)
-def get_total_findings_count_by_rule(
-    rule_name: str, db_connection: Session = Depends(get_db_connection)
-):
+def get_total_findings_count_by_rule(rule_name: str, db_connection: Session = Depends(get_db_connection)):
     """
         Retrieve total findings count for a given rule
 
@@ -250,9 +234,7 @@ def get_total_findings_count_by_rule(
     - **rule_name**: name of the rule
     """
     findings_filter = FindingsFilter(rule_names=[rule_name])
-    return finding_crud.get_total_findings_count(
-        db_connection, findings_filter=findings_filter
-    )
+    return finding_crud.get_total_findings_count(db_connection, findings_filter=findings_filter)
 
 
 @router.get(
@@ -284,15 +266,11 @@ def get_findings_by_rule(
         The output will contain a PaginationModel containing the list of FindingRead type objects,
         or an empty list if no finding was found for the given rule
     """
-    findings = finding_crud.get_findings_by_rule(
-        db_connection, skip=skip, limit=limit, rule_name=rule_name
-    )
+    findings = finding_crud.get_findings_by_rule(db_connection, skip=skip, limit=limit, rule_name=rule_name)
     total_findings = finding_crud.get_total_findings_count(
         db_connection, findings_filter=FindingsFilter(rule_names=[rule_name])
     )
-    return PaginationModel[finding_schema.FindingRead](
-        data=findings, total=total_findings, limit=limit, skip=skip
-    )
+    return PaginationModel[finding_schema.FindingRead](data=findings, total=total_findings, limit=limit, skip=skip)
 
 
 @router.post(
@@ -327,9 +305,7 @@ async def audit_findings(
     for finding_id in audit.finding_ids:
         db_finding = finding_crud.get_finding(db_connection, finding_id=finding_id)
         if db_finding is None:
-            raise HTTPException(
-                status_code=404, detail=f"Finding {finding_id} not found"
-            )
+            raise HTTPException(status_code=404, detail=f"Finding {finding_id} not found")
         audits.append(
             audit_crud.create_audit(
                 db_connection=db_connection,
@@ -374,15 +350,9 @@ def get_finding_audits(
         The output will contain a PaginationModel containing the list of AuditRead type objects,
         or an empty list if no audit info was found
     """
-    audits = audit_crud.get_finding_audits(
-        db_connection, skip=skip, limit=limit, finding_id=finding_id
-    )
-    total_audits = audit_crud.get_finding_audits_count(
-        db_connection, finding_id=finding_id
-    )
-    return PaginationModel[audit_schema.AuditRead](
-        data=audits, total=total_audits, limit=limit, skip=skip
-    )
+    audits = audit_crud.get_finding_audits(db_connection, skip=skip, limit=limit, finding_id=finding_id)
+    total_audits = audit_crud.get_finding_audits_count(db_connection, finding_id=finding_id)
+    return PaginationModel[audit_schema.AuditRead](data=audits, total=total_audits, limit=limit, skip=skip)
 
 
 @router.get(
@@ -404,9 +374,7 @@ def get_supported_statuses() -> List[str]:
     - **return**: List[str]
         The output will contain a list of strings of unique statuses supported
     """
-    supported_finding_statuses = [
-        finding_status for finding_status in FindingStatus if finding_status
-    ]
+    supported_finding_statuses = [finding_status for finding_status in FindingStatus if finding_status]
     return supported_finding_statuses
 
 
@@ -459,13 +427,9 @@ def get_count_by_time(
     )
     for finding in findings:
         if time_type == DateFilter.MONTH:
-            date_count = DateCountModel(
-                finding_count=finding[2], date_lable=f"{finding[0]}-{finding[1]}"
-            )
+            date_count = DateCountModel(finding_count=finding[2], date_lable=f"{finding[0]}-{finding[1]}")
         elif time_type == DateFilter.WEEK:
-            date_count = DateCountModel(
-                finding_count=finding[2], date_lable=f"{finding[0]}-W{finding[1]}"
-            )
+            date_count = DateCountModel(finding_count=finding[2], date_lable=f"{finding[0]}-W{finding[1]}")
         elif time_type == DateFilter.DAY:
             date_count = DateCountModel(
                 finding_count=finding[3],
@@ -474,6 +438,4 @@ def get_count_by_time(
 
         date_counts.append(date_count)
 
-    return PaginationModel[DateCountModel](
-        data=date_counts, total=total_findings, limit=limit, skip=skip
-    )
+    return PaginationModel[DateCountModel](data=date_counts, total=total_findings, limit=limit, skip=skip)

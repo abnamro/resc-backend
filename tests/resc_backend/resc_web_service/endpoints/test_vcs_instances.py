@@ -52,11 +52,7 @@ class TestVCSInstances(unittest.TestCase):
 
     @staticmethod
     def create_json_body(vcs_instance: DBVcsInstance):
-        return json.loads(
-            TestVCSInstances.cast_db_vcs_instance_to_vcs_instance_create(
-                vcs_instance
-            ).json()
-        )
+        return json.loads(TestVCSInstances.cast_db_vcs_instance_to_vcs_instance_create(vcs_instance).json())
 
     @staticmethod
     def assert_vcs_instance(data, vcs_instance):
@@ -70,15 +66,9 @@ class TestVCSInstances(unittest.TestCase):
         assert data["scope"] == vcs_instance.scope
         assert data["organization"] == vcs_instance.organization
 
-    @patch(
-        "resc_backend.resc_web_service.crud.vcs_instance.create_vcs_instance_if_not_exists"
-    )
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_post_vcs_instance(
-        self, clear_cache_by_namespace, create_vcs_instance_if_not_exists
-    ):
+    @patch("resc_backend.resc_web_service.crud.vcs_instance.create_vcs_instance_if_not_exists")
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_post_vcs_instance(self, clear_cache_by_namespace, create_vcs_instance_if_not_exists):
         db_vcs_instance = self.db_vcs_instances[0]
         create_vcs_instance_if_not_exists.return_value = db_vcs_instance
         clear_cache_by_namespace.return_value = None
@@ -91,17 +81,11 @@ class TestVCSInstances(unittest.TestCase):
         self.assert_vcs_instance(response.json(), db_vcs_instance)
         create_vcs_instance_if_not_exists.assert_called_once_with(
             db_connection=ANY,
-            vcs_instance=self.cast_db_vcs_instance_to_vcs_instance_create(
-                db_vcs_instance
-            ),
+            vcs_instance=self.cast_db_vcs_instance_to_vcs_instance_create(db_vcs_instance),
         )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_VCS_INSTANCE)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_VCS_INSTANCE)])
 
-    @patch(
-        "resc_backend.resc_web_service.crud.vcs_instance.create_vcs_instance_if_not_exists"
-    )
+    @patch("resc_backend.resc_web_service.crud.vcs_instance.create_vcs_instance_if_not_exists")
     def test_post_vcs_instance_no_body(self, create_vcs_instance_if_not_exists):
         response = self.client.post(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}")
 
@@ -111,9 +95,7 @@ class TestVCSInstances(unittest.TestCase):
         assert data["detail"][0]["msg"] == "field required"
         create_vcs_instance_if_not_exists.assert_not_called()
 
-    @patch(
-        "resc_backend.resc_web_service.crud.vcs_instance.create_vcs_instance_if_not_exists"
-    )
+    @patch("resc_backend.resc_web_service.crud.vcs_instance.create_vcs_instance_if_not_exists")
     def test_post_vcs_instance_empty_body(self, create_vcs_instance_if_not_exists):
         response = self.client.post(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}", json={})
 
@@ -140,22 +122,16 @@ class TestVCSInstances(unittest.TestCase):
     def test_read_vcs_instance(self, read_vcs_instance):
         vcs_instance_id = 1
         read_vcs_instance.return_value = self.db_vcs_instances[vcs_instance_id]
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}/{vcs_instance_id}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}/{vcs_instance_id}")
         assert response.status_code == 200, response.text
-        self.assert_vcs_instance(
-            response.json(), self.db_vcs_instances[vcs_instance_id]
-        )
+        self.assert_vcs_instance(response.json(), self.db_vcs_instances[vcs_instance_id])
         read_vcs_instance.assert_called_once_with(ANY, vcs_instance_id=vcs_instance_id)
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instance")
     def test_read_vcs_instance_non_existing(self, read_vcs_instance):
         vcs_instance_id = 999
         read_vcs_instance.return_value = None
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}/{vcs_instance_id}"
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}/{vcs_instance_id}")
         assert response.status_code == 404, response.text
         read_vcs_instance.assert_called_once_with(ANY, vcs_instance_id=vcs_instance_id)
 
@@ -164,9 +140,7 @@ class TestVCSInstances(unittest.TestCase):
     def test_get_all_vcs_instances(self, get_vcs_instances, get_vcs_instances_count):
         get_vcs_instances.return_value = self.db_vcs_instances[:2]
         get_vcs_instances_count.return_value = len(self.db_vcs_instances[:2])
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}", params={"skip": 0, "limit": 5}
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}", params={"skip": 0, "limit": 5})
         assert response.status_code == 200, response.text
         data = response.json()
         assert len(data["data"]) == 2
@@ -178,37 +152,25 @@ class TestVCSInstances(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances")
     def test_get_all_vcs_instances_with_negative_skip(self, get_vcs_instances):
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}", params={"skip": -1, "limit": 5}
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}", params={"skip": -1, "limit": 5})
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "skip"]
-        assert (
-            data["detail"][0]["msg"]
-            == "ensure this value is greater than or equal to 0"
-        )
+        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
         get_vcs_instances.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances")
     def test_get_all_vcs_instances_with_negative_limit(self, get_vcs_instances):
-        response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}", params={"skip": 0, "limit": -1}
-        )
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}", params={"skip": 0, "limit": -1})
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "limit"]
-        assert (
-            data["detail"][0]["msg"]
-            == "ensure this value is greater than or equal to 1"
-        )
+        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
         get_vcs_instances.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances_count")
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances")
-    def test_get_all_vcs_instances_with_vcs_provider_type_filter(
-        self, get_vcs_instances, get_vcs_instances_count
-    ):
+    def test_get_all_vcs_instances_with_vcs_provider_type_filter(self, get_vcs_instances, get_vcs_instances_count):
         get_vcs_instances.return_value = self.db_vcs_instances[:5]
         get_vcs_instances_count.return_value = len(self.db_vcs_instances[:5])
         response = self.client.get(
@@ -229,9 +191,7 @@ class TestVCSInstances(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances_count")
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances")
-    def test_get_all_vcs_instances_with_vcs_instance_name_filter(
-        self, get_vcs_instances, get_vcs_instances_count
-    ):
+    def test_get_all_vcs_instances_with_vcs_instance_name_filter(self, get_vcs_instances, get_vcs_instances_count):
         get_vcs_instances.return_value = self.db_vcs_instances[:1]
         get_vcs_instances_count.return_value = len(self.db_vcs_instances[:1])
         response = self.client.get(
@@ -272,12 +232,8 @@ class TestVCSInstances(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.update_vcs_instance")
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instance")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_update_vcs_instance(
-        self, clear_cache_by_namespace, get_vcs_instance, update_vcs_instance
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_update_vcs_instance(self, clear_cache_by_namespace, get_vcs_instance, update_vcs_instance):
         vcs_instance_id = 1
         get_vcs_instance.return_value = self.db_vcs_instances[vcs_instance_id]
         update_vcs_instance.return_value = self.db_vcs_instances[1]
@@ -292,20 +248,14 @@ class TestVCSInstances(unittest.TestCase):
         get_vcs_instance.assert_called_once_with(ANY, vcs_instance_id=vcs_instance_id)
         update_vcs_instance.assert_called_once_with(
             db_connection=ANY,
-            vcs_instance=self.cast_db_vcs_instance_to_vcs_instance_create(
-                self.db_vcs_instances[1]
-            ),
+            vcs_instance=self.cast_db_vcs_instance_to_vcs_instance_create(self.db_vcs_instances[1]),
             vcs_instance_id=vcs_instance_id,
         )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_VCS_INSTANCE)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_VCS_INSTANCE)])
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.update_vcs_instance")
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instance")
-    def test_update_vcs_instance_empty_body(
-        self, update_vcs_instance, get_vcs_instance
-    ):
+    def test_update_vcs_instance_empty_body(self, update_vcs_instance, get_vcs_instance):
         response = self.client.put(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}/9999999999",
             json={},
@@ -332,9 +282,7 @@ class TestVCSInstances(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instance")
     @patch("resc_backend.resc_web_service.crud.vcs_instance.update_vcs_instance")
-    def test_update_vcs_instance_non_existing(
-        self, update_vcs_instance, get_vcs_instance
-    ):
+    def test_update_vcs_instance_non_existing(self, update_vcs_instance, get_vcs_instance):
         vcs_instance_id = 999
         get_vcs_instance.return_value = None
         response = self.client.put(
@@ -355,35 +303,23 @@ class TestVCSInstances(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instance")
     @patch("resc_backend.resc_web_service.crud.vcs_instance.delete_vcs_instance")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_delete_vcs_instance(
-        self, clear_cache_by_namespace, delete_vcs_instance, get_vcs_instance
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_delete_vcs_instance(self, clear_cache_by_namespace, delete_vcs_instance, get_vcs_instance):
         vcs_instance_id = 1
         get_vcs_instance.return_value = self.db_vcs_instances[vcs_instance_id]
         clear_cache_by_namespace.return_value = None
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_VCS}/{vcs_instance_id}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_VCS}/{vcs_instance_id}")
         assert response.status_code == 200, response.text
         get_vcs_instance.assert_called_once_with(ANY, vcs_instance_id=vcs_instance_id)
-        delete_vcs_instance.assert_called_once_with(
-            ANY, vcs_instance_id=vcs_instance_id, delete_related=True
-        )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_VCS_INSTANCE)]
-        )
+        delete_vcs_instance.assert_called_once_with(ANY, vcs_instance_id=vcs_instance_id, delete_related=True)
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_VCS_INSTANCE)])
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instance")
     @patch("resc_backend.resc_web_service.crud.vcs_instance.delete_vcs_instance")
     def test_delete_vcs_instance_invalid(self, delete_vcs_instance, get_vcs_instance):
         vcs_instance_id = 999
         get_vcs_instance.return_value = None
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_VCS}/{vcs_instance_id}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_VCS}/{vcs_instance_id}")
         assert response.status_code == 404, response.text
         data = response.json()
         assert data["detail"] == "VCS instance not found"

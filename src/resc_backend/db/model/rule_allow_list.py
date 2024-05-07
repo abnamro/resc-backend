@@ -29,9 +29,7 @@ class DBruleAllowList(Base):
         self.stop_words = stop_words
 
     @staticmethod
-    def create_from_metadata(
-        description: str, regexes: str, paths: str, commits: str, stop_words: str
-    ):
+    def create_from_metadata(description: str, regexes: str, paths: str, commits: str, stop_words: str):
         db_rule_allow_list = DBruleAllowList(
             description=description,
             regexes=regexes,

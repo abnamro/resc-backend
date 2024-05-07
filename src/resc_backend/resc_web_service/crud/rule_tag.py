@@ -9,9 +9,7 @@ from sqlalchemy.orm.query import Query
 from resc_backend.db.model import DBrule, DBruleTag, DBtag
 
 
-def create_rule_tag(
-    db_connection: Session, rule_id: int, tags: List[str]
-) -> List[DBruleTag]:
+def create_rule_tag(db_connection: Session, rule_id: int, tags: List[str]) -> List[DBruleTag]:
     """
     Create rule tag entries, linking / creating tag names to a rule
     :param db_connection:
@@ -87,9 +85,7 @@ def create_tags(db_connection: Session, tags: List[str]) -> List[DBtag]:
     return db_create_tags
 
 
-def get_rule_tag_names_by_rule_pack_version(
-    db_connection: Session, rule_pack_version: str
-):
+def get_rule_tag_names_by_rule_pack_version(db_connection: Session, rule_pack_version: str):
     """
     Get rule names and there tags based on the rule pack version
     :param db_connection:

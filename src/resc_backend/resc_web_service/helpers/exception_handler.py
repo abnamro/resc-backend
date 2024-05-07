@@ -16,9 +16,7 @@ from resc_backend.constants import ERROR_MESSAGE_500, ERROR_MESSAGE_503
 
 def add_exception_handlers(app: FastAPI):
     @app.exception_handler(RequestValidationError)
-    async def validation_exception_handler(
-        request: Request, exc: RequestValidationError
-    ):
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
         log_warning(request, exc, "422 Unprocessable Entity")
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -42,9 +40,7 @@ def add_exception_handlers(app: FastAPI):
         )
 
     @app.exception_handler(OperationalError)
-    async def service_unavailable_exception_handler(
-        request: Request, exc: OperationalError
-    ):
+    async def service_unavailable_exception_handler(request: Request, exc: OperationalError):
         log_error(request, exc, "503 Service Unavailable")
         return JSONResponse(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,

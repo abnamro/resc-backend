@@ -41,9 +41,7 @@ security = HTTPBearer()
 logger = logging.getLogger(__name__)
 
 
-async def requires_auth(
-    request: Request, credentials: HTTPBasicCredentials = Depends(security)
-):
+async def requires_auth(request: Request, credentials: HTTPBasicCredentials = Depends(security)):
     """
     Function that is used to validate the JWT access token
     """
@@ -80,9 +78,7 @@ async def requires_auth(
             )
         request.scope["user"] = user_id
     except urllib.error.URLError as error:
-        logger.error(
-            f"Unable to contact server for token validation {jwks_url} Message: {error}"
-        )
+        logger.error(f"Unable to contact server for token validation {jwks_url} Message: {error}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to contact server for token validation",
@@ -204,10 +200,7 @@ def check_db_initialized():
                 not_found_tables.append(table_name)
 
         if len(not_found_tables) > 0:
-            raise RuntimeError(
-                f"Unable to determine existence of required table(s) "
-                f"{', '.join(not_found_tables)}"
-            )
+            raise RuntimeError(f"Unable to determine existence of required table(s) " f"{', '.join(not_found_tables)}")
     except Exception as ex:
         logger.error(f"Database is NOT connected or initialized | {ex} | Retrying...")
         raise

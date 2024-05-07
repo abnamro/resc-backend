@@ -121,10 +121,7 @@ class TestFindings(unittest.TestCase):
         assert data["column_end"] == finding.column_end
         assert data["commit_id"] == finding.commit_id
         assert data["commit_message"] == finding.commit_message
-        assert (
-            datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f")
-            == finding.commit_timestamp
-        )
+        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == finding.commit_timestamp
         assert data["author"] == finding.author
         assert data["email"] == finding.email
         assert data["rule_name"] == finding.rule_name
@@ -132,10 +129,7 @@ class TestFindings(unittest.TestCase):
         assert data["repository_id"] == finding.repository_id
         assert data["id_"] == finding.id_
         assert finding.id_ == scan_findings[0].finding_id
-        assert (
-            datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S.%f")
-            == finding.event_sent_on
-        )
+        assert datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S.%f") == finding.event_sent_on
 
     @staticmethod
     def assert_finding(data, finding: Finding):
@@ -145,25 +139,17 @@ class TestFindings(unittest.TestCase):
         assert data["column_end"] == finding.column_end
         assert data["commit_id"] == finding.commit_id
         assert data["commit_message"] == finding.commit_message
-        assert (
-            datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f")
-            == finding.commit_timestamp
-        )
+        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == finding.commit_timestamp
         assert data["author"] == finding.author
         assert data["email"] == finding.email
         assert data["rule_name"] == finding.rule_name
         assert data["scan_ids"] == finding.scan_ids
         assert data["repository_id"] == finding.repository_id
         assert data["id_"] == finding.id_
-        assert (
-            datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S.%f")
-            == finding.event_sent_on
-        )
+        assert datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S.%f") == finding.event_sent_on
 
     @staticmethod
-    def cast_db_finding_to_finding_create(
-        finding: DBfinding, scan_findings: List[DBscanFinding]
-    ):
+    def cast_db_finding_to_finding_create(finding: DBfinding, scan_findings: List[DBscanFinding]):
         return FindingCreate(
             scan_ids=[x.scan_id for x in scan_findings],
             repository_id=finding.repository_id,
@@ -181,9 +167,7 @@ class TestFindings(unittest.TestCase):
         )
 
     @staticmethod
-    def cast_db_finding_to_finding_base(
-        finding: DBfinding, scan_findings: List[DBscanFinding]
-    ):
+    def cast_db_finding_to_finding_base(finding: DBfinding, scan_findings: List[DBscanFinding]):
         return FindingBase(
             scan_id=[x.scan_id for x in scan_findings],
             file_path=finding.file_path,
@@ -205,11 +189,7 @@ class TestFindings(unittest.TestCase):
 
     @staticmethod
     def create_json_body(finding: DBfinding, scan_findings: List[DBscanFinding]):
-        return json.loads(
-            TestFindings.cast_db_finding_to_finding_create(
-                finding, scan_findings
-            ).json()
-        )
+        return json.loads(TestFindings.cast_db_finding_to_finding_create(finding, scan_findings).json())
 
     @staticmethod
     def create_json_body_multiple_audit(audit_multiple: AuditMultiple):
@@ -229,16 +209,12 @@ class TestFindings(unittest.TestCase):
         finding_id = 999
         get_finding.return_value = None
         with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding_id}"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding_id}")
             assert response.status_code == 404, response.text
             get_finding.assert_called_once_with(ANY, finding_id=finding_id)
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding_id}"
-            )
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding_id}")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
@@ -250,52 +226,36 @@ class TestFindings(unittest.TestCase):
         db_scan_findings = [self.db_scan_findings[0]]
         get_scan_findings.return_value = db_scan_findings
         with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding.id_}"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding.id_}")
             assert response.status_code == 200, response.text
             self.assert_finding(response.json(), finding)
             get_finding.assert_called_once_with(ANY, finding_id=finding.id_)
             get_scan_findings.assert_called_once_with(ANY, finding_id=finding.id_)
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding.id_}"
-            )
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding.id_}")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_finding")
     @patch("resc_backend.resc_web_service.crud.finding.delete_finding")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_delete_findings(
-        self, clear_cache_by_namespace, delete_finding, get_finding
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_delete_findings(self, clear_cache_by_namespace, delete_finding, get_finding):
         db_finding = self.db_findings[0]
         get_finding.return_value = db_finding
         clear_cache_by_namespace.return_value = None
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{db_finding.id_}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{db_finding.id_}")
         assert response.status_code == 200, response.text
         get_finding.assert_called_once_with(ANY, finding_id=db_finding.id_)
-        delete_finding.assert_called_once_with(
-            ANY, finding_id=db_finding.id_, delete_related=True
-        )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_FINDING)]
-        )
+        delete_finding.assert_called_once_with(ANY, finding_id=db_finding.id_, delete_related=True)
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_FINDING)])
 
     @patch("resc_backend.resc_web_service.crud.finding.get_finding")
     @patch("resc_backend.resc_web_service.crud.finding.delete_finding")
     def test_delete_findings_non_existing(self, delete_finding, get_finding):
         finding_id = 999
         get_finding.return_value = None
-        response = self.client.delete(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding_id}"
-        )
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding_id}")
         assert response.status_code == 404, response.text
         data = response.json()
         assert data["detail"] == "Finding not found"
@@ -303,9 +263,7 @@ class TestFindings(unittest.TestCase):
         delete_finding.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.finding.create_findings")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
     def test_post_findings(self, clear_cache_by_namespace, create_finding):
         db_finding = self.db_findings[0]
         db_scan_findings = [self.db_scan_findings[0]]
@@ -320,13 +278,9 @@ class TestFindings(unittest.TestCase):
 
         create_finding.assert_called_once_with(
             db_connection=ANY,
-            findings=[
-                self.cast_db_finding_to_finding_create(db_finding, db_scan_findings)
-            ],
+            findings=[self.cast_db_finding_to_finding_create(db_finding, db_scan_findings)],
         )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_FINDING)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_FINDING)])
 
     @patch("resc_backend.resc_web_service.crud.finding.create_findings")
     def test_post_findings_no_body(self, create_finding):
@@ -352,12 +306,8 @@ class TestFindings(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.finding.get_finding")
     @patch("resc_backend.resc_web_service.crud.scan_finding.get_scan_findings")
     @patch("resc_backend.resc_web_service.crud.finding.patch_finding")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_patch_findings(
-        self, clear_cache_by_namespace, patch_finding, get_scan_findings, get_finding
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_patch_findings(self, clear_cache_by_namespace, patch_finding, get_scan_findings, get_finding):
         finding_id = 1
         db_finding = self.db_findings[0]
         db_finding.event_sent_on = datetime.utcnow()
@@ -378,18 +328,12 @@ class TestFindings(unittest.TestCase):
             finding_id=db_finding.id_,
             finding_update=self.cast_db_finding_to_finding_patch(db_finding),
         )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_FINDING)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_FINDING)])
 
     @patch("resc_backend.resc_web_service.crud.finding.get_finding")
     @patch("resc_backend.resc_web_service.crud.finding.patch_finding")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_patch_event_sent_property_findings(
-        self, clear_cache_by_namespace, patch_finding, get_finding
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_patch_event_sent_property_findings(self, clear_cache_by_namespace, patch_finding, get_finding):
         finding_id = 1
         db_finding = self.db_findings[1]
         get_finding.return_value = db_finding
@@ -412,25 +356,18 @@ class TestFindings(unittest.TestCase):
         assert data["column_end"] == expected_results.column_end
         assert data["commit_id"] == expected_results.commit_id
         assert data["commit_message"] == expected_results.commit_message
-        assert (
-            datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f")
-            == expected_results.commit_timestamp
-        )
+        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == expected_results.commit_timestamp
         assert data["author"] == expected_results.author
         assert data["email"] == expected_results.email
         assert data["rule_name"] == expected_results.rule_name
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_FINDING)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_FINDING)])
 
     @patch("resc_backend.resc_web_service.crud.finding.get_total_findings_count")
     @patch("resc_backend.resc_web_service.crud.finding.get_findings")
     def test_get_multiple_findings(self, get_findings, get_findings_count):
         number_of_findings = 3
         get_findings.return_value = self.enriched_findings[:number_of_findings]
-        get_findings_count.return_value = len(
-            self.enriched_findings[:number_of_findings]
-        )
+        get_findings_count.return_value = len(self.enriched_findings[:number_of_findings])
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}",
@@ -463,10 +400,7 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
-            assert (
-                data["detail"][0]["msg"]
-                == "ensure this value is greater than or equal to 0"
-            )
+            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -487,10 +421,7 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
-            assert (
-                data["detail"][0]["msg"]
-                == "ensure this value is greater than or equal to 1"
-            )
+            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -508,8 +439,7 @@ class TestFindings(unittest.TestCase):
         get_total_findings_count.return_value = count
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             assert response.status_code == 200, response.text
             assert response.text == str(count)
@@ -519,8 +449,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -532,35 +461,28 @@ class TestFindings(unittest.TestCase):
         get_total_findings_count.return_value = count
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             assert response.status_code == 200, response.text
             assert response.text == str(count)
-            get_total_findings_count.assert_called_once_with(
-                db_connection=ANY, rule_name=rule_name
-            )
+            get_total_findings_count.assert_called_once_with(db_connection=ANY, rule_name=rule_name)
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_total_findings_count")
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_by_rule")
-    def test_get_multiple_findings_by_rule_none(
-        self, get_findings_by_rule, get_findings_count
-    ):
+    def test_get_multiple_findings_by_rule_none(self, get_findings_by_rule, get_findings_count):
         rule_name = "rule_name"
         get_findings_by_rule.return_value = []
         get_findings_count.return_value = 0
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             assert response.status_code == 200, response.text
@@ -569,14 +491,11 @@ class TestFindings(unittest.TestCase):
             assert data["total"] == 0
             assert data["limit"] == 5
             assert data["skip"] == 0
-            get_findings_by_rule.assert_called_once_with(
-                ANY, skip=0, limit=5, rule_name=rule_name
-            )
+            get_findings_by_rule.assert_called_once_with(ANY, skip=0, limit=5, rule_name=rule_name)
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             self.assert_cache(cached_response)
@@ -584,16 +503,13 @@ class TestFindings(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.finding.get_total_findings_count")
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_by_rule")
-    def test_get_multiple_findings_by_rule_multiple(
-        self, get_findings_by_rule, get_findings_count
-    ):
+    def test_get_multiple_findings_by_rule_multiple(self, get_findings_by_rule, get_findings_count):
         rule_name = "rule_name"
         get_findings_by_rule.return_value = self.enriched_findings[:2]
         get_findings_count.return_value = len(self.enriched_findings[:2])
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             assert response.status_code == 200, response.text
@@ -604,14 +520,11 @@ class TestFindings(unittest.TestCase):
             assert data["total"] == 2
             assert data["limit"] == 5
             assert data["skip"] == 0
-            get_findings_by_rule.assert_called_once_with(
-                ANY, skip=0, limit=5, rule_name=rule_name
-            )
+            get_findings_by_rule.assert_called_once_with(ANY, skip=0, limit=5, rule_name=rule_name)
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             self.assert_cache(cached_response)
@@ -619,16 +532,13 @@ class TestFindings(unittest.TestCase):
 
     @patch("resc_backend.resc_web_service.crud.finding.get_total_findings_count")
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_by_rule")
-    def test_get_multiple_findings_by_rule_single(
-        self, get_findings_by_rule, get_findings_count
-    ):
+    def test_get_multiple_findings_by_rule_single(self, get_findings_by_rule, get_findings_count):
         rule_name = "rule_name"
         get_findings_by_rule.return_value = self.enriched_findings[:1]
         get_findings_count.return_value = len(self.enriched_findings[:1])
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             assert response.status_code == 200, response.text
@@ -638,72 +548,55 @@ class TestFindings(unittest.TestCase):
             assert data["total"] == 1
             assert data["limit"] == 5
             assert data["skip"] == 0
-            get_findings_by_rule.assert_called_once_with(
-                ANY, skip=0, limit=5, rule_name=rule_name
-            )
+            get_findings_by_rule.assert_called_once_with(ANY, skip=0, limit=5, rule_name=rule_name)
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_by_rule")
-    def test_get_multiple_findings_by_rule_with_negative_skip(
-        self, get_findings_by_rule
-    ):
+    def test_get_multiple_findings_by_rule_with_negative_skip(self, get_findings_by_rule):
         rule_name = "rule_name"
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": -1, "limit": 5},
             )
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
-            assert (
-                data["detail"][0]["msg"]
-                == "ensure this value is greater than or equal to 0"
-            )
+            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
             get_findings_by_rule.assert_not_called()
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": -1, "limit": 5},
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_by_rule")
-    def test_get_multiple_findings_by_rule_with_negative_limit(
-        self, get_findings_by_rule
-    ):
+    def test_get_multiple_findings_by_rule_with_negative_limit(self, get_findings_by_rule):
         rule_name = "rule_name"
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": -1},
             )
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
-            assert (
-                data["detail"][0]["msg"]
-                == "ensure this value is greater than or equal to 1"
-            )
+            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
             get_findings_by_rule.assert_not_called()
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": -1},
             )
             self.assert_cache(cached_response)
@@ -712,12 +605,8 @@ class TestFindings(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.finding.get_finding")
     @patch("resc_backend.resc_web_service.crud.scan_finding.get_scan_findings")
     @patch("resc_backend.resc_web_service.crud.audit.create_audit")
-    @patch(
-        "resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace"
-    )
-    def test_audit_findings(
-        self, clear_cache_by_namespace, audit_findings, get_scan_findings, get_finding
-    ):
+    @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
+    def test_audit_findings(self, clear_cache_by_namespace, audit_findings, get_scan_findings, get_finding):
         audit_multiple = AuditMultiple(
             finding_ids=[1, 2],
             status=FindingStatus.FALSE_POSITIVE.value,
@@ -732,9 +621,7 @@ class TestFindings(unittest.TestCase):
             json=self.create_json_body_multiple_audit(audit_multiple),
         )
         assert response.status_code == 201, response.text
-        get_finding.assert_has_calls(
-            [call(ANY, finding_id=1), call(ANY, finding_id=2)], any_order=False
-        )
+        get_finding.assert_has_calls([call(ANY, finding_id=1), call(ANY, finding_id=2)], any_order=False)
         audit_findings.assert_has_calls(
             [
                 call(
@@ -754,9 +641,7 @@ class TestFindings(unittest.TestCase):
             ],
             any_order=False,
         )
-        clear_cache_by_namespace.assert_has_calls(
-            [call(namespace=CACHE_NAMESPACE_FINDING)]
-        )
+        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_FINDING)])
 
     @patch("resc_backend.resc_web_service.crud.finding.get_finding")
     @patch("resc_backend.resc_web_service.crud.audit.create_audit")
@@ -777,10 +662,7 @@ class TestFindings(unittest.TestCase):
 
     def test_get_supported_statuses(self):
         with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_SUPPORTED_STATUSES}/"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_SUPPORTED_STATUSES}/")
             assert response.status_code == 200, response.text
             data = response.json()
             assert data[0] == "NOT_ANALYZED"
@@ -791,25 +673,17 @@ class TestFindings(unittest.TestCase):
             assert len(data) == 5
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-                f"{RWS_ROUTE_SUPPORTED_STATUSES}/"
-            )
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_SUPPORTED_STATUSES}/")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_count_by_time")
-    @patch(
-        "resc_backend.resc_web_service.crud.finding.get_findings_count_by_time_total"
-    )
-    def test_get_count_by_time_month(
-        self, get_findings_count_by_time_total, get_findings_count_by_time
-    ):
+    @patch("resc_backend.resc_web_service.crud.finding.get_findings_count_by_time_total")
+    def test_get_count_by_time_month(self, get_findings_count_by_time_total, get_findings_count_by_time):
         get_findings_count_by_time_total.return_value = 2
         get_findings_count_by_time.return_value = [(2021, 10, 100), (2022, 12, 200)]
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.MONTH.value}"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.MONTH.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -823,17 +697,12 @@ class TestFindings(unittest.TestCase):
         assert data["skip"] == 0
 
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_count_by_time")
-    @patch(
-        "resc_backend.resc_web_service.crud.finding.get_findings_count_by_time_total"
-    )
-    def test_get_count_by_time_week(
-        self, get_findings_count_by_time_total, get_findings_count_by_time
-    ):
+    @patch("resc_backend.resc_web_service.crud.finding.get_findings_count_by_time_total")
+    def test_get_count_by_time_week(self, get_findings_count_by_time_total, get_findings_count_by_time):
         get_findings_count_by_time_total.return_value = 2
         get_findings_count_by_time.return_value = [(2021, 40, 100), (2022, 42, 200)]
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.WEEK.value}"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.WEEK.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -847,20 +716,15 @@ class TestFindings(unittest.TestCase):
         assert data["skip"] == 0
 
     @patch("resc_backend.resc_web_service.crud.finding.get_findings_count_by_time")
-    @patch(
-        "resc_backend.resc_web_service.crud.finding.get_findings_count_by_time_total"
-    )
-    def test_get_count_by_time_day(
-        self, get_findings_count_by_time_total, get_findings_count_by_time
-    ):
+    @patch("resc_backend.resc_web_service.crud.finding.get_findings_count_by_time_total")
+    def test_get_count_by_time_day(self, get_findings_count_by_time_total, get_findings_count_by_time):
         get_findings_count_by_time_total.return_value = 2
         get_findings_count_by_time.return_value = [
             (2021, 10, 1, 100),
             (2022, 12, 2, 200),
         ]
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
-            f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.DAY.value}"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.DAY.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -890,15 +754,12 @@ class TestFindings(unittest.TestCase):
             assert data["data"][0]["comment"] == self.db_audits[0].comment
             assert data["data"][0]["auditor"] == self.db_audits[0].auditor
             assert (
-                datetime.strptime(data["data"][0]["timestamp"], "%Y-%m-%dT%H:%M:%S.%f")
-                == self.db_audits[0].timestamp
+                datetime.strptime(data["data"][0]["timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == self.db_audits[0].timestamp
             )
             assert data["total"] == 1
             assert data["limit"] == 5
             assert data["skip"] == 0
-            get_finding_audits.assert_called_once_with(
-                ANY, skip=0, limit=5, finding_id=1
-            )
+            get_finding_audits.assert_called_once_with(ANY, skip=0, limit=5, finding_id=1)
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(

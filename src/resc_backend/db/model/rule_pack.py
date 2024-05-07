@@ -29,9 +29,7 @@ class DBrulePack(Base):
         self.created = created
 
     @staticmethod
-    def create_from_metadata(
-        version: str, global_allow_list: int, active: bool, created: datetime
-    ):
+    def create_from_metadata(version: str, global_allow_list: int, active: bool, created: datetime):
         db_rule_pack = DBrulePack(
             version=version,
             global_allow_list=global_allow_list,
