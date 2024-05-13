@@ -428,7 +428,7 @@ def get_rule_findings_count_by_status(
 
         query = query.join(
             DBrule,
-            (DBrule.rule_name == DBfinding.rule_name) | (DBrule.rule_pack == DBscan.rule_pack),
+            (DBrule.rule_name == DBfinding.rule_name) & (DBrule.rule_pack == DBscan.rule_pack),
         )
         query = query.join(rule_tag_subquery, DBrule.id_ == rule_tag_subquery.c.rule_id)
 
