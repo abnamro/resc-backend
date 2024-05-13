@@ -1551,9 +1551,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"array\");",
-											"    pm.expect(responseJson.length).to.eql(1);",
-											"    pm.expect(responseJson).to.eql([\"Cli\"] );",
-											"    pm.expect(responseJson).to.include(\"Cli\");",
+											"    pm.expect(responseJson.length).to.eql(2);",
+											"    pm.expect(responseJson).to.eql([\"Cli\",\"Warn\"] );",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -1648,7 +1647,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/rule-packs/tags?version=1.0.0",
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/tags?version=0.0.0",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -1661,7 +1660,7 @@
 									"query": [
 										{
 											"key": "version",
-											"value": "1.0.0"
+											"value": "0.0.0"
 										}
 									]
 								},
@@ -1717,9 +1716,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"array\");",
-											"    pm.expect(responseJson.length).to.eql(1);",
-											"    pm.expect(responseJson).to.eql([\"Cli\"] );",
-											"    pm.expect(responseJson).to.include(\"Cli\");",
+											"    pm.expect(responseJson.length).to.eql(2);",
+											"    pm.expect(responseJson).to.eql([\"Cli\",\"Warn\"] );",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
