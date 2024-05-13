@@ -16,7 +16,7 @@ INSERT INTO tag (name) VALUES
 
 INSERT INTO rule_tag (rule_id, tag_id) VALUES
     (1, 2), -- 1
-    (2, 1), -- 2
+    (2, 2), -- 2
     (3, 1); -- 3
 
 INSERT INTO vcs_instance (name, provider_type, scheme, hostname, port, organization, vcs_scope, exceptions) VALUES
