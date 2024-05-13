@@ -18,6 +18,7 @@ INSERT INTO rule_tag (rule_id, tag_id) VALUES
     (1, 2), -- 1
     (2, 2), -- 2
     (3, 1); -- 3
+    (2, 1), -- 2
 
 INSERT INTO vcs_instance (name, provider_type, scheme, hostname, port, organization, vcs_scope, exceptions) VALUES
     ('AZURE_DEVOPS_ACCEPTANCE', 'AZURE_DEVOPS', 'https', 'fake-dev.azure.com', 443, 'ado-org', 'ado-project1,ado-project2', NULL), -- 1
