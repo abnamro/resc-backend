@@ -355,7 +355,7 @@ class TestRules(unittest.TestCase):
                 "true_positive": 2,
                 "false_positive": 2,
                 "not_analyzed": 2,
-                "under_review": 2,
+                "not_accessible": 2,
                 "clarification_required": 2,
                 "total_findings_count": 10,
             }
@@ -385,7 +385,7 @@ class TestRules(unittest.TestCase):
                 "true_positive": 2,
                 "false_positive": 2,
                 "not_analyzed": 2,
-                "under_review": 2,
+                "not_accessible": 2,
                 "clarification_required": 2,
                 "total_findings_count": 10,
             }
@@ -424,7 +424,7 @@ class TestRules(unittest.TestCase):
                 "true_positive": 2,
                 "false_positive": 2,
                 "not_analyzed": 2,
-                "under_review": 2,
+                "not_accessible": 2,
                 "clarification_required": 2,
                 "total_findings_count": 10,
             }

@@ -648,7 +648,7 @@ class TestRepositories(unittest.TestCase):
                 "true_positive": 1,
                 "false_positive": 2,
                 "not_analyzed": 3,
-                "under_review": 4,
+                "not_accessible": 4,
                 "clarification_required": 5,
                 "total_findings_count": 15,
             }
@@ -666,7 +666,7 @@ class TestRepositories(unittest.TestCase):
             assert response["true_positive"] == 1
             assert response["false_positive"] == 2
             assert response["not_analyzed"] == 3
-            assert response["under_review"] == 4
+            assert response["not_accessible"] == 4
             assert response["clarification_required"] == 5
             assert response["total_findings_count"] == 15
 
@@ -692,7 +692,7 @@ class TestRepositories(unittest.TestCase):
             "true_positive": 1,
             "false_positive": 2,
             "not_analyzed": 3,
-            "under_review": 4,
+            "not_accessible": 4,
             "clarification_required": 5,
             "total_findings_count": 15,
         }
@@ -701,7 +701,7 @@ class TestRepositories(unittest.TestCase):
         assert response["true_positive"] == 1
         assert response["false_positive"] == 2
         assert response["not_analyzed"] == 3
-        assert response["under_review"] == 4
+        assert response["not_accessible"] == 4
         assert response["clarification_required"] == 5
         assert response["total_findings_count"] == 15
 

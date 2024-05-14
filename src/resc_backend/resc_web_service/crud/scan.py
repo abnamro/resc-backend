@@ -159,7 +159,7 @@ def get_repository_findings_metadata_for_latest_scan(
             if scan.scan_type == ScanType.BASE:
                 break
 
-    true_positive_count = false_positive_count = not_analyzed_count = under_review_count = (
+    true_positive_count = false_positive_count = not_analyzed_count = not_accessible_count = (
         clarification_required_count
     ) = 0
     if len(scan_ids_latest_to_base) > 0:
@@ -177,8 +177,8 @@ def get_repository_findings_metadata_for_latest_scan(
                 false_positive_count = count
             if finding_status == FindingStatus.NOT_ANALYZED.value or finding_status is None:
                 not_analyzed_count += count
-            if finding_status == FindingStatus.UNDER_REVIEW.value:
-                under_review_count = count
+            if finding_status == FindingStatus.NOT_ACCESSIBLE.value:
+                not_accessible_count = count
             if finding_status == FindingStatus.CLARIFICATION_REQUIRED.value:
                 clarification_required_count = count
 
@@ -186,7 +186,7 @@ def get_repository_findings_metadata_for_latest_scan(
         true_positive_count
         + false_positive_count
         + not_analyzed_count
-        + under_review_count
+        + not_accessible_count
         + clarification_required_count
     )
 
@@ -194,7 +194,7 @@ def get_repository_findings_metadata_for_latest_scan(
         "true_positive": true_positive_count,
         "false_positive": false_positive_count,
         "not_analyzed": not_analyzed_count,
-        "under_review": under_review_count,
+        "not_accessible": not_accessible_count,
         "clarification_required": clarification_required_count,
         "total_findings_count": total_findings_count,
     }

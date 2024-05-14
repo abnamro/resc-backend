@@ -124,7 +124,7 @@ def get_rules_finding_status_count(
             StatusCount(status=FindingStatus.NOT_ANALYZED.value, count=rule_counts["not_analyzed"])
         )
         rule_finding_count.finding_statuses_count.append(
-            StatusCount(status=FindingStatus.UNDER_REVIEW.value, count=rule_counts["under_review"])
+            StatusCount(status=FindingStatus.NOT_ACCESSIBLE.value, count=rule_counts["not_accessible"])
         )
         rule_finding_count.finding_statuses_count.append(
             StatusCount(
