@@ -122,7 +122,7 @@ def get_repositories(
     if repository_filter:
         query = query.where(DBrepository.repository_name == repository_filter)
 
-    repositories = query.order_by(DBrepository.id_).offset(skip).limit(limit_val).all()
+    repositories = query.order_by(DBrepository.repository_name).offset(skip).limit(limit_val).all()
 
     return repositories
 
@@ -276,6 +276,7 @@ def get_distinct_projects(
         query = query.where(DBrepository.repository_name == repository_filter)
 
     query = query.distinct()
+    query = query.order_by(DBrepository.project_key)
     distinct_projects = query.all()
     return distinct_projects
 
@@ -322,6 +323,7 @@ def get_distinct_repositories(
         query = query.where(DBrepository.project_key == project_name)
 
     query = query.distinct()
+    query = query.order_by(DBrepository.repository_name)
     distinct_repositories = query.all()
     return distinct_repositories
 
