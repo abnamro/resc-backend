@@ -1,5 +1,4 @@
 # Standard Library
-from typing import Optional
 
 # Third Party
 from pydantic import BaseModel, conint, constr
@@ -7,17 +6,17 @@ from pydantic import BaseModel, conint, constr
 
 class RuleBase(BaseModel):
     rule_name: constr(min_length=1, max_length=400)
-    description: Optional[constr(max_length=2000)] = None
-    entropy: Optional[float] = None
-    secret_group: Optional[int] = None
-    regex: Optional[str] = None
-    path: Optional[str] = None
-    keywords: Optional[str] = None
+    description: constr(max_length=2000) | None = None
+    entropy: float | None = None
+    secret_group: int | None = None
+    regex: str | None = None
+    path: str | None = None
+    keywords: str | None = None
 
 
 class RuleCreate(RuleBase):
     rule_pack: constr(regex=r"^(\d+\.)?(\d+\.)?(\*|\d+)$")
-    allow_list: Optional[conint(gt=0)] = None
+    allow_list: conint(gt=0) | None = None
 
     @classmethod
     def create_from_base_class(cls, base_object: RuleBase, rule_pack: str, allow_list=int):

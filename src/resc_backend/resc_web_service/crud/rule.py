@@ -1,6 +1,5 @@
 # Standard Library
 import logging
-from typing import List
 
 # Third Party
 from sqlalchemy.orm import Session
@@ -16,7 +15,7 @@ from resc_backend.resc_web_service.schema.rule import RuleCreate, RuleRead
 logger = logging.getLogger(__name__)
 
 
-def get_rules_by_scan_id(db_connection: Session, scan_id: int) -> List[RuleRead]:
+def get_rules_by_scan_id(db_connection: Session, scan_id: int) -> list[RuleRead]:
     """
         Get rules by scan id
     :param db_connection:
@@ -29,7 +28,7 @@ def get_rules_by_scan_id(db_connection: Session, scan_id: int) -> List[RuleRead]
     rule_query = db_connection.query(DBrule)
     rule_query = rule_query.join(DBscan, DBscan.rule_pack == DBrule.rule_pack)
     rule_query = rule_query.where(DBscan.id_ == scan_id)
-    rules: List[RuleRead] = rule_query.all()
+    rules: list[RuleRead] = rule_query.all()
     return rules
 
 
@@ -79,7 +78,7 @@ def create_rule(db_connection: Session, rule: RuleCreate):
     return db_rule
 
 
-def get_rules_by_rule_pack_version(db_connection: Session, rule_pack_version: str) -> List[str]:
+def get_rules_by_rule_pack_version(db_connection: Session, rule_pack_version: str) -> list[str]:
     """
         Fetch rules by rule pack version
     :param db_connection:
@@ -114,7 +113,7 @@ def get_rules_by_rule_pack_version(db_connection: Session, rule_pack_version: st
     return db_rules
 
 
-def get_global_allow_list_by_rule_pack_version(db_connection: Session, rule_pack_version: str) -> List[str]:
+def get_global_allow_list_by_rule_pack_version(db_connection: Session, rule_pack_version: str) -> list[str]:
     """
         Retrieve global allow list by rule pack version
     :param db_connection:

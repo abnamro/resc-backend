@@ -1,6 +1,5 @@
 # Standard Library
 from datetime import datetime
-from typing import List, Optional
 
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
@@ -89,7 +88,7 @@ def get_all_findings(
     },
 )
 async def create_findings(
-    findings: List[finding_schema.FindingCreate],
+    findings: list[finding_schema.FindingCreate],
     db_connection: Session = Depends(get_db_connection),
 ) -> int:
     """
@@ -357,7 +356,7 @@ def get_finding_audits(
 
 @router.get(
     f"{RWS_ROUTE_SUPPORTED_STATUSES}/",
-    response_model=List[str],
+    response_model=list[str],
     summary="Get all supported statuses for findings",
     status_code=status.HTTP_200_OK,
     responses={
@@ -367,7 +366,7 @@ def get_finding_audits(
     },
 )
 @cache(namespace=CACHE_NAMESPACE_FINDING_STATUS, expire=REDIS_CACHE_EXPIRE)
-def get_supported_statuses() -> List[str]:
+def get_supported_statuses() -> list[str]:
     """
         Retrieve all supported statuses for findings
 
@@ -393,8 +392,8 @@ def get_count_by_time(
     time_type: DateFilter,
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    start_date_time: Optional[datetime] = Query(None),
-    end_date_time: Optional[datetime] = Query(None),
+    start_date_time: datetime | None = Query(None),
+    end_date_time: datetime | None = Query(None),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[DateCountModel]:
     """

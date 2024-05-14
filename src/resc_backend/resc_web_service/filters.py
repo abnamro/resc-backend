@@ -1,6 +1,5 @@
 # Standard Library
 from datetime import datetime
-from typing import List
 
 # Third Party
 from pydantic import validator
@@ -13,17 +12,17 @@ from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
 @dataclass
 class FindingsFilter:
-    vcs_providers: List[VCSProviders] = None
-    finding_statuses: List[FindingStatus] = None
-    rule_names: List[str] = None
-    rule_tags: List[str] = None
+    vcs_providers: list[VCSProviders] = None
+    finding_statuses: list[FindingStatus] = None
+    rule_names: list[str] = None
+    rule_tags: list[str] = None
     project_name: str = None
     repository_name: str = None
-    scan_ids: List[int] = None
+    scan_ids: list[int] = None
     start_date_time: datetime = None
     end_date_time: datetime = None
     event_sent: bool = None
-    rule_pack_versions: List[str] = None
+    rule_pack_versions: list[str] = None
 
     @validator("end_date_time")
     @classmethod

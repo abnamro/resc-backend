@@ -1,5 +1,5 @@
 # Standard Library
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 # Third Party
 from pydantic import BaseModel, conint
@@ -18,7 +18,7 @@ class FindingCountModel(GenericModel, Generic[Model]):
         Type of the object in the data list
     """
 
-    data: Optional[Model]
+    data: Model | None
     true_positive: conint(gt=-1)
     false_positive: conint(gt=-1)
     not_analyzed: conint(gt=-1)

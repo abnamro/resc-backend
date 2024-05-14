@@ -1,6 +1,5 @@
 # Standard Library
 import logging
-from typing import Optional
 
 # Third Party
 import requests
@@ -30,7 +29,7 @@ def upload_rule_pack_toml_file(url: str, rule_file_path: str):
     return response
 
 
-def download_rule_pack_toml_file(rws_url: str, rule_pack_version: Optional[str] = "") -> Response:
+def download_rule_pack_toml_file(rws_url: str, rule_pack_version: str | None = "") -> Response:
     params = {}
     if rule_pack_version:
         params = {"rule_pack_version": rule_pack_version}
@@ -52,10 +51,10 @@ def download_rule_pack_toml_file(rws_url: str, rule_pack_version: Optional[str] 
 
 def get_rule_packs(
     url: str,
-    version: Optional[str] = None,
-    active: Optional[bool] = None,
-    skip: Optional[int] = 0,
-    limit: Optional[int] = DEFAULT_RECORDS_PER_PAGE_LIMIT,
+    version: str | None = None,
+    active: bool | None = None,
+    skip: int | None = 0,
+    limit: int | None = DEFAULT_RECORDS_PER_PAGE_LIMIT,
 ):
     api_url = f"{url}{RWS_VERSION_PREFIX}{RWS_ROUTE_RULE_PACKS}/versions"
     params = {"active": active, "skip": skip, "limit": limit}

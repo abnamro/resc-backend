@@ -1,5 +1,4 @@
 # Standard Library
-from typing import List
 
 # Third Party
 from sqlalchemy.orm import Session
@@ -14,7 +13,7 @@ from resc_backend.db.model import (
 )
 
 
-def create_scan_findings(db_connection: Session, scan_findings: List[DBscanFinding]) -> int:
+def create_scan_findings(db_connection: Session, scan_findings: list[DBscanFinding]) -> int:
     if len(scan_findings) < 1:
         # Function is called with an empty list of findings
         return 0
@@ -32,7 +31,7 @@ def create_scan_findings(db_connection: Session, scan_findings: List[DBscanFindi
     return len(scan_findings)
 
 
-def get_scan_findings(db_connection: Session, finding_id: int) -> List[DBscanFinding]:
+def get_scan_findings(db_connection: Session, finding_id: int) -> list[DBscanFinding]:
     scan_findings = db_connection.query(DBscanFinding)
     scan_findings = scan_findings.where(DBscanFinding.finding_id == finding_id).all()
     return scan_findings

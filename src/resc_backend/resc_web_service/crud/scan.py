@@ -1,6 +1,5 @@
 # Standard Library
 from datetime import datetime
-from typing import List
 
 # Third Party
 from sqlalchemy import func, update
@@ -57,7 +56,7 @@ def get_scans(
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
     repository_id: int = -1,
-) -> List[DBscan]:
+) -> list[DBscan]:
     """
         Retrieve the scan records, ordered by scan_id and optionally filtered by repository_id
     :param db_connection:

@@ -2,7 +2,7 @@
 import json
 import unittest
 from datetime import datetime
-from typing import Generator, List
+from collections.abc import Generator
 from unittest.mock import ANY, call, patch
 
 # Third Party
@@ -114,7 +114,7 @@ class TestFindings(unittest.TestCase):
             )
 
     @staticmethod
-    def assert_db_finding(data, finding: DBfinding, scan_findings: List[DBscanFinding]):
+    def assert_db_finding(data, finding: DBfinding, scan_findings: list[DBscanFinding]):
         assert data["file_path"] == finding.file_path
         assert data["line_number"] == finding.line_number
         assert data["column_start"] == finding.column_start
@@ -149,7 +149,7 @@ class TestFindings(unittest.TestCase):
         assert datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S.%f") == finding.event_sent_on
 
     @staticmethod
-    def cast_db_finding_to_finding_create(finding: DBfinding, scan_findings: List[DBscanFinding]):
+    def cast_db_finding_to_finding_create(finding: DBfinding, scan_findings: list[DBscanFinding]):
         return FindingCreate(
             scan_ids=[x.scan_id for x in scan_findings],
             repository_id=finding.repository_id,
@@ -167,7 +167,7 @@ class TestFindings(unittest.TestCase):
         )
 
     @staticmethod
-    def cast_db_finding_to_finding_base(finding: DBfinding, scan_findings: List[DBscanFinding]):
+    def cast_db_finding_to_finding_base(finding: DBfinding, scan_findings: list[DBscanFinding]):
         return FindingBase(
             scan_id=[x.scan_id for x in scan_findings],
             file_path=finding.file_path,
@@ -188,7 +188,7 @@ class TestFindings(unittest.TestCase):
         return FindingPatch(event_sent_on=finding.event_sent_on)
 
     @staticmethod
-    def create_json_body(finding: DBfinding, scan_findings: List[DBscanFinding]):
+    def create_json_body(finding: DBfinding, scan_findings: list[DBscanFinding]):
         return json.loads(TestFindings.cast_db_finding_to_finding_create(finding, scan_findings).json())
 
     @staticmethod

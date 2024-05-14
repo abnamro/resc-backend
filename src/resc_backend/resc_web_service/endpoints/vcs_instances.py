@@ -1,6 +1,5 @@
 # Standard Library
 import logging
-from typing import Optional
 
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -113,8 +112,8 @@ def read_vcs_instance(
 def get_all_vcs_instances(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcs_provider_type: Optional[VCSProviders] = Query(None),
-    vcs_instance_name: Optional[str] = Query(None),
+    vcs_provider_type: VCSProviders | None = Query(None),
+    vcs_instance_name: str | None = Query(None),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[vcs_instance_schema.VCSInstanceRead]:
     """

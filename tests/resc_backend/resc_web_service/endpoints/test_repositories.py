@@ -2,7 +2,7 @@
 import json
 import unittest
 from datetime import datetime
-from typing import Generator
+from collections.abc import Generator
 from unittest.mock import ANY, call, patch
 
 # Third Party

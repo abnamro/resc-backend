@@ -1,7 +1,7 @@
 # Standard Library
 import unittest
 from datetime import datetime
-from typing import Generator, List
+from collections.abc import Generator
 from unittest.mock import ANY, patch
 from urllib.parse import quote, urlencode
 
@@ -368,14 +368,14 @@ class TestDetailedFindings(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings_count")
     @patch("resc_backend.resc_web_service.crud.detailed_finding.get_detailed_findings")
     def test_get_detailed_findings_by_all_filters(self, get_detailed_findings, get_total_findings_count):
-        scan_ids: List[int] = [1, 2]
-        vcs_providers: List[str] = [
+        scan_ids: list[int] = [1, 2]
+        vcs_providers: list[str] = [
             VCSProviders.AZURE_DEVOPS.value,
             VCSProviders.BITBUCKET.value,
         ]
-        finding_statuses: List[str] = [FindingStatus.NOT_ANALYZED.value]
-        rule_names: List[str] = ["rule1", "rule2"]
-        rule_pack_versions: List[str] = ["2"]
+        finding_statuses: list[str] = [FindingStatus.NOT_ANALYZED.value]
+        rule_names: list[str] = ["rule1", "rule2"]
+        rule_pack_versions: list[str] = ["2"]
         all_params = {
             "vcs_providers": vcs_providers,
             "finding_statuses": finding_statuses,

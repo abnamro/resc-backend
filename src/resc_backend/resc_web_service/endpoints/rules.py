@@ -1,7 +1,6 @@
 # Standard Library
 import logging
 from datetime import datetime
-from typing import List, Optional
 
 # Third Party
 from fastapi import APIRouter, Depends, Query, status
@@ -34,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 @router.get(
     f"{RWS_ROUTE_DETECTED_RULES}",
-    response_model=List[str],
+    response_model=list[str],
     summary="Get unique rules from findings",
     status_code=status.HTTP_200_OK,
     responses={
@@ -45,15 +44,15 @@ logger = logging.getLogger(__name__)
 )
 @cache(namespace=CACHE_NAMESPACE_RULE, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_rules_from_findings(
-    finding_statuses: List[FindingStatus] = Query(None, alias="findingstatus", title="FindingStatuses"),
-    vcs_providers: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    project_name: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    repository_name: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    start_date_time: Optional[datetime] = Query(None),
-    end_date_time: Optional[datetime] = Query(None),
-    rule_pack_versions: Optional[List[str]] = Query(None, alias="rule_pack_version", title="RulePackVersion"),
+    finding_statuses: list[FindingStatus] = Query(None, alias="findingstatus", title="FindingStatuses"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    project_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    repository_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    start_date_time: datetime | None = Query(None),
+    end_date_time: datetime | None = Query(None),
+    rule_pack_versions: list[str] | None = Query(None, alias="rule_pack_version", title="RulePackVersion"),
     db_connection: Session = Depends(get_db_connection),
-) -> List[str]:
+) -> list[str]:
     """
         Retrieve all uniquely detected rules across all findings in the database
 
@@ -83,7 +82,7 @@ def get_distinct_rules_from_findings(
 
 @router.get(
     f"{RWS_ROUTE_RULES}{RWS_ROUTE_FINDING_STATUS_COUNT}",
-    response_model=List[RuleFindingCountModel],
+    response_model=list[RuleFindingCountModel],
     summary="Get detected rules with counts per status",
     status_code=status.HTTP_200_OK,
     responses={
@@ -94,10 +93,10 @@ def get_distinct_rules_from_findings(
 )
 @cache(namespace=CACHE_NAMESPACE_FINDING, expire=REDIS_CACHE_EXPIRE)
 def get_rules_finding_status_count(
-    rule_pack_versions: Optional[List[str]] = Query(None, alias="rule_pack_version", title="RulePackVersion"),
-    rule_tags: Optional[List[str]] = Query(None, alias="rule_tag", title="RuleTag"),
+    rule_pack_versions: list[str] | None = Query(None, alias="rule_pack_version", title="RulePackVersion"),
+    rule_tags: list[str] | None = Query(None, alias="rule_tag", title="RuleTag"),
     db_connection: Session = Depends(get_db_connection),
-) -> List[RuleFindingCountModel]:
+) -> list[RuleFindingCountModel]:
     """
         Retrieve all detected rules with finding counts per supported status
 

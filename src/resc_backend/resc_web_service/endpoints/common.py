@@ -1,5 +1,4 @@
 # Standard Library
-from typing import List
 
 # Third Party
 from fastapi import APIRouter, status
@@ -22,7 +21,7 @@ router = APIRouter(tags=[COMMON_TAG])
 
 @router.get(
     f"{RWS_ROUTE_SUPPORTED_VCS_PROVIDERS}",
-    response_model=List[str],
+    response_model=list[str],
     summary="Get supported vcs-providers",
     description="Retrieve the supported vcs-providers, example: Bitbucket, AzureDevOps, Github etc",
     status_code=status.HTTP_200_OK,
@@ -33,7 +32,7 @@ router = APIRouter(tags=[COMMON_TAG])
     },
 )
 @cache(namespace=CACHE_NAMESPACE_VCS_INSTANCE, expire=REDIS_CACHE_EXPIRE)
-def get_supported_vcs_providers() -> List[str]:
+def get_supported_vcs_providers() -> list[str]:
     """
         Retrieve all supported vcs providers
     :return: List[str]

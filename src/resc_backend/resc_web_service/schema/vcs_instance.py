@@ -1,5 +1,4 @@
 # Standard Library
-from typing import Optional
 
 # Third Party
 from pydantic import BaseModel, conint, conlist, constr, validator
@@ -15,9 +14,9 @@ class VCSInstanceBase(BaseModel):
     hostname: constr(max_length=200)
     port: conint(gt=-0, lt=65536)
     scheme: constr(max_length=20)
-    exceptions: Optional[conlist(item_type=str, min_items=None, max_items=500)]
-    scope: Optional[conlist(item_type=str, min_items=None, max_items=500)]
-    organization: Optional[constr(max_length=200)]
+    exceptions: conlist(item_type=str, min_items=None, max_items=500) | None
+    scope: conlist(item_type=str, min_items=None, max_items=500) | None
+    organization: constr(max_length=200) | None
 
     @validator("scheme", pre=True)
     @classmethod

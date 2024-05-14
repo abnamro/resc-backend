@@ -8,7 +8,6 @@ Create Date: 2024-03-22 16:00:07.771214
 
 from enum import Enum
 from alembic import op
-import sqlalchemy as sa
 from sqlalchemy import func, Table, table, column, select, update
 from itertools import islice
 

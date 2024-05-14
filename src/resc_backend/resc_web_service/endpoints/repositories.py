@@ -1,5 +1,4 @@
 # Standard Library
-from typing import List, Optional
 
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -53,9 +52,9 @@ router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
 def get_all_repositories(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    projectfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    repositoryfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    projectfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_schema.RepositoryRead]:
     """
@@ -222,7 +221,7 @@ async def delete_repository(repository_id: int, db_connection: Session = Depends
 
 @router.get(
     f"{RWS_ROUTE_DISTINCT_PROJECTS}/",
-    response_model=List[str],
+    response_model=list[str],
     summary="Get all unique project names",
     status_code=status.HTTP_200_OK,
     responses={
@@ -233,11 +232,11 @@ async def delete_repository(repository_id: int, db_connection: Session = Depends
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_projects(
-    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    repositoryfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
-) -> List[str]:
+) -> list[str]:
     """
         Retrieve all unique project names
 
@@ -261,7 +260,7 @@ def get_distinct_projects(
 
 @router.get(
     f"{RWS_ROUTE_DISTINCT_REPOSITORIES}/",
-    response_model=List[str],
+    response_model=list[str],
     summary="Get all unique repository names",
     status_code=status.HTTP_200_OK,
     responses={
@@ -272,11 +271,11 @@ def get_distinct_projects(
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_repositories(
-    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    projectname: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    projectname: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
-) -> List[str]:
+) -> list[str]:
     """
         Retrieve all unique repository names
 
@@ -356,9 +355,9 @@ def get_findings_metadata_for_repository(
 def get_all_repositories_with_findings_metadata(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcsproviders: List[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    projectfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    repositoryfilter: Optional[str] = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    projectfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_enriched_schema.RepositoryEnrichedRead]:

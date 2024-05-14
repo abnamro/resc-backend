@@ -1,7 +1,6 @@
 # Standard Library
 import logging
 from datetime import datetime, timedelta
-from typing import List
 
 # Third Party
 from sqlalchemy import extract, func, union
@@ -49,7 +48,7 @@ def patch_finding(db_connection: Session, finding_id: int, finding_update: findi
     return db_finding
 
 
-def create_findings(db_connection: Session, findings: List[finding_schema.FindingCreate]) -> List[DBfinding]:
+def create_findings(db_connection: Session, findings: list[finding_schema.FindingCreate]) -> list[DBfinding]:
     if len(findings) < 1:
         # Function is called with an empty list of findings
         return []
@@ -117,12 +116,12 @@ def get_findings(db_connection: Session, skip: int = 0, limit: int = DEFAULT_REC
 
 def get_scans_findings(
     db_connection,
-    scan_ids: List[int],
+    scan_ids: list[int],
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-    rules_filter: List[str] = None,
-    statuses_filter: List[FindingStatus] = None,
-) -> List[DBfinding]:
+    rules_filter: list[str] = None,
+    statuses_filter: list[FindingStatus] = None,
+) -> list[DBfinding]:
     """
         Retrieve all finding child objects of a scan object from the database
     :param db_connection:
@@ -255,14 +254,14 @@ def get_findings_by_rule(
 def get_distinct_rules_from_findings(
     db_connection: Session,
     scan_id: int = -1,
-    finding_statuses: List[FindingStatus] = None,
-    vcs_providers: List[VCSProviders] = None,
+    finding_statuses: list[FindingStatus] = None,
+    vcs_providers: list[VCSProviders] = None,
     project_name: str = "",
     repository_name: str = "",
     start_date_time: datetime = None,
     end_date_time: datetime = None,
-    rule_pack_versions: List[str] = None,
-) -> List[DBrule]:
+    rule_pack_versions: list[str] = None,
+) -> list[DBrule]:
     """
         Retrieve distinct rules detected
     :param db_connection:
@@ -339,8 +338,8 @@ def get_distinct_rules_from_findings(
 
 def get_findings_count_by_status(
     db_connection: Session,
-    scan_ids: List[int] = None,
-    finding_statuses: List[FindingStatus] = None,
+    scan_ids: list[int] = None,
+    finding_statuses: list[FindingStatus] = None,
     rule_name: str = "",
 ):
     """
@@ -385,8 +384,8 @@ def get_findings_count_by_status(
 
 def get_rule_findings_count_by_status(
     db_connection: Session,
-    rule_pack_versions: List[str] = None,
-    rule_tags: List[str] = None,
+    rule_pack_versions: list[str] = None,
+    rule_tags: list[str] = None,
 ):
     """
         Retrieve count of findings based on rulename and status
@@ -584,7 +583,7 @@ def get_findings_count_by_time_total(
     return result
 
 
-def get_distinct_rules_from_scans(db_connection: Session, scan_ids: List[int] = None) -> List[DBrule]:
+def get_distinct_rules_from_scans(db_connection: Session, scan_ids: list[int] = None) -> list[DBrule]:
     """
         Retrieve distinct rules detected
     :param db_connection:
