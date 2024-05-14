@@ -1,7 +1,7 @@
 """init database
 
 Revision ID: e453b2238001
-Revises: 
+Revises:
 Create Date: 2022-09-23 08:44:32.699043
 
 """

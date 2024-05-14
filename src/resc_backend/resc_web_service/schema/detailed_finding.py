@@ -70,6 +70,7 @@ class DetailedFindingRead(DetailedFinding):
         github_commit_url = f"{repository_url}/commit/{commit_id}?path=/{file_path}"
         return github_commit_url
 
+    @classmethod
     @root_validator
     def build_commit_url(cls, values) -> dict:
         if values["status"] is None:

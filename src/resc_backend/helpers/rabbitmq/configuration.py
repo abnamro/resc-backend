@@ -1,4 +1,3 @@
-
 # First Party
 from resc_backend.helpers.environment_wrapper import EnvironmentVariable
 

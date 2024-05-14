@@ -11,20 +11,27 @@ exclude = ["alembic/*"]
 select = [
     # pycodestyle
     "E",
+    "W",
     # Pyflakes
     "F",
+    # flake8-builtins
+    "A",
     # pyupgrade
     "UP",
+    # pep8-naming
+    "N",
     # flake8-bugbear
     # "B",
-    # flake8-simplify
-    "SIM",
+    # flake8-annotations
+    # "ANN",
     # isort
     # "I",
     ]
+ignore = ["ANN101","ANN102"]
 
 [tool.ruff.lint.per-file-ignores]
 "alembic/*" = [
     "I",
     "E501"
     ] # Line too long (143 > 120)
+"tests/*" = ["ANN"]

@@ -63,7 +63,7 @@ def upgrade():
     fk_name = get_foreign_key_name(inspector, rule_tag, tag)
     if fk_name is not None:
         op.drop_constraint(fk_name, rule_tag, type_='foreignkey')
-    
+
     op.create_foreign_key('fk_' + finding + '_' + repository, finding, repository, ['repository_id'], ['id'])
     op.create_foreign_key('fk_' + scan + '_' + repository, scan, repository, ['repository_id'], ['id'], ondelete='CASCADE', onupdate='CASCADE')
     op.create_foreign_key('fk_' + repository + '_' + vcs_instance, repository, vcs_instance, ['vcs_instance'], ['id'], ondelete='CASCADE', onupdate='CASCADE')
