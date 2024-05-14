@@ -6,11 +6,7 @@ Create Date: 2024-03-12 14:48:27.332829
 
 """
 import logging
-import sys
-
 from alembic import op
-import sqlalchemy as sa
-
 from sqlalchemy.engine import Inspector
 
 # revision identifiers, used by Alembic.
