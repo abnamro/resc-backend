@@ -1,6 +1,7 @@
 # Standard Library
 import logging
-from typing import Any, Callable, Dict, Tuple
+from typing import Any
+from collections.abc import Callable
 
 # Third Party
 from fastapi import Request, Response
@@ -55,8 +56,8 @@ class CacheManager:
         *,
         request: Request = None,
         response: Response = None,
-        args: Tuple[Any, ...],
-        kwargs: Dict[str, Any],
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
     ) -> str:
         """
         Build a unique key for caching based on the provided function, namespace, request, response,
@@ -93,8 +94,8 @@ class CacheManager:
         *,
         request: Request = None,
         response: Response = None,
-        args: Tuple[Any, ...],
-        kwargs: Dict[str, Any],
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
     ) -> str:
         """
         Build a personalized unique key for caching based logged-in user on the provided function, namespace, request,

@@ -1,5 +1,4 @@
 # Standard Library
-from typing import List
 
 # Third Party
 from sqlalchemy import func
@@ -30,7 +29,7 @@ def get_vcs_instances(
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
     vcs_provider_type: VCSProviders = None,
     vcs_instance_name: str = None,
-) -> List[DBVcsInstance]:
+) -> list[DBVcsInstance]:
     """
         Retrieve all vcs_instances records
     :param db_connection:

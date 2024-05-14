@@ -1,5 +1,4 @@
 # Standard Library
-from typing import List
 
 # Third Party
 from sqlalchemy import func
@@ -37,7 +36,7 @@ def _get_max_base_scan(db_connection: Session) -> Query:
 
 def get_repositories(
     db_connection: Session,
-    vcs_providers: List[VCSProviders] = None,
+    vcs_providers: list[VCSProviders] = None,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
     project_filter: str = "",
@@ -129,7 +128,7 @@ def get_repositories(
 
 def get_repositories_count(
     db_connection: Session,
-    vcs_providers: List[VCSProviders] = None,
+    vcs_providers: list[VCSProviders] = None,
     project_filter: str = "",
     repository_filter: str = "",
     only_if_has_findings: bool = False,
@@ -236,7 +235,7 @@ def create_repository_if_not_exists(db_connection: Session, repository: reposito
 
 def get_distinct_projects(
     db_connection: Session,
-    vcs_providers: List[VCSProviders] = None,
+    vcs_providers: list[VCSProviders] = None,
     repository_filter: str = "",
     only_if_has_findings: bool = False,
 ):
@@ -283,7 +282,7 @@ def get_distinct_projects(
 
 def get_distinct_repositories(
     db_connection: Session,
-    vcs_providers: List[VCSProviders] = None,
+    vcs_providers: list[VCSProviders] = None,
     project_name: str = "",
     only_if_has_findings: bool = False,
 ):

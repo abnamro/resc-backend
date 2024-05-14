@@ -1,6 +1,5 @@
 # Standard Library
 import datetime
-from typing import Optional
 
 # Third Party
 from pydantic import BaseModel, conint, conlist, constr
@@ -19,7 +18,7 @@ class AuditRead(BaseModel):
     id_: conint(gt=0)
     status: FindingStatus
     auditor: constr(max_length=250)
-    comment: Optional[constr(max_length=255)] = None
+    comment: constr(max_length=255) | None = None
     timestamp: datetime.datetime
 
     class Config:

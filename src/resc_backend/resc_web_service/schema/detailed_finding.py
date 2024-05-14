@@ -1,6 +1,5 @@
 # Standard Library
 import datetime
-from typing import Dict, Optional
 
 # Third Party
 from pydantic import BaseModel, HttpUrl, conint, constr, root_validator
@@ -20,8 +19,8 @@ class DetailedFindingBase(BaseModel):
     commit_timestamp: datetime.datetime
     author: constr(max_length=200)
     email: constr(max_length=100)
-    status: Optional[FindingStatus] = FindingStatus.NOT_ANALYZED.value
-    comment: Optional[constr(max_length=255)] = None
+    status: FindingStatus | None = FindingStatus.NOT_ANALYZED.value
+    comment: constr(max_length=255) | None = None
     rule_name: constr(max_length=200)
     rule_pack: constr(max_length=100)
     project_key: constr(min_length=1, max_length=100)
@@ -31,7 +30,7 @@ class DetailedFindingBase(BaseModel):
     vcs_provider: VCSProviders
     last_scanned_commit: constr(min_length=1, max_length=100)
     scan_id: conint(gt=0)
-    event_sent_on: Optional[datetime.datetime]
+    event_sent_on: datetime.datetime | None
 
 
 class DetailedFinding(DetailedFindingBase):
@@ -40,7 +39,7 @@ class DetailedFinding(DetailedFindingBase):
 
 class DetailedFindingRead(DetailedFinding):
     id_: conint(gt=0)
-    commit_url: Optional[constr(min_length=1)]
+    commit_url: constr(min_length=1) | None
 
     @staticmethod
     def build_bitbucket_commit_url(
@@ -72,7 +71,7 @@ class DetailedFindingRead(DetailedFinding):
         return github_commit_url
 
     @root_validator
-    def build_commit_url(cls, values) -> Dict:
+    def build_commit_url(cls, values) -> dict:
         if values["status"] is None:
             values["status"] = FindingStatus.NOT_ANALYZED.value
         if values["comment"] is None:

@@ -1,5 +1,4 @@
 # Standard Library
-from typing import List
 
 # Third Party
 from sqlalchemy.orm import Session
@@ -9,7 +8,7 @@ from sqlalchemy.orm.query import Query
 from resc_backend.db.model import DBrule, DBruleTag, DBtag
 
 
-def create_rule_tag(db_connection: Session, rule_id: int, tags: List[str]) -> List[DBruleTag]:
+def create_rule_tag(db_connection: Session, rule_id: int, tags: list[str]) -> list[DBruleTag]:
     """
     Create rule tag entries, linking / creating tag names to a rule
     :param db_connection:
@@ -35,7 +34,7 @@ def create_rule_tag(db_connection: Session, rule_id: int, tags: List[str]) -> Li
     return db_rule_tags
 
 
-def create_tags_if_not_exists(db_connection: Session, tags: List[str]) -> List[DBtag]:
+def create_tags_if_not_exists(db_connection: Session, tags: list[str]) -> list[DBtag]:
     """
     Create tags if they don't exist or select existing
     :param db_connection:
@@ -63,7 +62,7 @@ def create_tags_if_not_exists(db_connection: Session, tags: List[str]) -> List[D
     return db_tags
 
 
-def create_tags(db_connection: Session, tags: List[str]) -> List[DBtag]:
+def create_tags(db_connection: Session, tags: list[str]) -> list[DBtag]:
     """
     Create tags
     :param db_connection:

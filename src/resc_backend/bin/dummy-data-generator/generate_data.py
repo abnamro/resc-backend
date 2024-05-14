@@ -149,7 +149,7 @@ class GenerateData:
         self.generate_findings(property_values["findings"])
         (self.generate_scan_findings(),)
         self.generate_audits()
-        logger.info("Duration [{}]".format(datetime.now() - start))
+        logger.info(f"Duration [{datetime.now() - start}]")
         # shutdown properly
         self.db_util.shut_down()
 

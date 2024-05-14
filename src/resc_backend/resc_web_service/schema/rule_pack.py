@@ -1,6 +1,5 @@
 # Standard Library
 import datetime
-from typing import Optional
 
 # Third Party
 from pydantic import BaseModel, conint, constr
@@ -11,12 +10,12 @@ RULE_PACK_VERSION_REGEX = r"^\d+(?:\.\d+){2}$"
 class RulePackBase(BaseModel):
     version: constr(regex=RULE_PACK_VERSION_REGEX)
     active: bool = False
-    global_allow_list: Optional[conint(gt=0)]
+    global_allow_list: conint(gt=0) | None
 
 
 class RulePackCreate(RulePackBase):
     version: constr(regex=RULE_PACK_VERSION_REGEX)
-    global_allow_list: Optional[conint(gt=0)]
+    global_allow_list: conint(gt=0) | None
 
     @classmethod
     def create_from_base_class(cls, base_object: RulePackBase, global_allow_list: int):

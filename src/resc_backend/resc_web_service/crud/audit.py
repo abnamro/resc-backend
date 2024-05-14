@@ -1,7 +1,6 @@
 # Standard Library
 import logging
 from datetime import datetime, timedelta
-from typing import List
 
 # Third Party
 from sqlalchemy import extract, func, select, update
@@ -71,7 +70,7 @@ def get_finding_audits(
     finding_id: int,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-) -> List[DBaudit]:
+) -> list[DBaudit]:
     """
         Get Audit entries for finding
     :param db_connection:

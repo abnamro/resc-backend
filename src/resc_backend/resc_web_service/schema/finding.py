@@ -1,7 +1,6 @@
 # Standard Library
 import datetime
 import sys
-from typing import List, Optional
 
 # Third Party
 from pydantic import BaseModel, conint, conlist, constr
@@ -20,7 +19,7 @@ class FindingBase(BaseModel):
     commit_timestamp: datetime.datetime
     author: constr(max_length=200)
     email: constr(max_length=100)
-    event_sent_on: Optional[datetime.datetime]
+    event_sent_on: datetime.datetime | None
     rule_name: constr(max_length=400)
 
 
@@ -42,13 +41,13 @@ class Finding(FindingBase):
 
 class FindingRead(FindingCreate):
     id_: conint(gt=0)
-    scan_ids: Optional[conlist(conint(gt=0), min_items=None, max_items=sys.maxsize)]
+    scan_ids: conlist(conint(gt=0), min_items=None, max_items=sys.maxsize) | None
 
     class Config:
         orm_mode = True
 
     @classmethod
-    def create_from_db_entities(cls, db_finding: DBfinding, scan_ids: List[int]):
+    def create_from_db_entities(cls, db_finding: DBfinding, scan_ids: list[int]):
         return FindingRead(
             id_=db_finding.id_,
             file_path=db_finding.file_path,

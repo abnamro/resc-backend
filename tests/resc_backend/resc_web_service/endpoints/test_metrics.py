@@ -1,7 +1,7 @@
 # Standard Library
 import unittest
 from datetime import datetime, timedelta
-from typing import Generator
+from collections.abc import Generator
 from unittest.mock import ANY, Mock, patch
 
 # Third Party
@@ -157,11 +157,11 @@ class TestFindings(unittest.TestCase):
         data = convert_rows_to_finding_count_over_time(finding_counts, weeks=3)
         assert len(data) == 3
         assert data[2].time_period == f"{first_week.isocalendar().year} W{first_week.isocalendar().week:02d}"
-        assert data[2].vcs_provider_finding_count.AZURE_DEVOPS == getattr(data1, "finding_count")
+        assert getattr(data1, "finding_count") == data[2].vcs_provider_finding_count.AZURE_DEVOPS
         assert data[2].total == getattr(data1, "finding_count")
         assert data[1].time_period == f"{second_week.isocalendar().year} W{second_week.isocalendar().week:02d}"
-        assert data[1].vcs_provider_finding_count.AZURE_DEVOPS == getattr(data2, "finding_count")
-        assert data[1].vcs_provider_finding_count.BITBUCKET == getattr(data3, "finding_count")
+        assert getattr(data2, "finding_count") == data[1].vcs_provider_finding_count.AZURE_DEVOPS
+        assert getattr(data3, "finding_count") == data[1].vcs_provider_finding_count.BITBUCKET
         assert data[1].total == getattr(data2, "finding_count") + getattr(data3, "finding_count")
         assert data[0].time_period == f"{third_week.isocalendar().year} W{third_week.isocalendar().week:02d}"
         assert data[0].total == 0

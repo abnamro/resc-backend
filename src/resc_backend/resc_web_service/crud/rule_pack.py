@@ -1,6 +1,5 @@
 # Standard Library
 import logging
-from typing import List, Optional
 
 # Third Party
 from packaging.version import Version
@@ -20,7 +19,7 @@ from resc_backend.resc_web_service.schema import rule_pack as rule_pack_schema
 logger = logging.getLogger(__name__)
 
 
-def get_rule_pack(db_connection: Session, version: Optional[str]) -> rule_pack_schema.RulePackRead:
+def get_rule_pack(db_connection: Session, version: str | None) -> rule_pack_schema.RulePackRead:
     """
         Get active rule pack from database
     :param db_connection:
@@ -83,7 +82,7 @@ def get_rule_packs(
     active: bool = None,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-) -> List[DBrulePack]:
+) -> list[DBrulePack]:
     """
         Retrieve rule packs from database
     :param db_connection:
@@ -113,7 +112,7 @@ def get_rule_packs(
 
 def get_current_active_rule_pack(
     db_connection: Session,
-) -> Optional[DBrulePack]:
+) -> DBrulePack | None:
     """
         Return the currently active rule_pack, if any.
     :param db_connection:
@@ -126,7 +125,7 @@ def get_current_active_rule_pack(
     return active_rule_pack
 
 
-def get_rule_packs_tags(db_connection: Session, versions: list) -> List[str]:
+def get_rule_packs_tags(db_connection: Session, versions: list) -> list[str]:
     """
         Retrieve rule packs tags for versions from database
     :param db_connection:

@@ -1,6 +1,5 @@
 # Standard Library
 import logging
-from typing import List
 
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -212,7 +211,7 @@ def delete_scan(scan_id: int, db_connection: Session = Depends(get_db_connection
 )
 async def create_scan_findings(
     scan_id: int,
-    findings: List[finding_schema.FindingCreate],
+    findings: list[finding_schema.FindingCreate],
     db_connection: Session = Depends(get_db_connection),
 ) -> int:
     """
@@ -270,8 +269,8 @@ def get_scan_findings(
     scan_id: int,
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    rules: List[str] = Query([], pattern=r"^[A-z0-9 .\-_%]*$", alias="rule", title="rule"),
-    statuses: List[FindingStatus] = Query(None, alias="status", title="status"),
+    rules: list[str] = Query([], pattern=r"^[A-z0-9 .\-_%]*$", alias="rule", title="rule"),
+    statuses: list[FindingStatus] = Query(None, alias="status", title="status"),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[finding_schema.FindingRead]:
     """
@@ -314,11 +313,11 @@ def get_scan_findings(
     },
 )
 def get_scans_findings(
-    scan_ids: List[int] = Query([], alias="scan_id", title="Scan ids"),
+    scan_ids: list[int] = Query([], alias="scan_id", title="Scan ids"),
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    rules: List[str] = Query([], pattern=r"^[A-z0-9 .\-_%]*$", alias="rule", title="rule"),
-    statuses: List[FindingStatus] = Query(None, alias="status", title="status"),
+    rules: list[str] = Query([], pattern=r"^[A-z0-9 .\-_%]*$", alias="rule", title="rule"),
+    statuses: list[FindingStatus] = Query(None, alias="status", title="status"),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[finding_schema.FindingRead]:
     """
@@ -351,7 +350,7 @@ def get_scans_findings(
 
 @router.get(
     f"{RWS_ROUTE_DETECTED_RULES}/",
-    response_model=List[str],
+    response_model=list[str],
     summary="Get unique rules from scans",
     status_code=status.HTTP_200_OK,
     responses={
@@ -361,9 +360,9 @@ def get_scans_findings(
     },
 )
 def get_distinct_rules_from_scans(
-    scan_ids: List[int] = Query([], alias="scan_id", title="Scan ids"),
+    scan_ids: list[int] = Query([], alias="scan_id", title="Scan ids"),
     db_connection: Session = Depends(get_db_connection),
-) -> List[str]:
+) -> list[str]:
     """
         Retrieve all uniquely detected rules for given scans
 

@@ -1,7 +1,6 @@
 # Standard Library
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
 
 # Third Party
 from fastapi import APIRouter, Depends, Query, Request, status
@@ -57,8 +56,8 @@ logger = logging.getLogger(__name__)
 @cache(namespace=CACHE_NAMESPACE_FINDING, expire=REDIS_CACHE_EXPIRE)
 def get_finding_audit_count_over_time(
     db_connection: Session = Depends(get_db_connection),
-    weeks: Optional[int] = Query(default=13, ge=1),
-    audit_status: Optional[FindingStatus] = Query(default=FindingStatus.TRUE_POSITIVE.value),
+    weeks: int | None = Query(default=13, ge=1),
+    audit_status: FindingStatus | None = Query(default=FindingStatus.TRUE_POSITIVE.value),
 ) -> list[FindingCountOverTime]:
     """
         Retrieve count of audited findings over time for given weeks per vcs provider
@@ -89,7 +88,7 @@ def get_finding_audit_count_over_time(
 @cache(namespace=CACHE_NAMESPACE_FINDING, expire=REDIS_CACHE_EXPIRE)
 def get_finding_total_count_over_time(
     db_connection: Session = Depends(get_db_connection),
-    weeks: Optional[int] = Query(default=13, ge=1),
+    weeks: int | None = Query(default=13, ge=1),
 ) -> list[FindingCountOverTime]:
     """
         Retrieve count of findings over time for given weeks per vcs provider
@@ -118,7 +117,7 @@ def get_finding_total_count_over_time(
 @cache(namespace=CACHE_NAMESPACE_FINDING, expire=REDIS_CACHE_EXPIRE)
 def get_finding_un_triaged_count_over_time(
     db_connection: Session = Depends(get_db_connection),
-    weeks: Optional[int] = Query(default=13, ge=1),
+    weeks: int | None = Query(default=13, ge=1),
 ) -> list[FindingCountOverTime]:
     """
         Retrieve count of UnTriaged findings over time for given weeks per vcs provider
@@ -192,7 +191,7 @@ def convert_rows_to_finding_count_over_time(count_over_time: dict, weeks: int) -
 @cache(namespace=CACHE_NAMESPACE_FINDING, expire=REDIS_CACHE_EXPIRE)
 def get_audit_count_by_auditor_over_time(
     db_connection: Session = Depends(get_db_connection),
-    weeks: Optional[int] = Query(default=13, ge=1),
+    weeks: int | None = Query(default=13, ge=1),
 ) -> list[AuditCountOverTime]:
     """
         Retrieve count of Audits by Auditor over time for given weeks

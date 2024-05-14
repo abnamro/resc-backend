@@ -1,6 +1,6 @@
 # Standard Library
 import unittest
-from typing import Generator
+from collections.abc import Generator
 from unittest.mock import ANY
 
 # Third Party

@@ -1,7 +1,6 @@
 # Standard Library
 import logging
 import re
-from typing import List, Optional
 
 # Third Party
 import tomlkit
@@ -65,8 +64,8 @@ logger = logging.getLogger(__name__)
 )
 @cache(namespace=CACHE_NAMESPACE_RULE_PACK, expire=REDIS_CACHE_EXPIRE)
 def get_rule_packs(
-    version: Optional[str] = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
-    active: Optional[bool] = Query(None, description="Filter on active rule packs"),
+    version: str | None = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
+    active: bool | None = Query(None, description="Filter on active rule packs"),
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
     db_connection: Session = Depends(get_db_connection),
@@ -115,7 +114,7 @@ def get_rule_packs(
     },
 )
 async def download_rule_pack_toml_file(
-    version: Optional[str] = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
+    version: str | None = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
     db_connection: Session = Depends(get_db_connection),
 ) -> FileResponse:
     """
@@ -239,7 +238,7 @@ async def upload_rule_pack_toml_file(
     return {"filename": rule_file.filename}
 
 
-def read_rule_pack(version: Optional[str] = None, db_connection: Session = Depends(get_db_connection)) -> RulePackRead:
+def read_rule_pack(version: str | None = None, db_connection: Session = Depends(get_db_connection)) -> RulePackRead:
     """
         Read active rule pack from database
     :param version:
@@ -357,7 +356,7 @@ def insert_rules(
 
 @router.get(
     "/tags",
-    response_model=List[str],
+    response_model=list[str],
     summary="Get rule packs' tags",
     status_code=status.HTTP_200_OK,
     responses={
@@ -368,9 +367,9 @@ def insert_rules(
 )
 @cache(namespace=CACHE_NAMESPACE_RULE_PACK, expire=REDIS_CACHE_EXPIRE)
 def get_rule_packs_tags(
-    versions: Optional[List[str]] = Query(None, alias="version", title="version"),
+    versions: list[str] | None = Query(None, alias="version", title="version"),
     db_connection: Session = Depends(get_db_connection),
-) -> List[str]:
+) -> list[str]:
     """
         Retrieve rule pack related tags
 

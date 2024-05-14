@@ -46,7 +46,7 @@ try:
 
     try:
         sql_file_path = "test_data/database_dummy_data.sql"
-        with open(sql_file_path, "r") as sql_file:
+        with open(sql_file_path) as sql_file:
             sql_script = sql_file.read()
         cursor.execute(sql_script)
         conn.commit()

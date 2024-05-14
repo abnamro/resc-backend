@@ -1,5 +1,4 @@
 # Standard Library
-from typing import List
 
 # Third Party
 from sqlalchemy import func
@@ -30,7 +29,7 @@ from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.scan_type import ScanType
 
 
-def _query_join_if_multiple_rule_pack(query: Query, rule_pack_versions: List[str]) -> Query:
+def _query_join_if_multiple_rule_pack(query: Query, rule_pack_versions: list[str]) -> Query:
     """
     When we are working with rule pack it is sometimes necessary to use a join
     with a subquery (i.e. when there are 0 or > 1 rule pack selected).
@@ -69,7 +68,7 @@ def _query_join_if_multiple_rule_pack(query: Query, rule_pack_versions: List[str
     return query
 
 
-def _query_join_if_rule_tag(query: Query, rule_tags: List[str]) -> Query:
+def _query_join_if_rule_tag(query: Query, rule_tags: list[str]) -> Query:
     """
     When we are working with a set of Rule tag with need to join a few extra tables.
     This filtering requires a few extra tables, hence if the field is None,
@@ -173,7 +172,7 @@ def get_detailed_findings(
     findings_filter: FindingsFilter,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-) -> List[detailed_finding_schema.DetailedFindingRead]:
+) -> list[detailed_finding_schema.DetailedFindingRead]:
     """
     Retrieve all detailed findings objects matching the provided FindingsFilter
     :param findings_filter:
@@ -234,7 +233,7 @@ def get_detailed_findings(
     query = _query_apply_findings_filters(query, findings_filter)
     query = query.order_by(DBfinding.id_)
     query = query.offset(skip).limit(limit_val)
-    findings: List[detailed_finding_schema.DetailedFindingRead] = query.all()
+    findings: list[detailed_finding_schema.DetailedFindingRead] = query.all()
 
     return findings
 

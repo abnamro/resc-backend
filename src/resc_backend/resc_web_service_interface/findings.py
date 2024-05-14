@@ -1,7 +1,6 @@
 # Standard Library
 import json
 import logging
-from typing import List
 
 # Third Party
 import requests
@@ -17,7 +16,7 @@ from resc_backend.resc_web_service.schema.finding import FindingCreate
 logger = logging.getLogger(__name__)
 
 
-def create_findings(url: str, findings: List[FindingCreate]) -> requests.Response:
+def create_findings(url: str, findings: list[FindingCreate]) -> requests.Response:
     api_url = f"{url}{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}"
 
     findings_json = []
@@ -28,7 +27,7 @@ def create_findings(url: str, findings: List[FindingCreate]) -> requests.Respons
     return response
 
 
-def create_findings_with_scan_id(url: str, findings: List[FindingCreate], scan_id: int) -> requests.Response:
+def create_findings_with_scan_id(url: str, findings: list[FindingCreate], scan_id: int) -> requests.Response:
     api_url = f"{url}{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{scan_id}{RWS_ROUTE_FINDINGS}"
 
     findings_json = []

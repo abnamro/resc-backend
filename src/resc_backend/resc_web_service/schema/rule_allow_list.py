@@ -1,16 +1,15 @@
 # Standard Library
-from typing import Optional
 
 # Third Party
 from pydantic import BaseModel, conint, constr
 
 
 class RuleAllowListBase(BaseModel):
-    description: Optional[constr(max_length=2000)]
-    regexes: Optional[str]
-    paths: Optional[str]
-    commits: Optional[str]
-    stop_words: Optional[str]
+    description: constr(max_length=2000) | None
+    regexes: str | None
+    paths: str | None
+    commits: str | None
+    stop_words: str | None
 
 
 class RuleAllowListCreate(RuleAllowListBase):

@@ -2,7 +2,6 @@
 import logging
 import os
 import re
-from typing import List
 
 # Third Party
 import tomlkit
@@ -82,8 +81,8 @@ def create_rule_dictionary(rule: Rule, allow_list_dict: dict, tags: str) -> dict
 
 def create_toml_dictionary(
     rule_pack_version: str,
-    rules: List[str],
-    global_allow_list: List[str],
+    rules: list[str],
+    global_allow_list: list[str],
     rule_tag_names,
 ) -> dict:
     """
