@@ -70,9 +70,8 @@ class DetailedFindingRead(DetailedFinding):
         github_commit_url = f"{repository_url}/commit/{commit_id}?path=/{file_path}"
         return github_commit_url
 
-    @classmethod
     @root_validator
-    def build_commit_url(cls, values) -> dict:
+    def build_commit_url(cls, values) -> dict: # noqa: N805
         if values["status"] is None:
             values["status"] = FindingStatus.NOT_ANALYZED.value
         if values["comment"] is None:
