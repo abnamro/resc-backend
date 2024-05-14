@@ -6,8 +6,7 @@ Create Date: 2024-05-14 15:05:36.849877
 
 """
 from alembic import op
-import sqlalchemy as sa
-from sqlalchemy import func, Table, table, column, select, delete
+from sqlalchemy import Table, table, column, delete
 
 TABLE_AUDIT = "audit"
 UNDER_REVIEW = "UNDER_REVIEW"
