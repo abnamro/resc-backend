@@ -449,7 +449,7 @@ def get_rule_findings_count_by_status(
             "true_positive": 0,
             "false_positive": 0,
             "not_analyzed": 0,
-            "under_review": 0,
+            "not_accessible": 0,
             "clarification_required": 0,
             "total_findings_count": 0,
         }
@@ -462,8 +462,8 @@ def get_rule_findings_count_by_status(
             rule_count_dict[status_count[0]]["false_positive"] += status_count[2]
         elif status_count[1] == FindingStatus.TRUE_POSITIVE.value:
             rule_count_dict[status_count[0]]["true_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.UNDER_REVIEW.value:
-            rule_count_dict[status_count[0]]["under_review"] += status_count[2]
+        elif status_count[1] == FindingStatus.NOT_ACCESSIBLE.value:
+            rule_count_dict[status_count[0]]["not_accessible"] += status_count[2]
         elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
             rule_count_dict[status_count[0]]["clarification_required"] += status_count[2]
 

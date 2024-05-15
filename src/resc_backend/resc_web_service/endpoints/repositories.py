@@ -334,7 +334,7 @@ def get_findings_metadata_for_repository(
         true_positive=findings_meta_data[repository_id]["true_positive"],
         false_positive=findings_meta_data[repository_id]["false_positive"],
         not_analyzed=findings_meta_data[repository_id]["not_analyzed"],
-        under_review=findings_meta_data[repository_id]["under_review"],
+        not_accessible=findings_meta_data[repository_id]["not_accessible"],
         clarification_required=findings_meta_data[repository_id]["clarification_required"],
         total_findings_count=findings_meta_data[repository_id]["total_findings_count"],
     )
@@ -411,7 +411,7 @@ def get_all_repositories_with_findings_metadata(
             true_positive=repo_findings_meta_data[repo.id_]["true_positive"],
             false_positive=repo_findings_meta_data[repo.id_]["false_positive"],
             not_analyzed=repo_findings_meta_data[repo.id_]["not_analyzed"],
-            under_review=repo_findings_meta_data[repo.id_]["under_review"],
+            not_accessible=repo_findings_meta_data[repo.id_]["not_accessible"],
             clarification_required=repo_findings_meta_data[repo.id_]["clarification_required"],
             total_findings_count=repo_findings_meta_data[repo.id_]["total_findings_count"],
         )

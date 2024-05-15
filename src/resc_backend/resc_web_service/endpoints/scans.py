@@ -228,7 +228,7 @@ async def create_scan_findings(
     - **commit_timestamp**: Commit timestamp
     - **author**: Author name
     - **email**: Email of the author
-    - **status**: Status of the finding, Valid values are NOT_ANALYZED, UNDER_REVIEW,
+    - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
                   CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
     - **comment**: Comment
     - **event_sent_on**: event sent timestamp

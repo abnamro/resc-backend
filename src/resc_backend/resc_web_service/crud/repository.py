@@ -367,7 +367,7 @@ def get_findings_metadata_by_repository_id(db_connection: Session, repository_id
             "true_positive": 0,
             "false_positive": 0,
             "not_analyzed": 0,
-            "under_review": 0,
+            "not_accessible": 0,
             "clarification_required": 0,
             "total_findings_count": 0,
         }
@@ -379,8 +379,8 @@ def get_findings_metadata_by_repository_id(db_connection: Session, repository_id
             repo_count_dict[status_count[0]]["false_positive"] += status_count[2]
         elif status_count[1] == FindingStatus.TRUE_POSITIVE.value:
             repo_count_dict[status_count[0]]["true_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.UNDER_REVIEW.value:
-            repo_count_dict[status_count[0]]["under_review"] += status_count[2]
+        elif status_count[1] == FindingStatus.NOT_ACCESSIBLE.value:
+            repo_count_dict[status_count[0]]["not_accessible"] += status_count[2]
         elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
             repo_count_dict[status_count[0]]["clarification_required"] += status_count[2]
 

@@ -666,7 +666,7 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 200, response.text
             data = response.json()
             assert data[0] == "NOT_ANALYZED"
-            assert data[1] == "UNDER_REVIEW"
+            assert data[1] == "NOT_ACCESSIBLE"
             assert data[2] == "CLARIFICATION_REQUIRED"
             assert data[3] == "FALSE_POSITIVE"
             assert data[4] == "TRUE_POSITIVE"

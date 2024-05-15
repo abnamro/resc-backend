@@ -294,7 +294,7 @@ async def audit_findings(
 
     - **db_connection**: Session of the database connection
     - **finding_ids**: List of finding IDs for which audit to be performed
-    - **status**: Status of the finding, Valid values are NOT_ANALYZED, UNDER_REVIEW,
+    - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
                   CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
     - **comment**: Comment
     - **return**: int
