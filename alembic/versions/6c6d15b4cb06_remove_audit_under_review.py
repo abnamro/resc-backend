@@ -29,7 +29,7 @@ def upgrade():
     # Create a sub query with group by on finding.
     delete_query = delete(audit).where(audit.c.status == UNDER_REVIEW)
     result = conn.execute(delete_query)
-    print(result.rowcount + " row deleted")
+    print(str(result.rowcount) + " row deleted")
 
 def downgrade():
     pass
