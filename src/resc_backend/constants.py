@@ -5,6 +5,9 @@ BITBUCKET = "BITBUCKET"
 AZURE_DEVOPS = "AZURE_DEVOPS"
 GITHUB_PUBLIC = "GITHUB_PUBLIC"
 
+# Rule tags with special behaviour
+RULE_TAG_SCAN_AS_DIR = "ScanAsDir"
+
 # RWS: RESC Web Service
 RWS_VERSION_PREFIX = "/resc/v1"
 RWS_ROUTE_REPOSITORIES = "/repositories"
