@@ -363,26 +363,18 @@ def get_findings_metadata_by_repository_id(db_connection: Session, repository_id
     status_counts = query.all()
     repo_count_dict = {}
     for repository_id in repository_ids:
-        repo_count_dict[repository_id] = {
-            "true_positive": 0,
-            "false_positive": 0,
-            "not_analyzed": 0,
-            "not_accessible": 0,
-            "clarification_required": 0,
-            "total_findings_count": 0,
-        }
+        repo_count_dict[repository_id] = FindingStatus.init_statistics()
+
     for status_count in status_counts:
-        repo_count_dict[status_count[0]]["total_findings_count"] += status_count[2]
-        if status_count[1] == FindingStatus.NOT_ANALYZED.value or status_count[1] is None:
-            repo_count_dict[status_count[0]]["not_analyzed"] += status_count[2]
-        elif status_count[1] == FindingStatus.FALSE_POSITIVE.value:
-            repo_count_dict[status_count[0]]["false_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.TRUE_POSITIVE.value:
-            repo_count_dict[status_count[0]]["true_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.NOT_ACCESSIBLE.value:
-            repo_count_dict[status_count[0]]["not_accessible"] += status_count[2]
-        elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
-            repo_count_dict[status_count[0]]["clarification_required"] += status_count[2]
+        repository_id: str = status_count[0]
+        finding_status: str | None = status_count[1]
+        count: int = status_count[2]
+
+        repo_count_dict[repository_id]["total_findings_count"] += count
+        if finding_status is None:
+            repo_count_dict[repository_id][FindingStatus.NOT_ANALYZED.value.lower()] += count
+        else:
+            repo_count_dict[repository_id][finding_status.lower()] += count
 
     return repo_count_dict
 

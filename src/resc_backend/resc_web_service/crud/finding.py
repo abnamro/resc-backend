@@ -445,27 +445,18 @@ def get_rule_findings_count_by_status(
 
     rule_count_dict = {}
     for status_count in status_counts:
-        rule_count_dict[status_count[0]] = {
-            "true_positive": 0,
-            "false_positive": 0,
-            "not_analyzed": 0,
-            "not_accessible": 0,
-            "clarification_required": 0,
-            "total_findings_count": 0,
-        }
+        rule_name: str = status_count[0]
+        rule_count_dict[rule_name] = FindingStatus.init_statistics()
 
     for status_count in status_counts:
-        rule_count_dict[status_count[0]]["total_findings_count"] += status_count[2]
-        if status_count[1] == FindingStatus.NOT_ANALYZED.value or status_count[1] is None:
-            rule_count_dict[status_count[0]]["not_analyzed"] += status_count[2]
-        elif status_count[1] == FindingStatus.FALSE_POSITIVE.value:
-            rule_count_dict[status_count[0]]["false_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.TRUE_POSITIVE.value:
-            rule_count_dict[status_count[0]]["true_positive"] += status_count[2]
-        elif status_count[1] == FindingStatus.NOT_ACCESSIBLE.value:
-            rule_count_dict[status_count[0]]["not_accessible"] += status_count[2]
-        elif status_count[1] == FindingStatus.CLARIFICATION_REQUIRED.value:
-            rule_count_dict[status_count[0]]["clarification_required"] += status_count[2]
+        rule_name: str = status_count[0]
+        count: int = status_count[2]
+        finding_status: str | None = status_count[1]
+        rule_count_dict[rule_name]["total_findings_count"] += count
+        if finding_status is None:
+            rule_count_dict[rule_name][FindingStatus.NOT_ANALYZED.value.lower()] += count
+        else:
+            rule_count_dict[rule_name][finding_status.lower()] += count
 
     return rule_count_dict
 

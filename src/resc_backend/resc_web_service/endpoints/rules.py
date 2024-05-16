@@ -132,6 +132,12 @@ def get_rules_finding_status_count(
                 count=rule_counts["clarification_required"],
             )
         )
+        rule_finding_count.finding_statuses_count.append(
+            StatusCount(
+                status=FindingStatus.OUTDATED.value,
+                count=rule_counts["outdated"],
+            )
+        )
         rule_findings_counts.append(rule_finding_count)
 
     return rule_findings_counts
