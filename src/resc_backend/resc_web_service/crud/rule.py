@@ -2,15 +2,17 @@
 import logging
 
 # Third Party
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
 # First Party
-from resc_backend.db.model import DBrule, DBruleAllowList, DBrulePack, DBscan
+from resc_backend.db.model import DBrule, DBruleAllowList, DBrulePack, DBruleTag, DBscan, DBtag
 from resc_backend.resc_web_service.schema import (
     rule_allow_list as rule_allow_list_schema,
 )
 from resc_backend.resc_web_service.schema.rule import RuleCreate, RuleRead
+from resc_backend.constants import RULE_TAG_SCAN_AS_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -137,3 +139,24 @@ def get_global_allow_list_by_rule_pack_version(db_connection: Session, rule_pack
     db_global_allow_list = query.first()
 
     return db_global_allow_list
+
+
+def get_scan_as_dir_rules_by_rule_pack_version(db_connection: Session, rule_pack_version: str) -> list[str]:
+    """
+        Fetch rules applied as directory by rule pack version
+    :param db_connection:
+        Session of the database connection
+    :param rule_pack_version:
+        rule pack version
+    :return: List[str]
+        The output contains list of strings of rules which are applied as directory
+    """
+    query: Query = select(DBrule.rule_name)
+    query = query.join(DBrulePack, DBrulePack.version == DBrule.rule_pack)
+    query = query.where(DBrule.rule_pack == rule_pack_version)
+    query = query.join(DBruleTag, DBruleTag.rule_id == DBrule.id_)
+    query = query.join(DBtag, DBtag.id_ == DBruleTag.tag_id)
+    query = query.where(DBtag.name == RULE_TAG_SCAN_AS_DIR)
+    db_rules = db_connection.execute(query).scalars().all()
+
+    return db_rules
