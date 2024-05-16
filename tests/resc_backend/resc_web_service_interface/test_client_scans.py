@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, UTC
 from unittest.mock import patch
 
 # First Party
@@ -15,7 +15,7 @@ def test_create_scan(post):
     scan = ScanCreate(
         scan_type="BASE",
         last_scanned_commit="FAKE_HASH",
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(UTC),
         repository_id=1,
         rule_pack="1.2",
     )

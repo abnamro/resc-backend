@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Third Party
 import pydantic
@@ -63,11 +63,11 @@ def test_pagination_model_findings():
             column_end=i,
             commit_id=f"commit_id_{i}",
             commit_message=f"commit_message_{i}",
-            commit_timestamp=datetime.utcnow(),
+            commit_timestamp=datetime.now(UTC),
             author=f"author_{i}",
             email=f"email_{i}",
             rule_name=f"rule_{i}",
-            event_sent_on=datetime.utcnow(),
+            event_sent_on=datetime.now(UTC),
             repository_id=1,
         )
         finding.id_ = i

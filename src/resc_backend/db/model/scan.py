@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Third Party
 from sqlalchemy import (
@@ -29,7 +29,7 @@ class DBscan(Base):
     rule_pack = Column(String(100), ForeignKey(DBrulePack.version), nullable=False)
     scan_type = Column(Enum(ScanType), default=ScanType.BASE, server_default=BASE_SCAN, nullable=False)
     last_scanned_commit = Column(String(100), nullable=False)
-    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = Column(DateTime, nullable=False, default=datetime.now(UTC))
     increment_number = Column(Integer, server_default=text("0"), default=0, nullable=False)
     is_latest = Column(Boolean, nullable=False, default=False, server_default=text("0"))
 

@@ -1,6 +1,6 @@
 # Standard Library
 import html
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Third Party
 from sqlalchemy import (
@@ -31,7 +31,7 @@ class DBaudit(Base):
     )
     auditor = Column(String(200))
     comment = Column(String(255), nullable=True)
-    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = Column(DateTime, nullable=False, default=datetime.now(UTC))
     is_latest = Column(Boolean, nullable=False, default=False, server_default=text("0"))
 
     def __init__(self, finding_id, status, auditor, comment, timestamp, is_latest):

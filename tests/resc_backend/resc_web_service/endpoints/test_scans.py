@@ -1,6 +1,6 @@
 # Standard Library
 import unittest
-from datetime import datetime
+from datetime import datetime, UTC
 from unittest.mock import ANY, patch
 
 # Third Party
@@ -32,7 +32,7 @@ class TestScans(unittest.TestCase):
                     repository_id=i,
                     scan_type="BASE",
                     last_scanned_commit="FAKE_HASH",
-                    timestamp=datetime.utcnow(),
+                    timestamp=datetime.now(UTC),
                     increment_number=0,
                     rule_pack=f"rule_pack_{i}",
                     is_latest=True,
@@ -61,11 +61,11 @@ class TestScans(unittest.TestCase):
                     column_end=i,
                     commit_id=f"commit_id_{i}",
                     commit_message=f"commit_message_{i}",
-                    commit_timestamp=datetime.utcnow(),
+                    commit_timestamp=datetime.now(UTC),
                     author=f"author_{i}",
                     email=f"email_{i}",
                     rule_name=f"rule_{i}",
-                    event_sent_on=datetime.utcnow(),
+                    event_sent_on=datetime.now(UTC),
                     repository_id=1,
                 )
             )
@@ -83,19 +83,19 @@ class TestScans(unittest.TestCase):
                     column_end=i,
                     commit_id=f"commit_id_{i}",
                     commit_message=f"commit_message_{i}",
-                    commit_timestamp=datetime.utcnow(),
+                    commit_timestamp=datetime.now(UTC),
                     author=f"author_{i}",
                     email=f"email_{i}",
                     repository_id=i,
                     rule_name=f"rule_{i}",
-                    event_sent_on=datetime.utcnow(),
+                    event_sent_on=datetime.now(UTC),
                 )
             )
 
     @staticmethod
     def create_json_body(scan):
         return {
-            "timestamp": datetime.strftime(scan.timestamp, "%Y-%m-%dT%H:%M:%S.%f"),
+            "timestamp": scan.timestamp.isoformat(),
             "scan_type": scan.scan_type,
             "last_scanned_commit": scan.last_scanned_commit,
             "repository_id": scan.repository_id,
@@ -118,7 +118,7 @@ class TestScans(unittest.TestCase):
     def assert_scan(data, scan):
         assert data["id_"] == scan.id_
         assert data["repository_id"] == scan.repository_id
-        assert datetime.strptime(data["timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == scan.timestamp
+        assert datetime.fromisoformat(data["timestamp"]) == scan.timestamp
 
     @patch("resc_backend.resc_web_service.crud.scan.get_scan")
     def test_get_scan_non_existing(self, get_scan):
@@ -244,7 +244,7 @@ class TestScans(unittest.TestCase):
         db_scan = self.db_scans[0]
         get_scan.return_value = db_scan
         update_scan.return_value = db_scan
-        update_scan.return_value.timestamp = datetime.utcnow()
+        update_scan.return_value.timestamp = datetime.now(UTC)
         response = self.client.put(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/{db_scan.id_}",
             json=self.create_json_body(update_scan.return_value),

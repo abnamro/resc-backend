@@ -1,7 +1,7 @@
 # Standard Library
 import json
 import unittest
-from datetime import datetime
+from datetime import datetime, UTC
 from collections.abc import Generator
 from unittest.mock import ANY, call, patch
 
@@ -83,7 +83,7 @@ class TestRepositories(unittest.TestCase):
                     repository_id=i,
                     scan_type="BASE",
                     last_scanned_commit="FAKE_HASH",
-                    timestamp=datetime.utcnow(),
+                    timestamp=datetime.now(UTC),
                     rule_pack="1.2",
                     increment_number=1,
                     is_latest=True,
@@ -101,11 +101,11 @@ class TestRepositories(unittest.TestCase):
                     column_end=i,
                     commit_id=f"commit_id_{i}",
                     commit_message=f"commit_message_{i}",
-                    commit_timestamp=datetime.utcnow(),
+                    commit_timestamp=datetime.now(UTC),
                     author=f"author_{i}",
                     email=f"email_{i}",
                     rule_name=f"rule_{i}",
-                    event_sent_on=datetime.utcnow(),
+                    event_sent_on=datetime.now(UTC),
                     repository_id=1,
                 )
             )

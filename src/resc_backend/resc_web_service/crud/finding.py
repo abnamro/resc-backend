@@ -1,6 +1,6 @@
 # Standard Library
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 # Third Party
 from sqlalchemy import extract, func, union
@@ -661,7 +661,7 @@ def _get_iso_date_now_diff_week(week: int) -> datetime:
     Returns:
         datetime: shifted iso time stamp for easier computations.
     """
-    current_utc_time = datetime.utcnow()
+    current_utc_time = datetime.now(UTC)
     current_iso = current_utc_time.isocalendar()
     current_iso_year = current_iso[0]
     current_iso_week = current_iso[1]

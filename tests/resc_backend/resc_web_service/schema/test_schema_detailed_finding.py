@@ -1,6 +1,6 @@
 # Standard Library
 import unittest
-from datetime import datetime
+from datetime import datetime, UTC
 
 # First Party
 from resc_backend.resc_web_service.schema.detailed_finding import DetailedFindingRead
@@ -21,7 +21,7 @@ class TestDetailedFindings(unittest.TestCase):
                     column_end=i,
                     commit_id=f"commit_id_{i}",
                     commit_message=f"commit_message_{i}",
-                    commit_timestamp=datetime.utcnow(),
+                    commit_timestamp=datetime.now(UTC),
                     author=f"author_{i}",
                     email=f"email_{i}",
                     status=FindingStatus.NOT_ANALYZED.value,
@@ -31,7 +31,7 @@ class TestDetailedFindings(unittest.TestCase):
                     project_key=f"project_key_{i}",
                     repository_name=f"repository_name_{i}",
                     repository_url=f"http://fake.repo.com/{i}",
-                    timestamp=datetime.utcnow(),
+                    timestamp=datetime.now(UTC),
                     vcs_provider="AZURE_DEVOPS",
                     last_scanned_commit=f"last_scanned_commit_{i}",
                     commit_url=f"commit_url_{i}",
@@ -49,7 +49,7 @@ class TestDetailedFindings(unittest.TestCase):
                     column_end=index,
                     commit_id=f"commit_id_{index}",
                     commit_message=f"commit_message_{index}",
-                    commit_timestamp=datetime.utcnow(),
+                    commit_timestamp=datetime.now(UTC),
                     author=f"author_{index}",
                     email=f"email_{index}",
                     status=FindingStatus.NOT_ANALYZED.value,
@@ -59,7 +59,7 @@ class TestDetailedFindings(unittest.TestCase):
                     project_key=f"project_key_{index}",
                     repository_name=f"repository_name_{index}",
                     repository_url=f"https://dummy-bitbucket-instance.com/projects/project_key_{index}",
-                    timestamp=datetime.utcnow(),
+                    timestamp=datetime.now(UTC),
                     vcs_provider="BITBUCKET",
                     last_scanned_commit=f"last_scanned_commit_{index}",
                     commit_url=f"commit_url_{index}",

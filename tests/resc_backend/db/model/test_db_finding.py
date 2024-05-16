@@ -1,7 +1,7 @@
 # Standard Library
 import sys
 import unittest
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Third Party
 from sqlalchemy import create_engine
@@ -57,7 +57,7 @@ class TestFinding(unittest.TestCase):
             repository_id=1,
             scan_type="BASE",
             last_scanned_commit="FAKE_HASH",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             rule_pack="1.2",
             increment_number=1,
             is_latest=True,
@@ -72,11 +72,11 @@ class TestFinding(unittest.TestCase):
             column_end=10,
             commit_id="2",
             commit_message="Fake commit message",
-            commit_timestamp=datetime.utcnow(),
+            commit_timestamp=datetime.now(UTC),
             author="fake author",
             email="fake.author@fake-domain.com",
             rule_name="rule_1",
-            event_sent_on=datetime.utcnow(),
+            event_sent_on=datetime.now(UTC),
             repository_id=1,
         )
         self.scan_finding = DBscanFinding(finding_id=1, scan_id=1)
