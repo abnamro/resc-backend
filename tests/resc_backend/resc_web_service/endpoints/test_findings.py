@@ -670,7 +670,8 @@ class TestFindings(unittest.TestCase):
             assert data[2] == "CLARIFICATION_REQUIRED"
             assert data[3] == "FALSE_POSITIVE"
             assert data[4] == "TRUE_POSITIVE"
-            assert len(data) == 5
+            assert data[5] == "OUTDATED"
+            assert len(data) == 6
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_SUPPORTED_STATUSES}/")

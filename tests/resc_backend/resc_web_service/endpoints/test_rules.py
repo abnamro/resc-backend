@@ -357,7 +357,8 @@ class TestRules(unittest.TestCase):
                 "not_analyzed": 2,
                 "not_accessible": 2,
                 "clarification_required": 2,
-                "total_findings_count": 10,
+                "outdated": 2,
+                "total_findings_count": 12,
             }
         }
         get_rule_findings_count_by_status.return_value = rule_statuses
@@ -367,7 +368,7 @@ class TestRules(unittest.TestCase):
             data = response.json()
             assert len(data) == 1
             assert data[0]["rule_name"] == self.db_rules[0].rule_name
-            assert data[0]["finding_count"] == 10
+            assert data[0]["finding_count"] == 12
             assert len(data[0]["finding_statuses_count"]) == len(self.db_status_count)
             for status in range(len(self.db_status_count)):
                 assert data[0]["finding_statuses_count"][status]["count"] == 2
@@ -387,7 +388,8 @@ class TestRules(unittest.TestCase):
                 "not_analyzed": 2,
                 "not_accessible": 2,
                 "clarification_required": 2,
-                "total_findings_count": 10,
+                "outdated": 2,
+                "total_findings_count": 12,
             }
         }
         get_rule_findings_count_by_status.return_value = rule_statuses
@@ -401,7 +403,7 @@ class TestRules(unittest.TestCase):
             data = response.json()
             assert len(data) == 1
             assert data[0]["rule_name"] == self.db_rules[0].rule_name
-            assert data[0]["finding_count"] == 10
+            assert data[0]["finding_count"] == 12
             assert len(data[0]["finding_statuses_count"]) == len(self.db_status_count)
             for status in range(len(self.db_status_count)):
                 assert data[0]["finding_statuses_count"][status]["count"] == 2
@@ -426,7 +428,8 @@ class TestRules(unittest.TestCase):
                 "not_analyzed": 2,
                 "not_accessible": 2,
                 "clarification_required": 2,
-                "total_findings_count": 10,
+                "outdated": 2,
+                "total_findings_count": 12,
             }
         }
         get_rule_findings_count_by_status.return_value = rule_statuses
@@ -440,7 +443,7 @@ class TestRules(unittest.TestCase):
             data = response.json()
             assert len(data) == 1
             assert data[0]["rule_name"] == self.db_rules[0].rule_name
-            assert data[0]["finding_count"] == 10
+            assert data[0]["finding_count"] == 12
             assert len(data[0]["finding_statuses_count"]) == len(self.db_status_count)
             for status in range(len(self.db_status_count)):
                 assert data[0]["finding_statuses_count"][status]["count"] == 2

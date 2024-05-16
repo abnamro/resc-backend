@@ -21,6 +21,7 @@ class RepositoryEnrichedBase(BaseModel):
     not_analyzed: conint(gt=-1)
     not_accessible: conint(gt=-1)
     clarification_required: conint(gt=-1)
+    outdated: conint(gt=-1)
     total_findings_count: conint(gt=-1)
 
 

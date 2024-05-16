@@ -20,7 +20,7 @@ from resc_backend.db.model import (
 from resc_backend.resc_web_service.crud import finding as finding_crud
 from resc_backend.resc_web_service.crud import scan_finding as scan_finding_crud
 from resc_backend.resc_web_service.schema import scan as scan_schema
-from resc_backend.resc_web_service.schema.finding_status import FindingStatus
+from resc_backend.resc_web_service.schema.finding_status import FindingStatus, StatusStats
 from resc_backend.resc_web_service.schema.scan_type import ScanType
 
 
@@ -138,7 +138,7 @@ def create_scan(db_connection: Session, scan: scan_schema.ScanCreate) -> DBscan:
 
 def get_repository_findings_metadata_for_latest_scan(
     db_connection: Session, repository_id: int, scan_timestamp: datetime
-):
+) -> StatusStats:
     """
         Retrieves the finding metadata for latest scan of a repository from the database
     :param db_connection:
@@ -159,9 +159,7 @@ def get_repository_findings_metadata_for_latest_scan(
             if scan.scan_type == ScanType.BASE:
                 break
 
-    true_positive_count = false_positive_count = not_analyzed_count = not_accessible_count = (
-        clarification_required_count
-    ) = 0
+    findings_metadata = FindingStatus.init_statistics()
     if len(scan_ids_latest_to_base) > 0:
         findings_count_by_status = finding_crud.get_findings_count_by_status(
             db_connection,
@@ -169,35 +167,14 @@ def get_repository_findings_metadata_for_latest_scan(
             finding_statuses=FindingStatus,
         )
         for finding in findings_count_by_status:
-            finding_status = finding[1]
-            count = finding[0]
-            if finding_status == FindingStatus.TRUE_POSITIVE.value:
-                true_positive_count = count
-            if finding_status == FindingStatus.FALSE_POSITIVE.value:
-                false_positive_count = count
-            if finding_status == FindingStatus.NOT_ANALYZED.value or finding_status is None:
-                not_analyzed_count += count
-            if finding_status == FindingStatus.NOT_ACCESSIBLE.value:
-                not_accessible_count = count
-            if finding_status == FindingStatus.CLARIFICATION_REQUIRED.value:
-                clarification_required_count = count
+            finding_status: str = finding[1]
+            count: int = finding[0]
 
-    total_findings_count = (
-        true_positive_count
-        + false_positive_count
-        + not_analyzed_count
-        + not_accessible_count
-        + clarification_required_count
-    )
-
-    findings_metadata = {
-        "true_positive": true_positive_count,
-        "false_positive": false_positive_count,
-        "not_analyzed": not_analyzed_count,
-        "not_accessible": not_accessible_count,
-        "clarification_required": clarification_required_count,
-        "total_findings_count": total_findings_count,
-    }
+            findings_metadata["total_findings_count"] += count
+            if finding_status is None:
+                findings_metadata[FindingStatus.NOT_ANALYZED.value.lower()] += count
+            else:
+                findings_metadata[finding_status.lower()] += count
 
     return findings_metadata
 

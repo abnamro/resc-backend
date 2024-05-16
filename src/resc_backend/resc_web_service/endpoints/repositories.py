@@ -336,6 +336,7 @@ def get_findings_metadata_for_repository(
         not_analyzed=findings_meta_data[repository_id]["not_analyzed"],
         not_accessible=findings_meta_data[repository_id]["not_accessible"],
         clarification_required=findings_meta_data[repository_id]["clarification_required"],
+        outdated=findings_meta_data[repository_id]["outdated"],
         total_findings_count=findings_meta_data[repository_id]["total_findings_count"],
     )
 
@@ -413,6 +414,7 @@ def get_all_repositories_with_findings_metadata(
             not_analyzed=repo_findings_meta_data[repo.id_]["not_analyzed"],
             not_accessible=repo_findings_meta_data[repo.id_]["not_accessible"],
             clarification_required=repo_findings_meta_data[repo.id_]["clarification_required"],
+            outdated=repo_findings_meta_data[repo.id_]["outdated"],
             total_findings_count=repo_findings_meta_data[repo.id_]["total_findings_count"],
         )
         repository_list.append(enriched_repository)
