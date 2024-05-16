@@ -1,6 +1,6 @@
 # Standard Library
 import unittest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from collections.abc import Generator
 from unittest.mock import ANY, Mock, patch
 
@@ -68,8 +68,8 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == 13
-            first_week = datetime.utcnow() - timedelta(weeks=0)
-            nth_week = datetime.utcnow() - timedelta(weeks=len(data) - 1)
+            first_week = datetime.now(UTC) - timedelta(weeks=0)
+            nth_week = datetime.now(UTC) - timedelta(weeks=len(data) - 1)
             assert (
                 data[len(data) - 1]["time_period"] == f"{first_week.isocalendar().year} "
                 f"W{first_week.isocalendar().week:02d}"
@@ -90,8 +90,8 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == 13
-            first_week = datetime.utcnow() - timedelta(weeks=0)
-            nth_week = datetime.utcnow() - timedelta(weeks=len(data) - 1)
+            first_week = datetime.now(UTC) - timedelta(weeks=0)
+            nth_week = datetime.now(UTC) - timedelta(weeks=len(data) - 1)
             assert (
                 data[len(data) - 1]["time_period"] == f"{first_week.isocalendar().year} "
                 f"W{first_week.isocalendar().week:02d}"
@@ -114,8 +114,8 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == 13
-            first_week = datetime.utcnow() - timedelta(weeks=0)
-            nth_week = datetime.utcnow() - timedelta(weeks=len(data) - 1)
+            first_week = datetime.now(UTC) - timedelta(weeks=0)
+            nth_week = datetime.now(UTC) - timedelta(weeks=len(data) - 1)
             assert (
                 data[len(data) - 1]["time_period"] == f"{first_week.isocalendar().year} "
                 f"W{first_week.isocalendar().week:02d}"
@@ -130,9 +130,9 @@ class TestFindings(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     def test_convert_rows_to_finding_count_over_time(self):
-        first_week = datetime.utcnow() - timedelta(weeks=0)
-        second_week = datetime.utcnow() - timedelta(weeks=1)
-        third_week = datetime.utcnow() - timedelta(weeks=2)
+        first_week = datetime.now(UTC) - timedelta(weeks=0)
+        second_week = datetime.now(UTC) - timedelta(weeks=1)
+        third_week = datetime.now(UTC) - timedelta(weeks=2)
         data1 = Mock(
             year=first_week.isocalendar().year,
             week=first_week.isocalendar().week,
@@ -177,8 +177,8 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == 13
-            first_week = datetime.utcnow() - timedelta(weeks=0)
-            nth_week = datetime.utcnow() - timedelta(weeks=len(data) - 1)
+            first_week = datetime.now(UTC) - timedelta(weeks=0)
+            nth_week = datetime.now(UTC) - timedelta(weeks=len(data) - 1)
             assert (
                 data[len(data) - 1]["time_period"] == f"{first_week.isocalendar().year} "
                 f"W{first_week.isocalendar().week:02d}"

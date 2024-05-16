@@ -1,7 +1,7 @@
 # Standard Library
 import json
 import unittest
-from datetime import datetime
+from datetime import datetime, UTC
 from collections.abc import Generator
 from unittest.mock import ANY, call, patch
 
@@ -68,11 +68,11 @@ class TestFindings(unittest.TestCase):
                 column_end=i,
                 commit_id=f"commit_id_{i}",
                 commit_message=f"commit_message_{i}",
-                commit_timestamp=datetime.utcnow(),
+                commit_timestamp=datetime.now(UTC),
                 author=f"author_{i}",
                 email=f"email_{i}",
                 rule_name=f"rule_{i}",
-                event_sent_on=datetime.utcnow(),
+                event_sent_on=datetime.now(UTC),
                 repository_id=1,
             )
             self.db_findings.append(finding)
@@ -86,7 +86,7 @@ class TestFindings(unittest.TestCase):
                 auditor=f"auditor {i}",
                 status=FindingStatus.TRUE_POSITIVE.value,
                 comment=f"comment {i}",
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(UTC),
                 is_latest=True,
             )
             self.db_audits.append(audit)
@@ -105,11 +105,11 @@ class TestFindings(unittest.TestCase):
                     column_end=i,
                     commit_id=f"commit_id_{i}",
                     commit_message=f"commit_message_{i}",
-                    commit_timestamp=datetime.utcnow(),
+                    commit_timestamp=datetime.now(UTC),
                     author=f"author_{i}",
                     email=f"email_{i}",
                     rule_name=f"rule_{i}",
-                    event_sent_on=datetime.utcnow(),
+                    event_sent_on=datetime.now(UTC),
                 )
             )
 
@@ -121,7 +121,7 @@ class TestFindings(unittest.TestCase):
         assert data["column_end"] == finding.column_end
         assert data["commit_id"] == finding.commit_id
         assert data["commit_message"] == finding.commit_message
-        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == finding.commit_timestamp
+        assert datetime.fromisoformat(data["commit_timestamp"]) == finding.commit_timestamp
         assert data["author"] == finding.author
         assert data["email"] == finding.email
         assert data["rule_name"] == finding.rule_name
@@ -129,7 +129,7 @@ class TestFindings(unittest.TestCase):
         assert data["repository_id"] == finding.repository_id
         assert data["id_"] == finding.id_
         assert finding.id_ == scan_findings[0].finding_id
-        assert datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S.%f") == finding.event_sent_on
+        assert datetime.fromisoformat(data["event_sent_on"]) == finding.event_sent_on
 
     @staticmethod
     def assert_finding(data, finding: Finding):
@@ -139,14 +139,14 @@ class TestFindings(unittest.TestCase):
         assert data["column_end"] == finding.column_end
         assert data["commit_id"] == finding.commit_id
         assert data["commit_message"] == finding.commit_message
-        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == finding.commit_timestamp
+        assert datetime.fromisoformat(data["commit_timestamp"]) == finding.commit_timestamp
         assert data["author"] == finding.author
         assert data["email"] == finding.email
         assert data["rule_name"] == finding.rule_name
         assert data["scan_ids"] == finding.scan_ids
         assert data["repository_id"] == finding.repository_id
         assert data["id_"] == finding.id_
-        assert datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S.%f") == finding.event_sent_on
+        assert datetime.fromisoformat(data["event_sent_on"]) == finding.event_sent_on
 
     @staticmethod
     def cast_db_finding_to_finding_create(finding: DBfinding, scan_findings: list[DBscanFinding]):
@@ -310,7 +310,7 @@ class TestFindings(unittest.TestCase):
     def test_patch_findings(self, clear_cache_by_namespace, patch_finding, get_scan_findings, get_finding):
         finding_id = 1
         db_finding = self.db_findings[0]
-        db_finding.event_sent_on = datetime.utcnow()
+        db_finding.event_sent_on = datetime.now(UTC)
         db_scan_findings = [self.db_scan_findings[0]]
         clear_cache_by_namespace.return_value = None
         get_scan_findings.return_value = db_scan_findings
@@ -356,7 +356,7 @@ class TestFindings(unittest.TestCase):
         assert data["column_end"] == expected_results.column_end
         assert data["commit_id"] == expected_results.commit_id
         assert data["commit_message"] == expected_results.commit_message
-        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == expected_results.commit_timestamp
+        assert datetime.fromisoformat(data["commit_timestamp"]) == expected_results.commit_timestamp
         assert data["author"] == expected_results.author
         assert data["email"] == expected_results.email
         assert data["rule_name"] == expected_results.rule_name
@@ -753,9 +753,7 @@ class TestFindings(unittest.TestCase):
             assert data["data"][0]["id_"] == self.db_audits[0].id_
             assert data["data"][0]["comment"] == self.db_audits[0].comment
             assert data["data"][0]["auditor"] == self.db_audits[0].auditor
-            assert (
-                datetime.strptime(data["data"][0]["timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == self.db_audits[0].timestamp
-            )
+            assert datetime.fromisoformat(data["data"][0]["timestamp"]) == self.db_audits[0].timestamp
             assert data["total"] == 1
             assert data["limit"] == 5
             assert data["skip"] == 0

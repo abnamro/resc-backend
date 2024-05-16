@@ -1,6 +1,6 @@
 # Standard Library
 import unittest
-from datetime import datetime
+from datetime import datetime, UTC
 from collections.abc import Generator
 from unittest.mock import ANY, patch
 from urllib.parse import quote, urlencode
@@ -55,7 +55,7 @@ class TestDetailedFindings(unittest.TestCase):
                     column_end=i,
                     commit_id=f"commit_id_{i}",
                     commit_message=f"commit_message_{i}",
-                    commit_timestamp=datetime.utcnow(),
+                    commit_timestamp=datetime.now(UTC),
                     author=f"author_{i}",
                     email=f"email_{i}",
                     rule_name=f"rule_name_{i}",
@@ -80,7 +80,7 @@ class TestDetailedFindings(unittest.TestCase):
         assert data["column_end"] == detailed_finding.column_end
         assert data["commit_id"] == detailed_finding.commit_id
         assert data["commit_message"] == detailed_finding.commit_message
-        assert datetime.strptime(data["commit_timestamp"], "%Y-%m-%dT%H:%M:%S.%f") == detailed_finding.commit_timestamp
+        assert datetime.fromisoformat(data["commit_timestamp"]) == detailed_finding.commit_timestamp
         assert data["author"] == detailed_finding.author
         assert data["email"] == detailed_finding.email
         assert data["rule_name"] == detailed_finding.rule_name
@@ -90,11 +90,11 @@ class TestDetailedFindings(unittest.TestCase):
         assert data["project_key"] == detailed_finding.project_key
         assert data["repository_name"] == detailed_finding.repository_name
         assert data["repository_url"] == detailed_finding.repository_url
-        assert datetime.strptime(data["timestamp"], "%Y-%m-%dT%H:%M:%S") == detailed_finding.timestamp
+        assert datetime.fromisoformat(data["timestamp"]) == detailed_finding.timestamp
         assert data["vcs_provider"] == detailed_finding.vcs_provider
         assert data["last_scanned_commit"] == detailed_finding.last_scanned_commit
         assert data["commit_url"] == detailed_finding.commit_url
-        assert datetime.strptime(data["event_sent_on"], "%Y-%m-%dT%H:%M:%S") == detailed_finding.event_sent_on
+        assert datetime.fromisoformat(data["event_sent_on"]) == detailed_finding.event_sent_on
 
     @staticmethod
     def assert_cache(cached_response):

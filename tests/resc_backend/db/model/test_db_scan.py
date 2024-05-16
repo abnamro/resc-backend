@@ -1,7 +1,7 @@
 # Standard Library
 import sys
 import unittest
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Third Party
 from sqlalchemy import create_engine
@@ -46,7 +46,7 @@ class TestScan(unittest.TestCase):
             repository_id=1,
             scan_type="BASE",
             last_scanned_commit="FAKE_HASH",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             rule_pack="1.2",
             increment_number=1,
             is_latest=True,

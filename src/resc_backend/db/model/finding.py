@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Third Party
 from sqlalchemy import (
@@ -27,7 +27,7 @@ class DBfinding(Base):
     column_end = Column(Integer, nullable=False, default=0)
     commit_id = Column(String(120))
     commit_message = Column(Text)
-    commit_timestamp = Column(DateTime, default=datetime.utcnow().isoformat())
+    commit_timestamp = Column(DateTime, default=datetime.now(UTC).isoformat())
     author = Column(String(200))
     email = Column(String(100))
     event_sent_on = Column(DateTime, nullable=True)

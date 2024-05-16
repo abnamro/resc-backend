@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Third Party
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
@@ -14,14 +14,14 @@ class DBrulePack(Base):
     version = Column("version", String(100), primary_key=True)
     global_allow_list = Column(Integer, ForeignKey(DBruleAllowList.id_), nullable=True)
     active = Column(Boolean, nullable=False, default=False)
-    created = Column(DateTime, nullable=False, default=datetime.utcnow)
+    created = Column(DateTime, nullable=False, default=datetime.now(UTC))
 
     def __init__(
         self,
         version: str,
         global_allow_list: int = None,
         active: bool = False,
-        created: datetime = datetime.utcnow(),
+        created: datetime = datetime.now(UTC),
     ):
         self.version = version
         self.global_allow_list = global_allow_list

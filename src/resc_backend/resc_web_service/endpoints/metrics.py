@@ -1,6 +1,6 @@
 # Standard Library
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 # Third Party
 from fastapi import APIRouter, Depends, Query, Request, status
@@ -150,7 +150,7 @@ def convert_rows_to_finding_count_over_time(count_over_time: dict, weeks: int) -
     # create defaults with 0 value
     week_groups = {}
     for week in range(0, weeks):
-        nth_week = datetime.utcnow() - timedelta(weeks=week)
+        nth_week = datetime.now(UTC) - timedelta(weeks=week)
         week = f"{nth_week.isocalendar().year} W{nth_week.isocalendar().week:02d}"
         week_groups[week] = {vcs_provider_type: 0 for vcs_provider_type in vcs_provider_types + ["total"]}
 
@@ -210,7 +210,7 @@ def get_audit_count_by_auditor_over_time(
     # default to 0 per auditor for all weeks in range
     weekly_audit_counts = {}
     for week in range(0, weeks):
-        nth_week = datetime.utcnow() - timedelta(weeks=week)
+        nth_week = datetime.now(UTC) - timedelta(weeks=week)
         week = f"{nth_week.isocalendar().year} W{nth_week.isocalendar().week:02d}"
         weekly_audit_counts[week] = AuditCountOverTime(time_period=week, audit_by_auditor_count=dict(auditors_default))
     weekly_audit_counts = dict(sorted(weekly_audit_counts.items()))

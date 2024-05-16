@@ -1,6 +1,6 @@
 # Standard Library
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 # Third Party
 from sqlalchemy import extract, func, select, update
@@ -55,7 +55,7 @@ def create_audit(
         auditor=auditor,
         status=status,
         comment=comment,
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(UTC),
         is_latest=True,
     )
     db_connection.add(db_audit)
@@ -116,7 +116,7 @@ def get_audit_count_by_auditor_over_time(db_connection: Session, weeks: int = 13
     :return: count_over_time
         list of rows containing audit count over time per week
     """
-    last_nth_week_date_time = datetime.utcnow() - timedelta(weeks=weeks)
+    last_nth_week_date_time = datetime.now(UTC) - timedelta(weeks=weeks)
 
     query = (
         db_connection.query(
@@ -160,7 +160,7 @@ def get_personal_audit_count(db_connection: Session, auditor: str, time_period: 
     :return: total_count
         count of audit entries
     """
-    date_today = datetime.utcnow()
+    date_today = datetime.now(UTC)
 
     total_count = db_connection.query(func.count(DBaudit.id_))
 
@@ -174,7 +174,7 @@ def get_personal_audit_count(db_connection: Session, auditor: str, time_period: 
                 total_count = total_count.filter(extract(DAY, DBaudit.timestamp) == extract(DAY, date_today))
 
     if time_period in (time_period.WEEK, time_period.LAST_WEEK):
-        date_last_week = datetime.utcnow() - timedelta(weeks=1)
+        date_last_week = datetime.now(UTC) - timedelta(weeks=1)
         date_week = date_last_week if time_period == time_period.LAST_WEEK else date_today
         total_count = total_count.filter(extract(YEAR, DBaudit.timestamp) == extract(YEAR, date_week))
         total_count = total_count.filter(extract(WEEK, DBaudit.timestamp) == extract(WEEK, date_week))
