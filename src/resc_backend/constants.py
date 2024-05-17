@@ -70,6 +70,8 @@ CACHE_NAMESPACE_FINDING_STATUS = "namespace-finding-status"
 
 TOML_CUSTOM_DELIMITER = "#custom-delimiter#"
 TEMP_RULE_FILE = "/tmp/temp_resc_rule.toml"
+TEMP_RULE_REPO_FILE = "/tmp/temp_resc_repo_rule.toml"
+TEMP_RULE_DIR_FILE = "/tmp/temp_resc_dir_rule.toml"
 ALLOWED_EXTENSION = ".toml"
 
 # Logging for dummy-data-generator

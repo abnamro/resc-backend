@@ -36,11 +36,11 @@ from resc_backend.resc_web_service.helpers.resc_swagger_models import (
 )
 from resc_backend.resc_web_service.helpers.rule import (
     create_toml_dictionary,
-    create_toml_rule_file,
     get_mapped_global_allow_list_obj,
     map_dictionary_to_rule_allow_list_object,
     validate_uploaded_file_and_read_content,
 )
+from resc_backend.resc_web_service.helpers.toml import create_toml_rule_file
 from resc_backend.resc_web_service.schema.pagination_model import PaginationModel
 from resc_backend.resc_web_service.schema.rule import RuleCreate
 from resc_backend.resc_web_service.schema.rule_allow_list import RuleAllowList

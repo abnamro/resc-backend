@@ -156,7 +156,9 @@ def get_scan_as_dir_rules_by_rule_pack_version(db_connection: Session, rule_pack
     query = query.where(DBrule.rule_pack == rule_pack_version)
     query = query.join(DBruleTag, DBruleTag.rule_id == DBrule.id_)
     query = query.join(DBtag, DBtag.id_ == DBruleTag.tag_id)
-    query = query.where(DBtag.name == RULE_TAG_SCAN_AS_DIR)
+    query = query.where(
+        DBtag.name == RULE_TAG_SCAN_AS_DIR
+    )  # We could make this a parameter later, but for now it is simpler. KISS
     db_rules = db_connection.execute(query).scalars().all()
 
     return db_rules
