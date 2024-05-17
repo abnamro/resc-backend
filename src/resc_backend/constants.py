@@ -5,6 +5,9 @@ BITBUCKET = "BITBUCKET"
 AZURE_DEVOPS = "AZURE_DEVOPS"
 GITHUB_PUBLIC = "GITHUB_PUBLIC"
 
+# Rule tags with special behaviour
+RULE_TAG_SCAN_AS_DIR = "ScanAsDir"
+
 # RWS: RESC Web Service
 RWS_VERSION_PREFIX = "/resc/v1"
 RWS_ROUTE_REPOSITORIES = "/repositories"
@@ -67,6 +70,8 @@ CACHE_NAMESPACE_FINDING_STATUS = "namespace-finding-status"
 
 TOML_CUSTOM_DELIMITER = "#custom-delimiter#"
 TEMP_RULE_FILE = "/tmp/temp_resc_rule.toml"
+TEMP_RULE_REPO_FILE = "/tmp/temp_resc_repo_rule.toml"
+TEMP_RULE_DIR_FILE = "/tmp/temp_resc_dir_rule.toml"
 ALLOWED_EXTENSION = ".toml"
 
 # Logging for dummy-data-generator
