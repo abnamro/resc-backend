@@ -1,5 +1,6 @@
 # Standard Library
 import logging.config
+from contextlib import asynccontextmanager
 
 # Third Party
 from fastapi import Depends, FastAPI
@@ -111,12 +112,20 @@ tags_metadata = [
 auth_disabled = env_variables[AUTHENTICATION_REQUIRED].lower() in ["false"]
 AUTH = [Depends(requires_no_auth)] if auth_disabled else [Depends(requires_auth)]
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    app_startup()
+    yield
+    await app_shutdown()
+
 app = FastAPI(
     title="Repository Scanner (RESC)",
     description="RESC API helps you to perform several operations upon findings "
     "obtained from multiple source code repositories.",
     version=get_package_version(),
     openapi_tags=tags_metadata,
+    lifespan=lifespan
 )
 
 if env_variables[ENABLE_CORS].lower() in ["true"]:
@@ -147,7 +156,6 @@ app.middleware("http")(add_security_headers)
 add_exception_handlers(app=app)
 
 
-@app.on_event("startup")
 def app_startup():
     CacheManager.initialize_cache(env_variables=env_variables)
     try:
@@ -159,7 +167,6 @@ def app_startup():
         raise SystemExit("Error while connecting to the database, retry timed out") from exc
 
 
-@app.on_event("shutdown")
 async def app_shutdown():
     await CacheManager.clear_all_cache()
 
