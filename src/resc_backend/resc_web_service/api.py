@@ -10,7 +10,6 @@ from starlette.status import HTTP_302_FOUND
 from tenacity import RetryError
 
 # First Party
-from resc_backend.common import get_package_version
 from resc_backend.constants import RWS_VERSION_PREFIX
 from resc_backend.db.connection import Session, engine
 from resc_backend.helpers.environment_wrapper import validate_environment
@@ -123,7 +122,6 @@ app = FastAPI(
     title="Repository Scanner (RESC)",
     description="RESC API helps you to perform several operations upon findings "
     "obtained from multiple source code repositories.",
-    version=get_package_version(),
     openapi_tags=tags_metadata,
     lifespan=lifespan
 )

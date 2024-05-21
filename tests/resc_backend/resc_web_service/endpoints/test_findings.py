@@ -345,7 +345,7 @@ class TestFindings(unittest.TestCase):
         update_body = {"event_sent_on": "2022-07-21T11:15:06.160000"}
         response = self.client.patch(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}/{finding_id}",
-            data=json.dumps(update_body),
+            content=json.dumps(update_body),
         )
         assert response.status_code == 200, response.text
         data = response.json()
