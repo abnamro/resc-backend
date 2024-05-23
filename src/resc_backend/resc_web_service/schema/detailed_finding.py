@@ -49,18 +49,12 @@ class DetailedFindingRead(DetailedFinding):
         file_path: str,
         commit_id: str,
         line_number: int,
-        old_style: bool = False,
     ) -> str:
         arr = repository_url.split("/")
         if len(arr) >= 3:
             repo_base_url = arr[0] + "//" + arr[2]
         else:
             repo_base_url = repository_url
-
-        if old_style:
-            return (
-                f"{repo_base_url}/projects/{project_key}/repos/" f"{repository_name}/browse/{file_path}?at={commit_id}"
-            )
 
         return (
             f"{repo_base_url}/projects/{project_key}/repos/"
@@ -73,11 +67,7 @@ class DetailedFindingRead(DetailedFinding):
         file_path: str,
         commit_id: str,
         line_number: int,
-        old_style=False,
     ) -> str:
-        if old_style:
-            return f"{repository_url}/commit/{commit_id}?path=/{file_path}"
-
         return (
             f"{repository_url}/commit/{commit_id}?path=/{file_path}&line={line_number}&lineEnd={line_number + 1}"
             "&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
