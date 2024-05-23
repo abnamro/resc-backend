@@ -17,5 +17,11 @@ self_signed_cert_generation/testca
 # Mac
 .DS_Store
 
+# tests
+coverage.xml
+
 # Newman tests
 tests/newman_tests/gitleaks.toml
+
+# env
+*.env
