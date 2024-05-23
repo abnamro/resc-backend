@@ -4,6 +4,7 @@ from datetime import datetime
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from fastapi_cache.decorator import cache
+from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
@@ -22,7 +23,6 @@ from resc_backend.constants import (
     RWS_ROUTE_SUPPORTED_STATUSES,
     RWS_ROUTE_TOTAL_COUNT_BY_RULE,
 )
-from resc_backend.db.connection import Session
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import audit as audit_crud
 from resc_backend.resc_web_service.crud import finding as finding_crud

@@ -6,6 +6,7 @@ import urllib.parse
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi_cache.decorator import cache
+from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
@@ -17,7 +18,6 @@ from resc_backend.constants import (
     REDIS_CACHE_EXPIRE,
     RWS_ROUTE_DETAILED_FINDINGS,
 )
-from resc_backend.db.connection import Session
 from resc_backend.resc_web_service.crud import detailed_finding as detailed_finding_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
 from resc_backend.resc_web_service.filters import FindingsFilter

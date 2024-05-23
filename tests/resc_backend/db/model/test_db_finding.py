@@ -119,3 +119,4 @@ class TestFinding(unittest.TestCase):
         self.assertEqual(result.commit_id, expected.commit_id)
         self.assertEqual(result.commit_message, expected.commit_message)
         self.assertEqual(result.commit_timestamp, expected.commit_timestamp)
+        self.assertEqual(result.is_dir_scan, expected.is_dir_scan)
