@@ -97,7 +97,9 @@ def create_scan(scan: scan_schema.ScanCreate, db_connection: Session = Depends(g
     """
     # Determine the increment number if needed and not supplied
     if scan.scan_type == ScanType.INCREMENTAL and (not scan.increment_number or scan.increment_number <= 0):
-        last_scan = scan_crud.get_latest_scan_for_repository(db_connection=db_connection, repository_id=scan.repository_id)
+        last_scan = scan_crud.get_latest_scan_for_repository(
+            db_connection=db_connection, repository_id=scan.repository_id
+        )
         new_increment = last_scan.increment_number + 1
         scan.increment_number = new_increment
 
@@ -247,7 +249,9 @@ async def create_scan_findings(
     # return db_scan
 
     # 1. Fetch rules with scan_as_dir
-    rules_scan_as_dir: list[str] = rule_crud.get_scan_as_dir_rules_by_scan_id(db_connection=db_connection, scan_id=scan_id)
+    rules_scan_as_dir: list[str] = rule_crud.get_scan_as_dir_rules_by_scan_id(
+        db_connection=db_connection, scan_id=scan_id
+    )
 
     # 2. split findings into 2 category: scan_as_dir and normal.
     findings_as_repo = []
