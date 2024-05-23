@@ -72,7 +72,8 @@ class TestDetailedFindings(unittest.TestCase):
         for index, finding in enumerate(detailed_findings):
             assert (
                 detailed_findings[index].commit_url == f"http://fake.repo.com/{index + 1}/commit/commit_id_{index + 1}"
-                f"?path=/file_path_{index + 1}"
+                f"?path=/file_path_{index + 1}&line={index + 1}&lineEnd={index + 2}"
+                "&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
             )
 
     def test_get_commit_url_by_vcs_provider_bitbucket(self):
@@ -82,5 +83,5 @@ class TestDetailedFindings(unittest.TestCase):
                 detailed_findings[idx].commit_url == f"https://dummy-bitbucket-instance.com"
                 f"/projects/project_key_{idx + 1}"
                 f"/repos/repository_name_{idx + 1}"
-                f"/browse/file_path_{idx + 1}?at=commit_id_{idx + 1}"
+                f"/commits/commit_id_{idx + 1}#file_path_{idx + 1}?t={idx + 1}"
             )
