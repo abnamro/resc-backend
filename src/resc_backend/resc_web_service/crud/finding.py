@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timedelta, UTC
 
 # Third Party
-from sqlalchemy import extract, func, union
+from sqlalchemy import extract, func, select, union
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
@@ -100,6 +100,65 @@ def create_findings(db_connection: Session, findings: list[finding_schema.Findin
     return db_findings
 
 
+def _short_key(finding: DBfinding | finding_schema.FindingCreate) -> str:
+    return f"{finding.rule_name}|{finding.file_path}|{finding.line_number}|{finding.column_start}|{finding.column_end}"
+
+
+def create_or_update_findings(db_connection: Session, findings: list[finding_schema.FindingCreate]) -> list[DBfinding]:
+    if len(findings) < 1:
+        # Function is called with an empty list of findings
+        return []
+
+    repository_id = findings[0].repository_id
+
+    # get a list of known / registered findings for this repository
+    query = db_connection.query(DBfinding)
+    query = query.where(DBfinding.repository_id == repository_id)
+    db_repository_findings = query.all()
+
+    map_repository_finding: dict[str, DBfinding] = dict_of_list(_short_key, db_repository_findings)
+    map_findings: dict[str, finding_schema.FindingCreate] = dict_of_list(_short_key, findings)
+
+    intersection = map_findings.keys() & map_repository_finding.keys()
+
+    db_findings: list[DBfinding] = []
+    for key in intersection:
+        repository_finding = map_repository_finding.get(key)
+        finding = map_findings.get(key)
+        repository_finding.commit_id = finding.commit_id
+        repository_finding.commit_message = finding.commit_message
+        repository_finding.commit_timestamp = finding.commit_timestamp
+        repository_finding.author = finding.author
+        db_findings.append(repository_finding)
+        del map_findings[key]
+
+    new_findings: list[finding_schema.FindingCreate] = map_findings.values()
+
+    logger.info(
+        f"create_findings repository {repository_id}, Requested: {len(findings)}. "
+        f"New findings: {len(new_findings)}. Already in db: {len(db_findings)}"
+    )
+
+    db_create_findings = []
+    # Map the to be created findings to the DBfinding type object
+    for new_finding in new_findings:
+        db_create_finding = DBfinding.create_from_finding(new_finding)
+        db_create_findings.append(db_create_finding)
+
+    # Store all the to be created findings in the database
+    if len(db_create_findings) >= 1:
+        db_connection.add_all(db_create_findings)
+
+    if len(db_findings) > 0 or len(db_create_finding) > 0:
+        db_connection.flush()
+        db_connection.commit()
+
+    db_findings.extend(db_create_findings)
+
+    # Return the known findings that are part of the request and the newly created findings
+    return db_findings
+
+
 def get_finding(db_connection: Session, finding_id: int):
     finding = db_connection.query(DBfinding)
     finding = finding.where(DBfinding.id_ == finding_id).first()
@@ -170,6 +229,35 @@ def get_scans_findings(
     query = query.offset(skip).limit(limit_val)
     findings = query.all()
     return findings
+
+
+def get_findings_from_repo_of_scan_as_dir(db_connection: Session, scan: DBscan) -> list[int]:
+    """
+    Retrieve all the findings which are:
+     - tied to the repository of the scan
+     - for the rule pack of the scan
+     - which are not tied to the scan (in other words out-dated)
+
+    Args:
+        db_connection (Session): session
+        scan (DBscan): scan to restrict with
+
+    Returns:
+        list[int]: list of ids of findings which are to be audited
+    """
+
+    query = select(DBfinding.id_)
+    query = query.join(DBrule, DBrule.rule_name == DBfinding.rule_name)
+    query = query.where(DBrule.rule_pack == scan.rule_pack)
+    query = query.where(DBfinding.repository_id == scan.repository_id)
+    query = query.where(DBfinding.is_dir_scan == True)  # noqa: E712
+
+    sub_query: Query = select(DBscanFinding.finding_id)
+    sub_query = sub_query.where(DBscanFinding.scan_id == scan.id_)
+    sub_query = sub_query.sub_query()
+    query = query.where(DBfinding.id_.not_in(sub_query))
+
+    return db_connection.execute(query).scalars().all()
 
 
 def get_total_findings_count(db_connection: Session, findings_filter: FindingsFilter = None) -> int:

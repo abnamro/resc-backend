@@ -18,10 +18,12 @@ from resc_backend.constants import (
     RWS_ROUTE_SCANS,
     SCANS_TAG,
 )
-from resc_backend.db.model import DBscanFinding
+from resc_backend.db.model import DBscanFinding, DBfinding
 from resc_backend.resc_web_service.cache_manager import CacheManager
+from resc_backend.resc_web_service.crud import audit as audit_crud
 from resc_backend.resc_web_service.crud import finding as finding_crud
 from resc_backend.resc_web_service.crud import scan as scan_crud
+from resc_backend.resc_web_service.crud import rule as rule_crud
 from resc_backend.resc_web_service.crud import scan_finding as scan_finding_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
 from resc_backend.resc_web_service.filters import FindingsFilter
@@ -239,13 +241,46 @@ async def create_scan_findings(
         or an empty list if no scan was found
     """
 
-    created_findings = finding_crud.create_findings(db_connection=db_connection, findings=findings)
-    scan_findings = []
+    db_scan = scan_crud.get_scan(db_connection, scan_id=scan_id)
+    if db_scan is None:
+        raise HTTPException(status_code=404, detail="Scan not found")
+    # return db_scan
+
+    # 1. Fetch rules with scan_as_dir
+    rules_scan_as_dir: list[str] = rule_crud.get_scan_as_dir_rules_by_scan_id(scan_id=scan_id)
+
+    # 2. split findings into 2 category: scan_as_dir and normal.
+    findings_as_repo = []
+    findings_as_dir = []
+    for finding in findings:
+        (findings_as_dir if finding.rule_name in rules_scan_as_dir else findings_as_repo).append(finding)
+
+    # 3. Process normal as previously done.
+    created_findings: list[DBfinding] = finding_crud.create_findings(
+        db_connection=db_connection, findings=findings_as_repo
+    )
+    # 4. Process scan_as_dir with updates.
+    created_dir_findings: list[DBfinding] = finding_crud.create_or_update_findings(
+        db_connection=db_connection, findings=findings_as_dir
+    )
+
+    created_findings.extend(created_dir_findings)
+    # 5. Add link between findings and scan
+    scan_findings: list[DBscanFinding] = []
     for finding in created_findings:
         scan_finding = DBscanFinding(finding_id=finding.id_, scan_id=scan_id)
         scan_findings.append(scan_finding)
 
+    # 6. merge.
     _ = scan_finding_crud.create_scan_findings(db_connection=db_connection, scan_findings=scan_findings)
+
+    # 7. Mark old scan_as_dir findings as outdated.
+    findings_to_audit: list[int] = finding_crud.get_findings_from_repo_of_scan_as_dir(
+        db_connection=db_connection, scan=db_scan
+    )
+    audit_crud.create_automated_audit(
+        db_connection=db_connection, findings_ids=findings_to_audit, status=FindingStatus.OUTDATED
+    )
 
     # Clear cache related to findings
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)

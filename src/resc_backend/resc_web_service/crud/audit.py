@@ -65,6 +65,25 @@ def create_audit(
     return db_audit
 
 
+def create_automated_audit(db_connection: Session, findings_ids: list[int], status: FindingStatus) -> list[DBaudit]:
+    """
+        Create automated audit for a list of findings.
+
+    Args:
+        db_connection (Session): Session of the database connection
+        findings_ids (list[int]): list of id to audit
+        status (FindingStatus): status to apply
+
+    Returns:
+        list[DBaudit]: newly created audits
+    """
+    db_audits = [DBaudit.create_automated(finding_id, status) for finding_id in findings_ids]
+    db_connection.add_all(db_audits)
+    db_connection.commit()
+
+    return db_audits
+
+
 def get_finding_audits(
     db_connection: Session,
     finding_id: int,
