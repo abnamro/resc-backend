@@ -18,7 +18,7 @@ from resc_backend.constants import (
     RWS_ROUTE_SCANS,
     SCANS_TAG,
 )
-from resc_backend.db.model import DBscanFinding, DBfinding
+from resc_backend.db.model import DBscanFinding, DBfinding, DBscan
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import audit as audit_crud
 from resc_backend.resc_web_service.crud import finding as finding_crud
@@ -243,7 +243,7 @@ async def create_scan_findings(
         or an empty list if no scan was found
     """
 
-    db_scan = scan_crud.get_scan(db_connection, scan_id=scan_id)
+    db_scan: DBscan = scan_crud.get_scan(db_connection, scan_id=scan_id)
     if db_scan is None:
         raise HTTPException(status_code=404, detail="Scan not found")
     # return db_scan
@@ -265,7 +265,7 @@ async def create_scan_findings(
     )
     # 4. Process scan_as_dir with updates.
     created_dir_findings: list[DBfinding] = finding_crud.create_or_update_findings(
-        db_connection=db_connection, findings=findings_as_dir
+        db_connection=db_connection, findings=findings_as_dir, commit_id=db_scan.last_scanned_commit
     )
 
     created_findings.extend(created_dir_findings)
