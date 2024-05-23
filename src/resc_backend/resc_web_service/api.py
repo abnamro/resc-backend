@@ -118,12 +118,13 @@ async def lifespan(_: FastAPI):
     yield
     await app_shutdown()
 
+
 app = FastAPI(
     title="Repository Scanner (RESC)",
     description="RESC API helps you to perform several operations upon findings "
     "obtained from multiple source code repositories.",
     openapi_tags=tags_metadata,
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 if env_variables[ENABLE_CORS].lower() in ["true"]:
