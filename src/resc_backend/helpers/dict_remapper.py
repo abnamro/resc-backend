@@ -2,12 +2,21 @@
 from functools import reduce
 
 
+def _remapper0(val):
+    return val[0]
+
+
+def _remapper1(val):
+    return val[1]
+
+
 def remap_dict_keys(input_dict: dict, transformation_map: list):
-    new_keys = [val[1] for val in transformation_map]
+    new_keys = list(map(_remapper1, transformation_map))
     for old_key, new_key in transformation_map:
         create_nested_dictionary(input_dict, new_key, get_value_from_nested_dictionary(input_dict, *old_key))
 
-    output_dict = {k: v for k, v in input_dict.items() if k in [key[0] for key in new_keys]}
+    new_keys_mapped = list(map(_remapper0, new_keys))
+    output_dict = {k: v for k, v in input_dict.items() if k in new_keys_mapped}
 
     return output_dict
 
@@ -21,8 +30,12 @@ def create_nested_dictionary(dictionary, keys, value):
     dictionary[keys[-1]] = value
 
 
+def _reducer(d, key):
+    return d.get(key) if d else None
+
+
 def get_value_from_nested_dictionary(dictionary, *keys):
-    return reduce(lambda d, key: d.get(key) if d else None, keys, dictionary)
+    return reduce(_reducer, keys, dictionary)
 
 
 def delete_keys_from_nested_dict(dict_del, lst_keys):

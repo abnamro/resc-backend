@@ -78,6 +78,7 @@ class TestFinding(unittest.TestCase):
             rule_name="rule_1",
             event_sent_on=datetime.now(UTC),
             repository_id=1,
+            is_dir_scan=False,
         )
         self.scan_finding = DBscanFinding(finding_id=1, scan_id=1)
         self.session.add(self.finding)
@@ -110,7 +111,7 @@ class TestFinding(unittest.TestCase):
             scan_ids=[self.scan_finding.scan_id],
             repository_id=self.finding.repository_id,
         )
-        result = DBfinding.create_from_finding(finding)
+        result = DBfinding.create_from_finding(finding, False)
         self.assertEqual(result.file_path, expected.file_path)
         self.assertEqual(result.line_number, expected.line_number)
         self.assertEqual(result.column_start, expected.column_start)
