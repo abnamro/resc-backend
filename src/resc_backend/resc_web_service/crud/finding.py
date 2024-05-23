@@ -25,6 +25,7 @@ from resc_backend.db.model import (
     DBtag,
     DBVcsInstance,
 )
+from resc_backend.helpers.list_mapper import dict_of_list
 from resc_backend.resc_web_service.crud import scan_finding as scan_finding_crud
 from resc_backend.resc_web_service.filters import FindingsFilter
 from resc_backend.resc_web_service.schema import finding as finding_schema
@@ -48,6 +49,14 @@ def patch_finding(db_connection: Session, finding_id: int, finding_update: findi
     return db_finding
 
 
+def _long_key(finding: DBfinding | finding_schema.FindingCreate) -> str:
+    key = (
+        f"{finding.commit_id}|{finding.rule_name}|{finding.file_path}"
+        + f"|{finding.line_number}|{finding.column_start}|{finding.column_end}"
+    )
+    return key
+
+
 def create_findings(db_connection: Session, findings: list[finding_schema.FindingCreate]) -> list[DBfinding]:
     if len(findings) < 1:
         # Function is called with an empty list of findings
@@ -60,27 +69,17 @@ def create_findings(db_connection: Session, findings: list[finding_schema.Findin
     query = query.where(DBfinding.repository_id == repository_id)
     db_repository_findings = query.all()
 
-    # Compare new findings list with findings in the db
-    new_findings = findings[:]
-    db_findings = []
-    for finding in findings:
-        for repository_finding in db_repository_findings:
-            # Compare based on the unique key in the findings table
-            if (
-                repository_finding.commit_id == finding.commit_id
-                and repository_finding.rule_name == finding.rule_name
-                and repository_finding.file_path == finding.file_path
-                and repository_finding.line_number == finding.line_number
-                and repository_finding.column_start == finding.column_start
-                and repository_finding.column_end == finding.column_end
-            ):
-                # Store the already known finding
-                db_findings.append(repository_finding)
-                # Remove from the db_repository_findings to increase performance for the next loop
-                db_repository_findings.remove(repository_finding)
-                # Remove from the to be created findings
-                new_findings.remove(finding)
-                break
+    map_repository_finding: dict[str, DBfinding] = dict_of_list(_long_key, db_repository_findings)
+    map_findings: dict[str, finding_schema.FindingCreate] = dict_of_list(_long_key, findings)
+
+    intersection = map_findings.keys() & map_repository_finding.keys()
+
+    db_findings: list[DBfinding] = []
+    for key in intersection:
+        db_findings.append(map_repository_finding.get(key))
+        del map_findings[key]
+
+    new_findings: list[finding_schema.FindingCreate] = map_findings.values()
     logger.info(
         f"create_findings repository {repository_id}, Requested: {len(findings)}. "
         f"New findings: {len(new_findings)}. Already in db: {len(db_findings)}"
