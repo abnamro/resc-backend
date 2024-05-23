@@ -141,6 +141,7 @@ def create_or_update_findings(db_connection: Session, findings: list[finding_sch
         repository_finding.commit_message = finding.commit_message
         repository_finding.commit_timestamp = finding.commit_timestamp
         repository_finding.author = finding.author
+        repository_finding.is_dir_scan = True
         db_findings.append(repository_finding)
         del map_findings[key]
 
