@@ -104,7 +104,19 @@ def _short_key(finding: DBfinding | finding_schema.FindingCreate) -> str:
     return f"{finding.rule_name}|{finding.file_path}|{finding.line_number}|{finding.column_start}|{finding.column_end}"
 
 
-def create_or_update_findings(db_connection: Session, findings: list[finding_schema.FindingCreate]) -> list[DBfinding]:
+def create_or_update_findings(db_connection: Session, findings: list[finding_schema.FindingCreate], commit_id: str) -> list[DBfinding]:
+    """
+    Create or update findings.
+    This is used in the case of rules which are applied to directories.
+
+    Args:
+        db_connection (Session): connection to DB
+        findings (list[finding_schema.FindingCreate]): list of findings to create or update
+        db_scan (DBscan): current scan (used for the new commit ID)
+
+    Returns:
+        list[DBfinding]: list of created findings
+    """
     if len(findings) < 1:
         # Function is called with an empty list of findings
         return []
@@ -125,7 +137,7 @@ def create_or_update_findings(db_connection: Session, findings: list[finding_sch
     for key in intersection:
         repository_finding = map_repository_finding.get(key)
         finding = map_findings.get(key)
-        repository_finding.commit_id = finding.commit_id
+        repository_finding.commit_id = finding.commit_id or commit_id
         repository_finding.commit_message = finding.commit_message
         repository_finding.commit_timestamp = finding.commit_timestamp
         repository_finding.author = finding.author
@@ -142,7 +154,7 @@ def create_or_update_findings(db_connection: Session, findings: list[finding_sch
     db_create_findings = []
     # Map the to be created findings to the DBfinding type object
     for new_finding in new_findings:
-        db_create_finding = DBfinding.create_from_finding(new_finding)
+        db_create_finding = DBfinding.create_from_finding(new_finding, is_dir_scan=True)
         db_create_findings.append(db_create_finding)
 
     # Store all the to be created findings in the database
