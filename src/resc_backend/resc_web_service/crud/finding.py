@@ -254,7 +254,7 @@ def get_findings_from_repo_of_scan_as_dir(db_connection: Session, scan: DBscan) 
 
     sub_query: Query = select(DBscanFinding.finding_id)
     sub_query = sub_query.where(DBscanFinding.scan_id == scan.id_)
-    sub_query = sub_query.sub_query()
+    sub_query = sub_query.subquery()
     query = query.where(DBfinding.id_.not_in(sub_query))
 
     return db_connection.execute(query).scalars().all()
