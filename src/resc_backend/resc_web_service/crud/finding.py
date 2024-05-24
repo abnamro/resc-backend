@@ -164,7 +164,7 @@ def create_or_update_findings(
     if len(db_create_findings) >= 1:
         db_connection.add_all(db_create_findings)
 
-    if len(db_findings) > 0 or len(db_create_finding) > 0:
+    if len(db_findings) > 0 or len(db_create_findings) > 0:
         db_connection.flush()
         db_connection.commit()
 
