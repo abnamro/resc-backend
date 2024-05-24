@@ -31,6 +31,7 @@ class DetailedFindingBase(BaseModel):
     last_scanned_commit: constr(min_length=1, max_length=100)
     scan_id: conint(gt=0)
     event_sent_on: datetime.datetime | None
+    is_dir_scan: bool
 
 
 class DetailedFinding(DetailedFindingBase):

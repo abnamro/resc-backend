@@ -36,6 +36,7 @@ class TestDetailedFindings(unittest.TestCase):
                     last_scanned_commit=f"last_scanned_commit_{i}",
                     commit_url=f"commit_url_{i}",
                     scan_id=i,
+                    is_dir_scan=False,
                 ),
             )
 
@@ -64,6 +65,7 @@ class TestDetailedFindings(unittest.TestCase):
                     last_scanned_commit=f"last_scanned_commit_{index}",
                     commit_url=f"commit_url_{index}",
                     scan_id=index,
+                    is_dir_scan=False,
                 ),
             )
 
