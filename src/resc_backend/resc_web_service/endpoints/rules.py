@@ -5,6 +5,7 @@ from datetime import datetime
 # Third Party
 from fastapi import APIRouter, Depends, Query, status
 from fastapi_cache.decorator import cache
+from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
@@ -18,7 +19,6 @@ from resc_backend.constants import (
     RWS_ROUTE_FINDING_STATUS_COUNT,
     RWS_ROUTE_RULES,
 )
-from resc_backend.db.connection import Session
 from resc_backend.resc_web_service.crud import finding as finding_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus

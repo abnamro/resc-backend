@@ -4,6 +4,7 @@ import logging
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
@@ -14,7 +15,6 @@ from resc_backend.constants import (
     RWS_ROUTE_VCS,
     VCS_TAG,
 )
-from resc_backend.db.connection import Session
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import vcs_instance as vcs_instance_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection

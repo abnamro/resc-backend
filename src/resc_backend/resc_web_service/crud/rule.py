@@ -34,6 +34,28 @@ def get_rules_by_scan_id(db_connection: Session, scan_id: int) -> list[RuleRead]
     return rules
 
 
+def get_scan_as_dir_rules_by_scan_id(db_connection: Session, scan_id: int) -> list[str]:
+    """
+        Fetch rules applied as directory by rule pack version
+    :param db_connection:
+        Session of the database connection
+    :param rule_pack_version:
+        rule pack version
+    :return: List[str]
+        The output contains list of strings of rules which are applied as directory
+    """
+    query: Query = select(DBrule.rule_name)
+    query = query.join(DBscan, DBscan.rule_pack == DBrule.rule_pack)
+    query = query.join(DBruleTag, DBruleTag.rule_id == DBrule.id_)
+    query = query.join(DBtag, DBtag.id_ == DBruleTag.tag_id)
+    query = query.where(DBscan.id_ == scan_id)
+    # We could make this a parameter later, but for now it is simpler. KISS
+    query = query.where(DBtag.name == RULE_TAG_SCAN_AS_DIR)
+    db_rules = db_connection.execute(query).scalars().all()
+
+    return db_rules
+
+
 def create_rule_allow_list(db_connection: Session, rule_allow_list: rule_allow_list_schema.RuleAllowList):
     """
         Create rule allow list in database

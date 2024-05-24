@@ -2,15 +2,7 @@
 from datetime import datetime, UTC
 
 # Third Party
-from sqlalchemy import (
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-    UniqueConstraint,
-)
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, Boolean
 
 # First Party
 from resc_backend.db.model import Base
@@ -31,6 +23,7 @@ class DBfinding(Base):
     author = Column(String(200))
     email = Column(String(100))
     event_sent_on = Column(DateTime, nullable=True)
+    is_dir_scan = Column(Boolean, nullable=False, default=False)
 
     __table_args__ = (
         UniqueConstraint(
@@ -47,18 +40,19 @@ class DBfinding(Base):
 
     def __init__(
         self,
-        rule_name,
-        file_path,
-        line_number,
-        commit_id,
-        commit_message,
-        commit_timestamp,
-        author,
-        email,
-        event_sent_on,
-        repository_id,
-        column_start,
-        column_end,
+        rule_name: str,
+        file_path: str,
+        line_number: int,
+        commit_id: str,
+        commit_message: str,
+        commit_timestamp: datetime,
+        author: str,
+        email: str,
+        event_sent_on: datetime,
+        repository_id: int,
+        column_start: int,
+        column_end: int,
+        is_dir_scan: bool = False,
     ):
         self.email = email
         self.author = author
@@ -72,9 +66,10 @@ class DBfinding(Base):
         self.repository_id = repository_id
         self.column_start = column_start
         self.column_end = column_end
+        self.is_dir_scan = is_dir_scan
 
     @staticmethod
-    def create_from_finding(finding):
+    def create_from_finding(finding, is_dir_scan: bool = False):
         db_finding = DBfinding(
             rule_name=finding.rule_name,
             file_path=finding.file_path,
@@ -88,5 +83,6 @@ class DBfinding(Base):
             repository_id=finding.repository_id,
             column_start=finding.column_start,
             column_end=finding.column_end,
+            is_dir_scan=is_dir_scan,
         )
         return db_finding

@@ -3,6 +3,7 @@
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi_cache.decorator import cache
+from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
@@ -20,7 +21,6 @@ from resc_backend.constants import (
     RWS_ROUTE_REPOSITORIES,
     RWS_ROUTE_SCANS,
 )
-from resc_backend.db.connection import Session
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import repository as repository_crud
 from resc_backend.resc_web_service.crud import scan as scan_crud

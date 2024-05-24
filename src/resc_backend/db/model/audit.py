@@ -62,3 +62,18 @@ class DBaudit(Base):
             is_latest=is_latest,
         )
         return db_audit
+
+    @staticmethod
+    def create_automated(
+        finding_id: int,
+        status: str,
+    ):
+        db_audit = DBaudit(
+            finding_id=finding_id,
+            status=status,
+            comment="automated",
+            auditor="resc",
+            timestamp=datetime.now(UTC),
+            is_latest=True,
+        )
+        return db_audit

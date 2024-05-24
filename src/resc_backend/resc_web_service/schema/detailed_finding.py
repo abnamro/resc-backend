@@ -31,6 +31,7 @@ class DetailedFindingBase(BaseModel):
     last_scanned_commit: constr(min_length=1, max_length=100)
     scan_id: conint(gt=0)
     event_sent_on: datetime.datetime | None
+    is_dir_scan: bool
 
 
 class DetailedFinding(DetailedFindingBase):
@@ -48,22 +49,37 @@ class DetailedFindingRead(DetailedFinding):
         project_key: str,
         file_path: str,
         commit_id: str,
+        line_number: int,
     ) -> str:
         arr = repository_url.split("/")
         if len(arr) >= 3:
             repo_base_url = arr[0] + "//" + arr[2]
         else:
             repo_base_url = repository_url
-        bitbucket_commit_url = (
-            f"{repo_base_url}/projects/{project_key}/repos/" f"{repository_name}/browse/{file_path}?at={commit_id}"
+
+        return (
+            f"{repo_base_url}/projects/{project_key}/repos/"
+            f"{repository_name}/commits/{commit_id}#{file_path}?t={line_number}"
         )
-        commit_url = bitbucket_commit_url
-        return commit_url
 
     @staticmethod
-    def build_ado_commit_url(repository_url: str, file_path: str, commit_id: str) -> str:
-        ado_commit_url = f"{repository_url}/commit/{commit_id}?path=/{file_path}"
-        return ado_commit_url
+    def build_ado_commit_url(
+        repository_url: str,
+        file_path: str,
+        commit_id: str,
+        line_number: int,
+        is_dir_scan: bool,
+    ) -> str:
+        if is_dir_scan:
+            return (
+                f"{repository_url}?version=GC{commit_id}&path=/{file_path}&line={line_number}&lineEnd={line_number + 1}"
+                "&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
+            )
+
+        return (
+            f"{repository_url}/commit/{commit_id}?path=/{file_path}&line={line_number}&lineEnd={line_number + 1}"
+            "&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
+        )
 
     @staticmethod
     def build_github_commit_url(repository_url: str, file_path: str, commit_id: str) -> str:
@@ -83,12 +99,15 @@ class DetailedFindingRead(DetailedFinding):
                 project_key=values["project_key"],
                 file_path=values["file_path"],
                 commit_id=values["commit_id"],
+                line_number=values["line_number"],
             )
         elif values["vcs_provider"] == VCSProviders.AZURE_DEVOPS:
             values["commit_url"] = cls.build_ado_commit_url(
                 repository_url=values["repository_url"],
                 file_path=values["file_path"],
                 commit_id=values["commit_id"],
+                line_number=values["line_number"],
+                is_dir_scan=values["is_dir_scan"],
             )
 
         elif values["vcs_provider"] == VCSProviders.GITHUB_PUBLIC:

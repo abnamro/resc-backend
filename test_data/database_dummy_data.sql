@@ -37,13 +37,13 @@ INSERT INTO scan (rule_pack, scan_type, last_scanned_commit, [timestamp], increm
    ('1.0.0', 'BASE', 'qwerty3', '2023-07-14 00:00:00.000', 0, 2, 1), -- 5
    ('1.0.0', 'INCREMENTAL', 'qwerty4', '2023-07-15 00:00:00.000', 1, 2, 1); -- 6
 
-INSERT INTO finding (repository_id, rule_name, file_path, line_number, commit_id, commit_message, commit_timestamp, author, email, event_sent_on, column_start, column_end) VALUES
-   (1, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty1', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100), -- 1
-   (1, 'Github-Tokens', 'application.txt', 2, 'qwerty2', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80), -- 2
-   (2, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100), -- 3
-   (2, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100), -- 4
-   (2, 'Github-Tokens', 'application.txt', 2, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80), -- 5
-   (2, 'Github-Tokens', 'application.txt', 2, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80); -- 6
+INSERT INTO finding (repository_id, rule_name, file_path, line_number, commit_id, commit_message, commit_timestamp, author, email, event_sent_on, column_start, column_end, is_dir_scan) VALUES
+   (1, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty1', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 1
+   (1, 'Github-Tokens', 'application.txt', 2, 'qwerty2', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0), -- 2
+   (2, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 3
+   (2, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 4
+   (2, 'Github-Tokens', 'application.txt', 2, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0), -- 5
+   (2, 'Github-Tokens', 'application.txt', 2, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0); -- 6
 
 INSERT INTO scan_finding(scan_id, finding_id) VALUES
    (1, 1),

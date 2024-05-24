@@ -69,6 +69,7 @@ class TestDetailedFindings(unittest.TestCase):
                     commit_url=f"_{i}",
                     event_sent_on=datetime(year=1970, month=1, day=i),
                     scan_id=i,
+                    is_dir_scan=False,
                 )
             )
 
@@ -94,6 +95,7 @@ class TestDetailedFindings(unittest.TestCase):
         assert data["vcs_provider"] == detailed_finding.vcs_provider
         assert data["last_scanned_commit"] == detailed_finding.last_scanned_commit
         assert data["commit_url"] == detailed_finding.commit_url
+        assert data["is_dir_scan"] is False
         assert datetime.fromisoformat(data["event_sent_on"]) == detailed_finding.event_sent_on
 
     @staticmethod
