@@ -52,7 +52,7 @@ class DBfinding(Base):
         repository_id: int,
         column_start: int,
         column_end: int,
-        is_dir_scan=False,
+        is_dir_scan: bool = False,
     ):
         self.email = email
         self.author = author
