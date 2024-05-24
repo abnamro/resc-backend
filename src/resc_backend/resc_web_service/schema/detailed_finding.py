@@ -72,7 +72,7 @@ class DetailedFindingRead(DetailedFinding):
     ) -> str:
         if is_dir_scan:
             return (
-                f"{repository_url}?version={commit_id}&path=/{file_path}&line={line_number}&lineEnd={line_number + 1}"
+                f"{repository_url}?version=GC{commit_id}&path=/{file_path}&line={line_number}&lineEnd={line_number + 1}"
                 "&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
             )
 
