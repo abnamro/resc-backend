@@ -252,12 +252,15 @@ async def create_scan_findings(
     rules_scan_as_dir: list[str] = rule_crud.get_scan_as_dir_rules_by_scan_id(
         db_connection=db_connection, scan_id=scan_id
     )
+    logger.debug(f"rules as directory: {", ".join(rules_scan_as_dir)}")
 
     # 2. split findings into 2 category: scan_as_dir and normal.
     findings_as_repo = []
     findings_as_dir = []
     for finding in findings:
         (findings_as_dir if finding.rule_name in rules_scan_as_dir else findings_as_repo).append(finding)
+    logger.debug(f"number of findings scan as directory: {len(findings_as_dir)}")
+    logger.debug(f"number of findings scan as repo: {len(findings_as_repo)}")
 
     # 3. Process normal as previously done.
     created_findings: list[DBfinding] = finding_crud.create_findings(

@@ -150,7 +150,7 @@ def create_or_update_findings(
     new_findings: list[finding_schema.FindingCreate] = map_findings.values()
 
     logger.info(
-        f"create_findings repository {repository_id}, Requested: {len(findings)}. "
+        f"create_or_update_findings repository {repository_id}, Requested: {len(findings)}. "
         f"New findings: {len(new_findings)}. Already in db: {len(db_findings)}"
     )
 

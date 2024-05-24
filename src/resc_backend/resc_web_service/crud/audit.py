@@ -81,6 +81,8 @@ def create_automated_audit(db_connection: Session, findings_ids: list[int], stat
     db_connection.add_all(db_audits)
     db_connection.commit()
 
+    logger.debug(f"Automated audit of {len(db_audits)} findings.")
+
     return db_audits
 
 
