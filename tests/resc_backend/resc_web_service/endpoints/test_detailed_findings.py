@@ -95,7 +95,7 @@ class TestDetailedFindings(unittest.TestCase):
         assert data["vcs_provider"] == detailed_finding.vcs_provider
         assert data["last_scanned_commit"] == detailed_finding.last_scanned_commit
         assert data["commit_url"] == detailed_finding.commit_url
-        assert data["is_dir_scan"] == False
+        assert data["is_dir_scan"] is False
         assert datetime.fromisoformat(data["event_sent_on"]) == detailed_finding.event_sent_on
 
     @staticmethod

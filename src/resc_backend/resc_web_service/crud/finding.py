@@ -104,9 +104,7 @@ def _short_key(finding: DBfinding | finding_schema.FindingCreate) -> str:
     return f"{finding.rule_name}|{finding.file_path}|{finding.line_number}|{finding.column_start}|{finding.column_end}"
 
 
-def create_or_update_findings(
-    db_connection: Session, findings: list[finding_schema.FindingCreate], commit_id: str
-) -> list[DBfinding]:
+def create_or_update_findings(db_connection: Session, findings: list[finding_schema.FindingCreate]) -> list[DBfinding]:
     """
     Create or update findings.
     This is used in the case of rules which are applied to directories.
@@ -139,7 +137,7 @@ def create_or_update_findings(
     for key in intersection:
         repository_finding = map_repository_finding.get(key)
         finding = map_findings.get(key)
-        repository_finding.commit_id = finding.commit_id or commit_id
+        repository_finding.commit_id = finding.commit_id
         repository_finding.commit_message = finding.commit_message
         repository_finding.commit_timestamp = finding.commit_timestamp
         repository_finding.author = finding.author
