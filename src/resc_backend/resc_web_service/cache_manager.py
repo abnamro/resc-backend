@@ -1,5 +1,4 @@
 # Standard Library
-import logging
 from typing import Any
 from collections.abc import Callable
 
@@ -10,8 +9,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 
 # First Party
-from resc_backend.common import initialise_logs
-from resc_backend.constants import CACHE_PREFIX, LOG_FILE_CACHING
+from resc_backend.constants import CACHE_PREFIX
 from resc_backend.helpers.environment_wrapper import validate_environment
 from resc_backend.resc_web_service.configuration import (
     CONDITIONAL_REDIS_ENV_VARS,
@@ -20,9 +18,6 @@ from resc_backend.resc_web_service.configuration import (
     RESC_REDIS_SERVICE_HOST,
     RESC_REDIS_SERVICE_PORT,
 )
-
-logger_config = initialise_logs(LOG_FILE_CACHING)
-logger = logging.getLogger(__name__)
 
 
 class CacheManager:
@@ -84,7 +79,6 @@ class CacheManager:
                 repr(sorted(request.query_params.items())),
             ]
         )
-        logger.debug(f"Cache created with key: {cache_key}")
         return cache_key
 
     @staticmethod
@@ -123,7 +117,6 @@ class CacheManager:
                 repr(sorted(request.query_params.items())),
             ]
         )
-        logger.debug(f"Cache created with key: {cache_key}")
         return cache_key
 
     @staticmethod
@@ -131,11 +124,9 @@ class CacheManager:
         cache_enabled = FastAPICache.get_enable()
         if cache_enabled:
             await FastAPICache.clear(namespace=namespace)
-            logger.debug(f"Cache cleared for namespaces: {namespace}")
 
     @staticmethod
     async def clear_all_cache():
         cache_enabled = FastAPICache.get_enable()
         if cache_enabled:
             await FastAPICache.clear()
-            logger.debug("Cache cleared for all namespaces")
