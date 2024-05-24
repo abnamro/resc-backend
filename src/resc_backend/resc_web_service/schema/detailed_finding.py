@@ -67,7 +67,14 @@ class DetailedFindingRead(DetailedFinding):
         file_path: str,
         commit_id: str,
         line_number: int,
+        is_dir_scan: bool,
     ) -> str:
+        if is_dir_scan:
+            return (
+                f"{repository_url}?version={commit_id}&path=/{file_path}&line={line_number}&lineEnd={line_number + 1}"
+                "&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
+            )
+
         return (
             f"{repository_url}/commit/{commit_id}?path=/{file_path}&line={line_number}&lineEnd={line_number + 1}"
             "&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
@@ -99,6 +106,7 @@ class DetailedFindingRead(DetailedFinding):
                 file_path=values["file_path"],
                 commit_id=values["commit_id"],
                 line_number=values["line_number"],
+                is_dir_scan=values["is_dir_scan"],
             )
 
         elif values["vcs_provider"] == VCSProviders.GITHUB_PUBLIC:
