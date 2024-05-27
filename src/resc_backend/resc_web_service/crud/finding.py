@@ -285,8 +285,8 @@ def get_untriaged_finding_outdated_for_current_rule_pack(db_connection: Session,
     """
     Retrieve all the findings which are:
      - tied to the repository of the scan
-     - for the rule pack of the scan
-     - which are not tied to the scan (in other words out-dated)
+     - where the rule is not in the rule pack of the scan
+     - which are analyzed
 
     Args:
         db_connection (Session): session
@@ -307,6 +307,9 @@ def get_untriaged_finding_outdated_for_current_rule_pack(db_connection: Session,
         DBaudit,
         (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
         isouter=True,
+    )
+    query = query.where(
+        (DBaudit.status == FindingStatus.NOT_ANALYZED) | (DBaudit.status == None)  # noqa: E711
     )
 
     return db_connection.execute(query).scalars().all()
