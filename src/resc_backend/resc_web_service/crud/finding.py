@@ -281,6 +281,37 @@ def get_findings_from_repo_of_scan_as_dir(db_connection: Session, scan: DBscan) 
     return db_connection.execute(query).scalars().all()
 
 
+def get_untriaged_finding_outdated_for_current_rule_pack(db_connection: Session, scan: DBscan) -> list[int]:
+    """
+    Retrieve all the findings which are:
+     - tied to the repository of the scan
+     - for the rule pack of the scan
+     - which are not tied to the scan (in other words out-dated)
+
+    Args:
+        db_connection (Session): session
+        scan (DBscan): scan to restrict with
+
+    Returns:
+        list[int]: list of ids of findings which are to be audited
+    """
+
+    sub_query_rule_name: Query = select(DBrule.rule_name)
+    sub_query_rule_name = sub_query_rule_name.where(DBrule.rule_pack == scan.rule_pack)
+    sub_query_rule_name = sub_query_rule_name.subquery()
+
+    query = select(DBfinding.id_)
+    query = query.where(DBfinding.repository_id == scan.repository_id)
+    query = query.where(DBfinding.rule_name.notin_(sub_query_rule_name))
+    query = query.join(
+        DBaudit,
+        (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
+        isouter=True,
+    )
+
+    return db_connection.execute(query).scalars().all()
+
+
 def get_total_findings_count(db_connection: Session, findings_filter: FindingsFilter = None) -> int:
     """
         Retrieve count of finding records of a given scan

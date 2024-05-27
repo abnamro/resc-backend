@@ -289,6 +289,14 @@ async def create_scan_findings(
         db_connection=db_connection, findings_ids=findings_to_audit, status=FindingStatus.OUTDATED
     )
 
+    # 8. Mark findings which are no longer in rule pack (i.e. rule name not in current rule pack) as outdated
+    old_findings_to_audit: list[int] = finding_crud.get_untriaged_finding_outdated_for_current_rule_pack(
+        db_connection=db_connection, scan=db_scan
+    )
+    audit_crud.create_automated_audit(
+        db_connection=db_connection, findings_ids=old_findings_to_audit, status=FindingStatus.OUTDATED
+    )
+
     # Clear cache related to findings
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_RULE)
