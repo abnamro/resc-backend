@@ -9579,7 +9579,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "[\n  {\n    \"file_path\": \"dummy_file.txt\",\n    \"line_number\": 10,\n    \"column_start\": 1,\n    \"column_end\": 8,\n    \"commit_id\": \"testcommit12345\",\n    \"commit_message\": \"test commit message\",\n    \"commit_timestamp\": \"2023-01-30T23:18:24.546Z\",\n    \"author\": \"test-author\",\n    \"email\": \"test-author@mail.com\",\n    \"status\": \"NOT_ANALYZED\",\n    \"comment\": \"\",\n    \"event_sent_on\": null,\n    \"rule_name\": \"Rule-1\",\n    \"repository_id\": {{repository_id}}\n  }\n\n]"
+									"raw": "[\n  {\n    \"file_path\": \"dummy_file.txt\",\n    \"line_number\": 10,\n    \"column_start\": 1,\n    \"column_end\": 8,\n    \"commit_id\": \"testcommit12345\",\n    \"commit_message\": \"test commit message\",\n    \"commit_timestamp\": \"2023-01-30T23:18:24.546Z\",\n    \"author\": \"test-author\",\n    \"email\": \"test-author@mail.com\",\n    \"status\": \"NOT_ANALYZED\",\n    \"comment\": \"\",\n    \"event_sent_on\": null,\n    \"rule_name\": \"private-key\",\n    \"repository_id\": {{repository_id}}\n  }\n\n]"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/resc/v1/scans/:scan_id/findings",
@@ -9711,7 +9711,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "[\n  {\n    \"file_path\": \"dummy_file.txt\",\n    \"line_number\": 10,\n    \"column_start\": 1,\n    \"column_end\": 8,\n    \"commit_id\": \"testcommit12345\",\n    \"commit_message\": \"test commit message\",\n    \"commit_timestamp\": \"2023-01-30T23:18:24.546Z\",\n    \"author\": \"test-author\",\n    \"email\": \"test-author@mail.com\",\n    \"event_sent_on\": null,\n    \"rule_name\": \"Rule-1\",\n    \"repository_id\": \"str\"\n  }\n\n]"
+									"raw": "[\n  {\n    \"file_path\": \"dummy_file.txt\",\n    \"line_number\": 10,\n    \"column_start\": 1,\n    \"column_end\": 8,\n    \"commit_id\": \"testcommit12345\",\n    \"commit_message\": \"test commit message\",\n    \"commit_timestamp\": \"2023-01-30T23:18:24.546Z\",\n    \"author\": \"test-author\",\n    \"email\": \"test-author@mail.com\",\n    \"event_sent_on\": null,\n    \"rule_name\": \"private-key\",\n    \"repository_id\": \"str\"\n  }\n\n]"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/resc/v1/scans/:scan_id/findings",
@@ -9831,7 +9831,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"author\"]).to.eql(\"test-author\");",
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"event_sent_on\"]).to.eql(null);",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_id\"]).to.eql(pm.environment.get(\"repository_id\"));",
 											"    pm.expect(responseJson[\"data\"][0][\"id_\"]).to.be.greaterThan(0);",
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
@@ -10129,7 +10129,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"author\"]).to.eql(\"test-author\");",
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"event_sent_on\"]).to.eql(null);",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_id\"]).to.eql(pm.environment.get(\"repository_id\"));",
 											"    pm.expect(responseJson[\"data\"][0][\"id_\"]).to.be.greaterThan(0);",
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
@@ -10147,7 +10147,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=Rule-1",
+									"raw": "{{baseUrl}}/resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=private-key",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -10173,7 +10173,7 @@
 										},
 										{
 											"key": "rule",
-											"value": "Rule-1"
+											"value": "private-key"
 										}
 									]
 								},
@@ -10247,7 +10247,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/scans/findings/?scan_id=999&skip=0&limit=100&rule=Rule-1",
+									"raw": "{{baseUrl}}/resc/v1/scans/findings/?scan_id=999&skip=0&limit=100&rule=private-key",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -10273,7 +10273,7 @@
 										},
 										{
 											"key": "rule",
-											"value": "Rule-1"
+											"value": "private-key"
 										}
 									]
 								},
@@ -10440,7 +10440,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"author\"]).to.eql(\"test-author\");",
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"event_sent_on\"]).to.eql(null);",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_id\"]).to.eql(pm.environment.get(\"repository_id\"));",
 											"    pm.expect(responseJson[\"data\"][0][\"id_\"]).to.be.greaterThan(0);",
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
@@ -10649,7 +10649,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"author\"]).to.eql(\"test-author\");",
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"event_sent_on\"]).to.eql(null);",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"id_\"]).to.be.greaterThan(0);",
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
 											"});",
@@ -10666,7 +10666,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=Rule-1&status=NOT_ANALYZED",
+									"raw": "{{baseUrl}}/resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=private-key&status=NOT_ANALYZED",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -10692,7 +10692,7 @@
 										},
 										{
 											"key": "rule",
-											"value": "Rule-1"
+											"value": "private-key"
 										},
 										{
 											"key": "status",
@@ -10855,8 +10855,8 @@
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"    pm.expect(responseJson.length).to.eql(1);",
-											"    pm.expect(responseJson).to.eql([\"Rule-1\"] );",
-											"    pm.expect(responseJson).to.include(\"Rule-1\");",
+											"    pm.expect(responseJson).to.eql([\"private-key\"] );",
+											"    pm.expect(responseJson).to.include(\"private-key\");",
 											"});",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -11621,7 +11621,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"author\"]).to.eql(\"developer\");",
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"developer@abc.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"event_sent_on\"]).to.eql(null);",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Google-OAuth-Access-Token\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"github-oauth\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_id\"]).to.eql(1);",
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
 											"    pm.expect(responseJson[\"data\"][0][\"id_\"]).to.be.eql(1);",
@@ -11639,7 +11639,7 @@
 											"    pm.expect(responseJson[\"data\"][1][\"author\"]).to.eql(\"developer\");",
 											"    pm.expect(responseJson[\"data\"][1][\"email\"]).to.eql(\"developer@abc.com\");",
 											"    pm.expect(responseJson[\"data\"][1][\"event_sent_on\"]).to.eql(null);",
-											"    pm.expect(responseJson[\"data\"][1][\"rule_name\"]).to.eql(\"Github-Tokens\");",
+											"    pm.expect(responseJson[\"data\"][1][\"rule_name\"]).to.eql(\"github-pat\");",
 											"    pm.expect(responseJson[\"data\"][1][\"repository_id\"]).to.eql(1);",
 											"    pm.expect(responseJson[\"data\"][1][\"scan_ids\"]).to.eql(null);",
 											"    pm.expect(responseJson[\"data\"][1][\"id_\"]).to.be.eql(2);",
@@ -11774,7 +11774,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"vcs_provider\"]).to.eql(\"AZURE_DEVOPS\");",
 											"    pm.expect(responseJson[\"data\"][0][\"last_scanned_commit\"]).to.eql(\"qwerty1\");",
 											"    pm.expect(responseJson[\"data\"][0][\"commit_url\"]).to.eql(\"https://fake-dev.azure.com/ado-org/ado-project1/_git/resc-dummy1/commit/qwerty1?path=/application.txt&line=1&lineEnd=2&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain\");",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Google-OAuth-Access-Token\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"github-oauth\");",
 											"    pm.expect(responseJson[\"data\"][0][\"rule_pack\"]).to.eql(\"0.0.0\");",
 											"    pm.expect(responseJson[\"data\"][0][\"scan_id\"]).to.eql(1);",
 											"    pm.expect(responseJson[\"data\"][0][\"id_\"]).to.eql(1);",
@@ -11894,7 +11894,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"vcs_provider\"]).to.eql(\"AZURE_DEVOPS\");",
 											"    pm.expect(responseJson[\"data\"][0][\"last_scanned_commit\"]).to.eql(\"qwerty1\");",
 											"    pm.expect(responseJson[\"data\"][0][\"commit_url\"]).to.eql(\"https://fake-dev.azure.com/ado-org/ado-project1/_git/resc-dummy1/commit/qwerty1?path=/application.txt&line=1&lineEnd=2&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain\");",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Google-OAuth-Access-Token\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"github-oauth\");",
 											"    pm.expect(responseJson[\"data\"][0][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][0][\"scan_id\"]).to.eql(3);",
 											"    pm.expect(responseJson[\"data\"][0][\"id_\"]).to.eql(1);",
@@ -11917,7 +11917,7 @@
 											"    pm.expect(responseJson[\"data\"][6][\"vcs_provider\"]).to.eql(\"AZURE_DEVOPS\");",
 											"    pm.expect(responseJson[\"data\"][6][\"last_scanned_commit\"]).to.eql(\"testcommit12345\");",
 											"    pm.expect(responseJson[\"data\"][6][\"commit_url\"]).to.eql(\"https://dev.azure.com/test-org/test-project/_git/test-repository/commit/testcommit12345?path=/dummy_file.txt&line=10&lineEnd=11&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain\");",
-											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"",
 											"    pm.expect(responseJson[\"total\"]).to.eql(7);",
@@ -14873,7 +14873,7 @@
 											"    pm.expect(responseJson[\"data\"][6][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][6][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][6][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][6][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][6][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -14995,7 +14995,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][0][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][0][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15025,7 +15025,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_names=[\"Rule-1\"]",
+									"raw": "{{baseUrl}}/resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_names=[\"private-key\"]",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -15045,7 +15045,7 @@
 										},
 										{
 											"key": "query_string",
-											"value": "rule_names=[\"Rule-1\"]"
+											"value": "rule_names=[\"private-key\"]"
 										}
 									]
 								},
@@ -15114,7 +15114,7 @@
 											"    pm.expect(responseJson[\"data\"][5][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][5][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][5][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][5][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][5][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][5][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][5][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][5][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15233,7 +15233,7 @@
 											"    pm.expect(responseJson[\"data\"][6][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][6][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][6][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][6][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][6][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15352,7 +15352,7 @@
 											"    pm.expect(responseJson[\"data\"][6][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][6][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][6][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][6][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][6][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15471,7 +15471,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][0][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][0][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15590,7 +15590,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][0][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][0][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15709,7 +15709,7 @@
 											"    pm.expect(responseJson[\"data\"][6][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][6][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][6][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][6][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][6][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15827,7 +15827,7 @@
 											"    pm.expect(responseJson[\"data\"][6][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][6][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][6][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][6][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][6][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][6][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][6][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -15959,7 +15959,7 @@
 											"    pm.expect(responseJson[\"data\"][0][\"email\"]).to.eql(\"test-author@mail.com\");",
 											"    pm.expect(responseJson[\"data\"][0][\"status\"]).to.eql(\"NOT_ANALYZED\");",
 											"    pm.expect(responseJson[\"data\"][0][\"comment\"]).to.eql(\"\");",
-											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"Rule-1\");",
+											"    pm.expect(responseJson[\"data\"][0][\"rule_name\"]).to.eql(\"private-key\");",
 											"    pm.expect(responseJson[\"data\"][0][\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"data\"][0][\"project_key\"]).to.eql(\"test-project\");",
 											"    pm.expect(responseJson[\"data\"][0][\"repository_name\"]).to.eql(\"test-repository\");",
@@ -16001,7 +16001,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_names=[\"Rule-1\"]%26finding_statuses=[\"NOT_ANALYZED\"]%26vcs_providers=[\"AZURE_DEVOPS\"]%26project_name=test-project%26repository_name=test-repository%26start_date_time=2020-04-13T00:00:00%26end_date_time={{end_date_time}}%26rule_pack_versions=[\"1.0.0\"]",
+									"raw": "{{baseUrl}}/resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_names=[\"private-key\"]%26finding_statuses=[\"NOT_ANALYZED\"]%26vcs_providers=[\"AZURE_DEVOPS\"]%26project_name=test-project%26repository_name=test-repository%26start_date_time=2020-04-13T00:00:00%26end_date_time={{end_date_time}}%26rule_pack_versions=[\"1.0.0\"]",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -16021,7 +16021,7 @@
 										},
 										{
 											"key": "query_string",
-											"value": "rule_names=[\"Rule-1\"]%26finding_statuses=[\"NOT_ANALYZED\"]%26vcs_providers=[\"AZURE_DEVOPS\"]%26project_name=test-project%26repository_name=test-repository%26start_date_time=2020-04-13T00:00:00%26end_date_time={{end_date_time}}%26rule_pack_versions=[\"1.0.0\"]"
+											"value": "rule_names=[\"private-key\"]%26finding_statuses=[\"NOT_ANALYZED\"]%26vcs_providers=[\"AZURE_DEVOPS\"]%26project_name=test-project%26repository_name=test-repository%26start_date_time=2020-04-13T00:00:00%26end_date_time={{end_date_time}}%26rule_pack_versions=[\"1.0.0\"]"
 										}
 									]
 								},
@@ -16088,7 +16088,7 @@
 											"    pm.expect(responseJson[\"email\"]).to.eql(\"developer@abc.com\");",
 											"    pm.expect(responseJson[\"status\"]).to.eql(\"TRUE_POSITIVE\");",
 											"    pm.expect(responseJson[\"comment\"]).to.eql(\"It is a true positive issue\");",
-											"    pm.expect(responseJson[\"rule_name\"]).to.eql(\"Google-OAuth-Access-Token\");",
+											"    pm.expect(responseJson[\"rule_name\"]).to.eql(\"github-oauth\");",
 											"    pm.expect(responseJson[\"rule_pack\"]).to.eql(\"1.0.0\");",
 											"    pm.expect(responseJson[\"project_key\"]).to.eql(\"ado-project1\");",
 											"    pm.expect(responseJson[\"repository_name\"]).to.eql(\"resc-dummy1\");",
@@ -16358,11 +16358,7 @@
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"    pm.expect(responseJson.length).to.eql(4);",
-											"    pm.expect(responseJson).to.eql([\"GitHub Personal Access Token\",\"Github-Tokens\",\"Google-OAuth-Access-Token\",\"Rule-1\"] );",
-											"    pm.expect(responseJson).to.include(\"GitHub Personal Access Token\");",
-											"    pm.expect(responseJson).to.include(\"Github-Tokens\");",
-											"    pm.expect(responseJson).to.include(\"Google-OAuth-Access-Token\");",
-											"    pm.expect(responseJson).to.include(\"Rule-1\");",
+											"    pm.expect(responseJson).to.eql([\"GitHub Personal Access Token\",\"github-oauth\",\"github-pat\",\"private-key\"] );",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -16440,10 +16436,7 @@
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"    pm.expect(responseJson.length).to.eql(3);",
-											"    pm.expect(responseJson).to.eql([\"Github-Tokens\",\"Google-OAuth-Access-Token\",\"Rule-1\"] );",
-											"    pm.expect(responseJson).to.include(\"Github-Tokens\");",
-											"    pm.expect(responseJson).to.include(\"Google-OAuth-Access-Token\");",
-											"    pm.expect(responseJson).to.include(\"Rule-1\");",
+											"    pm.expect(responseJson).to.eql([\"github-oauth\",\"github-pat\",\"private-key\"] );",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -16528,8 +16521,8 @@
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"",
 											"    responseJson.forEach((obj) => {",
-											"    \tif (obj.rule_name === \"Rule-1\"){",
-											"            pm.expect(obj.rule_name).to.eql(\"Rule-1\");",
+											"    \tif (obj.rule_name === \"private-key\"){",
+											"            pm.expect(obj.rule_name).to.eql(\"private-key\");",
 											"            pm.expect(obj.finding_count).to.eql(1);",
 											"            obj.finding_statuses_count.forEach((statusObj) => {",
 											"                if(statusObj.status === \"TRUE_POSITIVE\"){",
@@ -16663,8 +16656,8 @@
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"",
 											"    responseJson.forEach((obj) => {",
-											"    \tif (obj.rule_name === \"Rule-1\"){",
-											"            pm.expect(obj.rule_name).to.eql(\"Rule-1\");",
+											"    \tif (obj.rule_name === \"private-key\"){",
+											"            pm.expect(obj.rule_name).to.eql(\"private-key\");",
 											"            pm.expect(obj.finding_count).to.eql(1);",
 											"            obj.finding_statuses_count.forEach((statusObj) => {",
 											"                if(statusObj.status === \"TRUE_POSITIVE\"){",
@@ -16804,8 +16797,8 @@
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"",
 											"    responseJson.forEach((obj) => {",
-											"    \tif (obj.rule_name === \"Rule-1\"){",
-											"            pm.expect(obj.rule_name).to.eql(\"Rule-1\");",
+											"    \tif (obj.rule_name === \"private-key\"){",
+											"            pm.expect(obj.rule_name).to.eql(\"private-key\");",
 											"            pm.expect(obj.finding_count).to.eql(1);",
 											"            obj.finding_statuses_count.forEach((statusObj) => {",
 											"                if(statusObj.status === \"TRUE_POSITIVE\"){",
@@ -16949,8 +16942,8 @@
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"",
 											"    responseJson.forEach((obj) => {",
-											"    \tif (obj.rule_name === \"Rule-1\"){",
-											"            pm.expect(obj.rule_name).to.eql(\"Rule-1\");",
+											"    \tif (obj.rule_name === \"private-key\"){",
+											"            pm.expect(obj.rule_name).to.eql(\"private-key\");",
 											"            pm.expect(obj.finding_count).to.eql(1);",
 											"            obj.finding_statuses_count.forEach((statusObj) => {",
 											"                if(statusObj.status === \"TRUE_POSITIVE\"){",

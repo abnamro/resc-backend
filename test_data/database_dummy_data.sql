@@ -6,9 +6,10 @@ INSERT INTO rule_pack (version, global_allow_list, active) VALUES
     ('1.0.0', 1, 1); -- 2
 
 INSERT INTO rules (rule_pack, allow_list, rule_name, description, entropy, secret_group, regex, [path], keywords) VALUES
-    ('0.0.0', NULL, 'Google-OAuth-Access-Token', 'Google OAuth Access Token', NULL, NULL, 'ya29\\.[0-9A-Za-z\\-_]++', NULL, NULL), -- 1
-    ('1.0.0', NULL, 'Google-OAuth-Access-Token', 'Google OAuth Access Token', NULL, NULL, 'ya29\\.[0-9A-Za-z\\-_]++', NULL, NULL), -- 2
-    ('1.0.0', NULL, 'Github-Tokens', 'Github-Tokens', NULL, NULL, '(ghu|ghs|gho|ghp|ghr)_[0-9a-zA-Z]{36}', NULL, 'ghu_,ghs_,gho_,ghp_,ghr_'); -- 3
+    ('0.0.0', NULL, 'github-oauth', 'GitHub OAuth Access Token', NULL, NULL, 'ya29\\.[0-9A-Za-z\\-_]++', NULL, NULL), -- 1
+    ('1.0.0', NULL, 'github-oauth', 'GitHub OAuth Access Token', NULL, NULL, 'ya29\\.[0-9A-Za-z\\-_]++', NULL, NULL), -- 2
+    ('1.0.0', NULL, 'github-pat', 'GitHub Personal Access Token', NULL, NULL, '(ghu|ghs|gho|ghp|ghr)_[0-9a-zA-Z]{36}', NULL, 'ghu_,ghs_,gho_,ghp_,ghr_'), -- 3
+    ('1.0.0', NULL, 'private-key', 'Secret Key', NULL, NULL, 'regex-secret-key', NULL, NULL); -- 4
 
 INSERT INTO tag (name) VALUES
     ('Cli'), -- 1
@@ -38,12 +39,12 @@ INSERT INTO scan (rule_pack, scan_type, last_scanned_commit, [timestamp], increm
    ('1.0.0', 'INCREMENTAL', 'qwerty4', '2023-07-15 00:00:00.000', 1, 2, 1); -- 6
 
 INSERT INTO finding (repository_id, rule_name, file_path, line_number, commit_id, commit_message, commit_timestamp, author, email, event_sent_on, column_start, column_end, is_dir_scan) VALUES
-   (1, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty1', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 1
-   (1, 'Github-Tokens', 'application.txt', 2, 'qwerty2', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0), -- 2
-   (2, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 3
-   (2, 'Google-OAuth-Access-Token', 'application.txt', 1, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 4
-   (2, 'Github-Tokens', 'application.txt', 2, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0), -- 5
-   (2, 'Github-Tokens', 'application.txt', 2, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0); -- 6
+   (1, 'github-oauth', 'application.txt', 1, 'qwerty1', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 1
+   (1, 'github-pat', 'application.txt', 2, 'qwerty2', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0), -- 2
+   (2, 'github-oauth', 'application.txt', 1, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 3
+   (2, 'github-oauth', 'application.txt', 1, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 100, 0), -- 4
+   (2, 'github-pat', 'application.txt', 2, 'qwerty3', 'this is commit 1', '2023-01-01 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0), -- 5
+   (2, 'github-pat', 'application.txt', 2, 'qwerty4', 'this is commit 2', '2023-01-02 00:00:00.000', 'developer', 'developer@abc.com', NULL, 1, 80, 0); -- 6
 
 INSERT INTO scan_finding(scan_id, finding_id) VALUES
    (1, 1),
