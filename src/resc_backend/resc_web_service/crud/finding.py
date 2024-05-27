@@ -261,9 +261,17 @@ def get_findings_from_repo_of_scan_as_dir(db_connection: Session, scan: DBscan) 
 
     query = select(DBfinding.id_)
     query = query.join(DBrule, DBrule.rule_name == DBfinding.rule_name)
+    query = query.join(
+        DBaudit,
+        (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
+        isouter=True,
+    )
     query = query.where(DBrule.rule_pack == scan.rule_pack)
     query = query.where(DBfinding.repository_id == scan.repository_id)
     query = query.where(DBfinding.is_dir_scan == True)  # noqa: E712
+    query = query.where(
+        (DBaudit.status != FindingStatus.OUTDATED) | (DBaudit.status == None)  # noqa: E711
+    )
 
     sub_query: Query = select(DBscanFinding.finding_id)
     sub_query = sub_query.where(DBscanFinding.scan_id == scan.id_)

@@ -77,6 +77,8 @@ def create_automated_audit(db_connection: Session, findings_ids: list[int], stat
     Returns:
         list[DBaudit]: newly created audits
     """
+    db_connection.execute(update(DBaudit).where(DBaudit.finding_id.in_(findings_ids)).values(is_latest=False))
+
     db_audits = [DBaudit.create_automated(finding_id, status) for finding_id in findings_ids]
     db_connection.add_all(db_audits)
     db_connection.commit()
