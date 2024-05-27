@@ -286,7 +286,7 @@ def get_untriaged_finding_outdated_for_current_rule_pack(db_connection: Session,
     Retrieve all the findings which are:
      - tied to the repository of the scan
      - where the rule is not in the rule pack of the scan
-     - which are analyzed
+     - which are not analyzed
 
     Args:
         db_connection (Session): session
