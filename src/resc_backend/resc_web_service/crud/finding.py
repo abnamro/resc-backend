@@ -302,7 +302,7 @@ def get_untriaged_finding_outdated_for_current_rule_pack(db_connection: Session,
 
     query = select(DBfinding.id_)
     query = query.where(DBfinding.repository_id == scan.repository_id)
-    query = query.where(DBfinding.rule_name.notin_(sub_query_rule_name))
+    query = query.where(DBfinding.rule_name.not_in(sub_query_rule_name))
     query = query.join(
         DBaudit,
         (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
