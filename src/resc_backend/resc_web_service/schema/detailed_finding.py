@@ -50,12 +50,19 @@ class DetailedFindingRead(DetailedFinding):
         file_path: str,
         commit_id: str,
         line_number: int,
+        is_dir_scan: bool,
     ) -> str:
         arr = repository_url.split("/")
         if len(arr) >= 3:
             repo_base_url = arr[0] + "//" + arr[2]
         else:
             repo_base_url = repository_url
+
+        if is_dir_scan:
+            return (
+                f"{repo_base_url}/projects/{project_key}/repos/"
+                f"{repository_name}/browse/{file_path}?at={commit_id}#{line_number}"
+            )
 
         return (
             f"{repo_base_url}/projects/{project_key}/repos/"
@@ -100,6 +107,7 @@ class DetailedFindingRead(DetailedFinding):
                 file_path=values["file_path"],
                 commit_id=values["commit_id"],
                 line_number=values["line_number"],
+                is_dir_scan=values["is_dir_scan"],
             )
         elif values["vcs_provider"] == VCSProviders.AZURE_DEVOPS:
             values["commit_url"] = cls.build_ado_commit_url(
