@@ -290,7 +290,7 @@ async def create_scan_findings(
     )
 
     # 8. Mark findings which are no longer in rule pack (i.e. rule name not in current rule pack) as outdated
-    old_findings_to_audit: list[int] = finding_crud.get_untriaged_finding_outdated_for_current_rule_pack(
+    old_findings_to_audit: list[int] = finding_crud.get_untriaged_finding_outdated_for_current_scan(
         db_connection=db_connection, scan=db_scan
     )
     audit_crud.create_automated_audit(

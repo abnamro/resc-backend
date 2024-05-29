@@ -127,7 +127,7 @@ def get_finding_un_triaged_count_over_time(
     - **return**: [DateCountModel]
         The output will contain a list of DateCountModel type objects
     """
-    audit_counts = finding_crud.get_un_triaged_finding_count_by_vcs_provider_over_time(
+    audit_counts = finding_crud.get_untriaged_finding_count_by_vcs_provider_over_time(
         db_connection=db_connection, weeks=weeks
     )
     output = convert_rows_to_finding_count_over_time(count_over_time=audit_counts, weeks=weeks)

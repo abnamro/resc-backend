@@ -11,6 +11,7 @@ class RulePackBase(BaseModel):
     version: constr(regex=RULE_PACK_VERSION_REGEX)
     active: bool = False
     global_allow_list: conint(gt=0) | None
+    outdated: bool = False
 
 
 class RulePackCreate(RulePackBase):
