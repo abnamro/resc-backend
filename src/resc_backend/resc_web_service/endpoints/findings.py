@@ -295,7 +295,7 @@ async def audit_findings(
     - **db_connection**: Session of the database connection
     - **finding_ids**: List of finding IDs for which audit to be performed
     - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
-                  CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
+                  CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED
     - **comment**: Comment
     - **return**: int
         The output will contain count of successful saved audits

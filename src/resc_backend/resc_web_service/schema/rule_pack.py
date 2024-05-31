@@ -33,3 +33,7 @@ class RulePackRead(RulePackBase):
 
     class Config:
         orm_mode = True
+
+
+class RulePackVersion(BaseModel):
+    version: constr(regex=RULE_PACK_VERSION_REGEX)

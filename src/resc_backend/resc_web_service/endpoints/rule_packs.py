@@ -24,12 +24,15 @@ from resc_backend.constants import (
     RWS_ROUTE_RULE_PACKS,
 )
 from resc_backend.resc_web_service.cache_manager import CacheManager
+from resc_backend.resc_web_service.crud import audit as audit_crud
+from resc_backend.resc_web_service.crud import finding as finding_crud
 from resc_backend.resc_web_service.crud import rule as rule_crud
 from resc_backend.resc_web_service.crud import rule_pack as rule_pack_crud
 from resc_backend.resc_web_service.crud import rule_tag as rule_tag_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
 from resc_backend.resc_web_service.helpers.resc_swagger_models import (
     Model400,
+    Model403,
     Model404,
     Model409,
     Model422,
@@ -41,10 +44,11 @@ from resc_backend.resc_web_service.helpers.rule import (
     validate_uploaded_file_and_read_content,
 )
 from resc_backend.resc_web_service.helpers.toml import create_toml_rule_file
+from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.pagination_model import PaginationModel
 from resc_backend.resc_web_service.schema.rule import RuleCreate
 from resc_backend.resc_web_service.schema.rule_allow_list import RuleAllowList
-from resc_backend.resc_web_service.schema.rule_pack import RulePackCreate, RulePackRead
+from resc_backend.resc_web_service.schema.rule_pack import RulePackCreate, RulePackRead, RulePackVersion
 
 router = APIRouter(prefix=f"{RWS_ROUTE_RULE_PACKS}", tags=[RULE_PACKS_TAG])
 
@@ -426,3 +430,71 @@ def determine_uploaded_rule_pack_activation(
         )
         activate_uploaded_rule_pack = True
     return activate_uploaded_rule_pack
+
+
+@router.post(
+    "/mark-as-outdated",
+    summary="Mark rule pack as outdated",
+    response_model=dict,
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Rulepack successfully updated"},
+        403: {
+            "model": Model403,
+            "description": "Rule-pack version <version_id> is active",
+        },
+        404: {
+            "model": Model404,
+            "description": "Rule-pack version <version_id> does not exists",
+        },
+        422: {
+            "model": Model422,
+            "description": "Version <version_id> is not a valid semantic version",
+        },
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
+async def mark_rule_pack_as_outdated(
+    rulepack: RulePackVersion,
+    db_connection: Session = Depends(get_db_connection),
+) -> dict:
+    """
+        Mark rule pack as outdated.
+
+        We fetch all the findings which are not in any scans that are in younger rule pack.
+        We mark those findings as out dated.
+        e.g.
+
+        Finding 1 - Scan 1 - Rulepack 1
+        Finding 1 - Scan 2 - Rulepack 2
+        Finding 1 - Scan 3 - Rulepack 3
+        Finding 2 - Scan 1 - Rulepack 1
+        Finding 2 - Scan 2 - Rulepack 2
+        Finding 3 - Scan 3 - Rulepack 3
+
+        Marking Rule pack 2 as outdated will mark finding 2 as outdated: 1 and 3 are still found in rule pack 3
+        Marking Rule pack 1 as outdated will mark no findings as outdated: 1, 2 and 3 are found in rule packs 2 and 3.
+
+    - **db_connection**: Session of the database connection
+    - **version**: Version of the rule pack to be marked
+    - **return**: int The number of findings marked.
+    """
+    rule_packs = rule_pack_crud.get_rule_packs(
+        db_connection=db_connection,
+        version=rulepack.version,
+    )
+    if len(rule_packs) != 1:
+        raise HTTPException(status_code=404, detail="Rule pack not found.")
+
+    if rule_packs[0].active:
+        raise HTTPException(status_code=403, detail="Rule pack is active.")
+
+    findings: list[int] = finding_crud.get_untriaged_finding_for_old_rulepacks(
+        db_connection=db_connection, version=rulepack.version
+    )
+    audits = audit_crud.create_automated_audit(
+        db_connection=db_connection, findings_ids=findings, status=FindingStatus.OUTDATED
+    )
+
+    return {"audited": len(audits)}

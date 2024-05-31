@@ -17,6 +17,15 @@ class Model400(RescResponseModel):
         schema_extra = {"example": {"detail": "Bad Request"}}
 
 
+class Model403(RescResponseModel):
+    """
+    Response schema to be used for a 403 FORBIDDEN.
+    """
+
+    class Config:
+        schema_extra = {"example": {"data": {}, "detail": "Action Forbidden"}}
+
+
 class Model404(RescResponseModel):
     """
     Response schema to be used for a 404 NOT FOUND.

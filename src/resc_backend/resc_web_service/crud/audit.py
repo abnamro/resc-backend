@@ -1,6 +1,7 @@
 # Standard Library
 import logging
 from datetime import datetime, timedelta, UTC
+from itertools import islice
 
 # Third Party
 from sqlalchemy import extract, func, select, update
@@ -11,6 +12,8 @@ from sqlalchemy.orm import Session
 from resc_backend.constants import (
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     MAX_RECORDS_PER_PAGE_LIMIT,
+    AUDIT_AUTOMATED_AUDITOR,
+    AUDIT_AUTOMATED_COMMENT,
 )
 from resc_backend.db.model import DBaudit
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
@@ -77,15 +80,42 @@ def create_automated_audit(db_connection: Session, findings_ids: list[int], stat
     Returns:
         list[DBaudit]: newly created audits
     """
-    db_connection.execute(update(DBaudit).where(DBaudit.finding_id.in_(findings_ids)).values(is_latest=False))
 
-    db_audits = [DBaudit.create_automated(finding_id, status) for finding_id in findings_ids]
-    db_connection.add_all(db_audits)
+    # Iterate over those ids by chunk.
+    # This is necessary because SQL tends to crash when you do IN with more than 1000 values.
+    # source: trust me bro.
+    iterator = iter(findings_ids)
+    db_audits = []
+    while chunk := list(islice(iterator, 1000)):
+        db_connection.execute(update(DBaudit).where(DBaudit.finding_id.in_(chunk)).values(is_latest=False))
+        db_audits_created = [DBaudit.create_automated(finding_id, status) for finding_id in chunk]
+        db_connection.add_all(db_audits_created)
+        db_audits.extend(db_audits_created)
+
     db_connection.commit()
 
     logger.debug(f"Automated audit of {len(db_audits)} findings.")
 
     return db_audits
+
+
+def clear_outdated_no_longer_outdated(db_connection: Session, findings_ids: list[int]) -> None:
+    """
+        Remove outdated status from findings which have been automatically added
+
+    Args:
+        db_connection (Session): Session of the database connection
+        findings_ids (list[int]): list of id to audit
+    """
+    iterator = iter(findings_ids)
+    while chunk := list(islice(iterator, 1000)):
+        query = db_connection.query(DBaudit)
+        query = query.where(DBaudit.finding_id.in_(chunk))
+        query = query.where(DBaudit.auditor == AUDIT_AUTOMATED_AUDITOR)
+        query = query.where(DBaudit.comment == AUDIT_AUTOMATED_COMMENT)
+        query.delete(synchronize_session=False)
+
+    db_connection.commit()
 
 
 def get_finding_audits(

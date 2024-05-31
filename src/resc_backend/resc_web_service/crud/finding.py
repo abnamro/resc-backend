@@ -20,6 +20,7 @@ from resc_backend.db.model import (
     DBrepository,
     DBrule,
     DBruleTag,
+    DBrulePack,
     DBscan,
     DBscanFinding,
     DBtag,
@@ -982,3 +983,30 @@ def query_untriaged_findings_for_rule_pack(query: Query, version: str | Column[s
     query = query.where(DBscan.rule_pack == version)
     query = query.where((DBaudit.status == FindingStatus.NOT_ANALYZED) | (DBaudit.status == None))  # noqa: E711
     return query
+
+
+def get_untriaged_finding_for_old_rulepacks(db_connection: Session, version: str) -> list[int]:
+    # Select the age of the version.
+    age_query: Query = select(DBrulePack.created)
+    age_query = age_query.where(DBrulePack.version == version)
+    age_query = age_query.scalar_subquery()
+
+    # Select the findings that appears in scan more recent that version
+    do_not_touch_finding_query: Query = select(DBscanFinding.finding_id)
+    do_not_touch_finding_query = do_not_touch_finding_query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
+    do_not_touch_finding_query = do_not_touch_finding_query.join(DBrulePack, DBrulePack.version == DBscan.rule_pack)
+    do_not_touch_finding_query = do_not_touch_finding_query.where(DBrulePack.created > age_query)
+    do_not_touch_finding_query = do_not_touch_finding_query.scalar_subquery()
+
+    query: Query = select(DBfinding.id_)
+    query = query.join(
+        DBaudit,
+        (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
+        isouter=True,
+    )
+    query = query.where((DBaudit.status == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED))  # noqa: E711
+    query = query.where(DBfinding.id_.not_in(do_not_touch_finding_query))
+    # We limit to 100 000 because otherwise it crashes because too many data
+    query = query.limit(100_000)
+
+    return db_connection.execute(query).scalars().all()

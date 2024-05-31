@@ -233,7 +233,7 @@ async def create_scan_findings(
     - **author**: Author name
     - **email**: Email of the author
     - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
-                  CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
+                  CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED
     - **comment**: Comment
     - **event_sent_on**: event sent timestamp
     - **rule_name**: rule name
@@ -296,6 +296,10 @@ async def create_scan_findings(
     audit_crud.create_automated_audit(
         db_connection=db_connection, findings_ids=old_findings_to_audit, status=FindingStatus.OUTDATED
     )
+
+    created_findings_ids = [finding.id_ for finding in created_findings]
+    # 9. Mark active findings as no longer outdated
+    audit_crud.clear_outdated_no_longer_outdated(db_connection=db_connection, findings_ids=created_findings_ids)
 
     # Clear cache related to findings
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
