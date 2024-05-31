@@ -3,18 +3,18 @@ import logging
 
 # Third Party
 from packaging.version import Version
-from sqlalchemy import func, update
+from sqlalchemy import func, update, case, literal_column
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
-from sqlalchemy.sql.expression import true
 
 # First Party
 from resc_backend.constants import (
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     MAX_RECORDS_PER_PAGE_LIMIT,
 )
-from resc_backend.db.model import DBrule, DBrulePack, DBruleTag, DBtag
+from resc_backend.db.model import DBscanFinding, DBrule, DBrulePack, DBruleTag, DBtag
 from resc_backend.resc_web_service.schema import rule_pack as rule_pack_schema
+from resc_backend.resc_web_service.crud.finding import query_untriaged_findings_for_rule_pack
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def get_rule_pack(db_connection: Session, version: str | None) -> rule_pack_sche
         query = query.where(DBrulePack.version == version)
     else:
         logger.debug("rule pack version not specified, fetching currently active one")
-        query = query.where(DBrulePack.active == true())
+        query = query.where(DBrulePack.active == True)  # noqa: E712
     rule_pack = query.first()
     return rule_pack
 
@@ -100,8 +100,16 @@ def get_rule_packs(
         or an empty list if no rule pack was found
     """
     limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
-    query = db_connection.query(DBrulePack)
 
+    outdated_stmt = db_connection.query(
+        case((func.count(DBscanFinding.finding_id) == 0, literal_column("'1'")), else_=literal_column("'0'"))
+    )
+    outdated_stmt = query_untriaged_findings_for_rule_pack(outdated_stmt, DBrulePack.version)
+    outdated_stmt = outdated_stmt.label("outdated")
+
+    query: Query = db_connection.query(
+        DBrulePack.version, DBrulePack.active, DBrulePack.created, DBrulePack.global_allow_list, outdated_stmt
+    )
     if version:
         query = query.where(DBrulePack.version == version)
     if active is not None:

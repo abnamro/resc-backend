@@ -40,7 +40,7 @@ def test_get_rule_packs():
         rule_packs
     )
     _ = get_rule_packs(db_connection=mock_conn, skip=0, limit=5)
-    mock_conn.query.assert_called_once()
+    assert mock_conn.query.call_count == 2
     mock_conn.query.return_value.order_by.return_value.offset.return_value.limit.return_value.all.assert_called_once()
 
 

@@ -105,9 +105,9 @@ class TestFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_un_triaged_finding_count_by_vcs_provider_over_time")
-    def test_get_finding_un_triaged_count_over_time(self, get_un_triaged_finding_count_by_vcs_provider_over_time):
-        get_un_triaged_finding_count_by_vcs_provider_over_time.return_value = {}
+    @patch("resc_backend.resc_web_service.crud.finding.get_untriaged_finding_count_by_vcs_provider_over_time")
+    def test_get_finding_un_triaged_count_over_time(self, get_untriaged_finding_count_by_vcs_provider_over_time):
+        get_untriaged_finding_count_by_vcs_provider_over_time.return_value = {}
         with self.client as client:
             response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_METRICS}{RWS_ROUTE_UN_TRIAGED_COUNT_OVER_TIME}")
 

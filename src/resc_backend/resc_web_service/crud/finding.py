@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timedelta, UTC
 
 # Third Party
-from sqlalchemy import extract, func, select, union
+from sqlalchemy import Column, extract, func, select, union
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
@@ -281,7 +281,7 @@ def get_findings_from_repo_of_scan_as_dir(db_connection: Session, scan: DBscan) 
     return db_connection.execute(query).scalars().all()
 
 
-def get_untriaged_finding_outdated_for_current_rule_pack(db_connection: Session, scan: DBscan) -> list[int]:
+def get_untriaged_finding_outdated_for_current_scan(db_connection: Session, scan: DBscan) -> list[int]:
     """
     Retrieve all the findings which are:
      - tied to the repository of the scan
@@ -918,7 +918,7 @@ def get_finding_count_by_vcs_provider_over_time(db_connection: Session, weeks: i
     return count_over_time
 
 
-def get_un_triaged_finding_count_by_vcs_provider_over_time(db_connection: Session, weeks: int = 13) -> list[Row]:
+def get_untriaged_finding_count_by_vcs_provider_over_time(db_connection: Session, weeks: int = 13) -> list[Row]:
     """
         Retrieve count of un triaged findings over time for given weeks
     :param db_connection:
@@ -967,3 +967,18 @@ def get_un_triaged_finding_count_by_vcs_provider_over_time(db_connection: Sessio
     unioned_query = union(*all_tables)
     count_over_time = db_connection.execute(unioned_query).all()
     return count_over_time
+
+
+def query_untriaged_findings_for_rule_pack(query: Query, version: str | Column[str]) -> Query:
+    query = query.join(DBfinding, DBfinding.id_ == DBscanFinding.finding_id)
+    query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
+    query = query.join(DBrule, DBrule.rule_name == DBfinding.rule_name)
+    query = query.join(
+        DBaudit,
+        (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
+        isouter=True,
+    )
+    query = query.where(DBrule.rule_pack == version)
+    query = query.where(DBscan.rule_pack == version)
+    query = query.where((DBaudit.status == FindingStatus.NOT_ANALYZED) | (DBaudit.status == None))  # noqa: E711
+    return query
