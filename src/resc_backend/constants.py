@@ -104,3 +104,6 @@ CONTENT_SECURITY_POLICY = (
     "'self' https://fonts.googleapis.com https://cdn.jsdelivr.net 'unsafe-inline';"
     "frame-ancestors 'self'; form-action 'self';"
 )
+
+AUDIT_AUTOMATED_COMMENT = "automated"
+AUDIT_AUTOMATED_AUDITOR = "resc"

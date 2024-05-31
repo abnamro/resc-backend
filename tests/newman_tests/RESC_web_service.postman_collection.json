@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "dde1afa5-fc4b-457c-a001-dcab0c2d00c0",
+		"_postman_id": "346abcc7-3f6d-4d60-8a15-afef6ed2070f",
 		"name": "Repository Scanner (RESC)",
 		"description": "RESC API helps you to perform several operations upon findings obtained from multiple source code repositories. ðŸš€",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -519,6 +519,171 @@
 											"key": "version",
 											"value": "1.0.0"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark rule pack as outdated when invalid rule pack version provided",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"const responseJson = pm.response.json();",
+											"pm.test(\"Response body matches\", function() {",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule pack not found.\");",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"version\": \"3.0.0\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/mark-as-outdated",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resc",
+										"v1",
+										"rule-packs",
+										"mark-as-outdated"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark rule pack as outdated when active rule pack version provided",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"const responseJson = pm.response.json();",
+											"pm.test(\"Response body matches\", function() {",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule pack is active.\");",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"version\": \"1.0.0\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/mark-as-outdated",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resc",
+										"v1",
+										"rule-packs",
+										"mark-as-outdated"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark rule pack as outdated when inactive rule pack version provided",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const responseJson = pm.response.json();",
+											"pm.test(\"Response body matches\", function() {",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson[\"audited\"]).to.eql(0);",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"version\": \"0.0.0\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/mark-as-outdated",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resc",
+										"v1",
+										"rule-packs",
+										"mark-as-outdated"
 									]
 								}
 							},
@@ -13090,9 +13255,9 @@
 											"currentDate = new Date();",
 											"var newYear = new Date(currentDate.getFullYear(),0,1);",
 											"var day = newYear.getDay() - 1;",
-    										"day = (day >= 0 ? day : day + 7);",
+											"day = (day >= 0 ? day : day + 7);",
 											"var daynum = Math.floor((currentDate.getTime() - newYear.getTime() - (currentDate.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;",
-										    "var weekNumber;",
+											"var weekNumber;",
 											"if(day < 4) {",
 											"weekNumber = Math.floor((daynum+day-1)/7) + 1;",
 											"if(weekNumber > 52) {",

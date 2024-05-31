@@ -1,9 +1,9 @@
 INSERT INTO rule_allow_list (description, regexes, paths, commits, stop_words) VALUES
     ('global allow lists', NULL, 'gitleaks.toml', NULL, 'getenv,env_'); -- 1
 
-INSERT INTO rule_pack (version, global_allow_list, active) VALUES
-    ('0.0.0', 1, 0), -- 1
-    ('1.0.0', 1, 1); -- 2
+INSERT INTO rule_pack (version, global_allow_list, active, created) VALUES
+    ('0.0.0', 1, 0, '2023-07-12 00:00:00.000'), -- 1
+    ('1.0.0', 1, 1, '2023-07-14 00:00:00.000'); -- 2
 
 INSERT INTO rules (rule_pack, allow_list, rule_name, description, entropy, secret_group, regex, [path], keywords) VALUES
     ('0.0.0', NULL, 'github-oauth', 'GitHub OAuth Access Token', NULL, NULL, 'ya29\\.[0-9A-Za-z\\-_]++', NULL, NULL), -- 1

@@ -15,6 +15,7 @@ from sqlalchemy import (
 )
 
 # First Party
+from resc_backend.constants import AUDIT_AUTOMATED_AUDITOR, AUDIT_AUTOMATED_COMMENT
 from resc_backend.db.model import Base
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 
@@ -71,8 +72,8 @@ class DBaudit(Base):
         db_audit = DBaudit(
             finding_id=finding_id,
             status=status,
-            comment="automated",
-            auditor="resc",
+            comment=AUDIT_AUTOMATED_COMMENT,
+            auditor=AUDIT_AUTOMATED_AUDITOR,
             timestamp=datetime.now(UTC),
             is_latest=True,
         )
