@@ -6,7 +6,7 @@ from itertools import islice
 # Third Party
 from sqlalchemy import extract, func, select, update
 from sqlalchemy.engine import Row
-from sqlalchemy.orm import aliased, Session, Query
+from sqlalchemy.orm import Session, Query
 
 # First Party
 from resc_backend.constants import (

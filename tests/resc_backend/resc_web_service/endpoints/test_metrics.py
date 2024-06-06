@@ -195,17 +195,21 @@ class TestFindings(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.audit.get_audit_stats_count")
     @patch("resc_backend.resc_web_service.crud.audit.get_audit_count_by_auditor_over_time")
     @patch("resc_backend.resc_web_service.crud.audit.get_personal_audit_count")
-    def test_get_personal_audit_metrics(self, get_personal_audit_count, get_audit_count_by_auditor_over_time, get_audit_stats_count):
-        auditor_results = [{
-            'auditor':'Anonymous',
-            'true_positive': 1,
-            'false_positive': 0,
-            'clarification_required': 0,
-            'not_accessible': 1,
-            'outdated': 0,
-            'not_analyzed': 0,
-            'total': 2,
-        }]
+    def test_get_personal_audit_metrics(
+        self, get_personal_audit_count, get_audit_count_by_auditor_over_time, get_audit_stats_count
+    ):
+        auditor_results = [
+            {
+                "auditor": "Anonymous",
+                "true_positive": 1,
+                "false_positive": 0,
+                "clarification_required": 0,
+                "not_accessible": 1,
+                "outdated": 0,
+                "not_analyzed": 0,
+                "total": 2,
+            }
+        ]
         get_personal_audit_count.return_value = 2
         get_audit_count_by_auditor_over_time.return_value = {}
         get_audit_stats_count.return_value = auditor_results
