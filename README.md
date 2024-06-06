@@ -8,6 +8,7 @@
 [![Redis][redis-shield]][redis-url]
 [![Azure SQL Edge][database-shield]][database-url]
 [![CI][ci-shield]][ci-url]
+[![OpenSSF Scorecard][ossf-shield]][ossf-url]
 [![SonarCloud][sonar-cloud-shield]][sonar-cloud-url]
 
 > [!NOTE]  
@@ -231,4 +232,6 @@ Example: ./run_newman_tests.sh -b 'rescabnamro/resc-backend:latest' -d 'mcr.micr
 [ci-url]: https://github.com/abnamro/repository-scanner/actions/workflows/backend-ci.yaml
 [sonar-cloud-shield]: https://sonarcloud.io/api/project_badges/measure?project=abnamro-resc_resc-backend&metric=alert_status
 [sonar-cloud-url]: https://sonarcloud.io/summary/new_code?id=abnamro-resc_resc-backend
+[ossf-shield]: https://api.securityscorecards.dev/projects/github.com/abnamro/resc-backend/badge
+[ossf-url]: https://securityscorecards.dev/viewer/?uri=github.com/abnamro/resc-backend
   
