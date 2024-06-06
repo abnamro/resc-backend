@@ -278,6 +278,13 @@ def get_personal_audit_metrics(
         time_period=TimePeriod.FOREVER,
     )
 
+    ret = audit_crud.get_audit_stats_count(db_connection=db_connection, auditor=request.user)
+    if len(ret) == 0:
+        logger.warning("Something went wrong. No Auditor found")
+
+    auditor_metrics = ret[0] if len(ret) > 0 else None
+    audit_counts.forever_breakdown = auditor_metrics
+
     audit_counts.rank_current_week = determine_audit_rank_current_week(
         auditor=request.user, db_connection=db_connection
     )

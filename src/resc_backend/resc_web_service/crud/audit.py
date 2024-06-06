@@ -6,7 +6,7 @@ from itertools import islice
 # Third Party
 from sqlalchemy import extract, func, select, update
 from sqlalchemy.engine import Row
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 
 # First Party
 from resc_backend.constants import (
@@ -18,6 +18,7 @@ from resc_backend.constants import (
 from resc_backend.db.model import DBaudit
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.time_period import TimePeriod
+from resc_backend.resc_web_service.schema.auditor_metric import AuditorMetric
 
 logger = logging.getLogger(__name__)
 
@@ -234,3 +235,73 @@ def get_personal_audit_count(db_connection: Session, auditor: str, time_period: 
 
     total_count = total_count.filter(DBaudit.auditor == auditor).scalar()
     return total_count
+
+
+def get_audit_stats_count(db_connection: Session, auditor: str | None) -> list[AuditorMetric]:
+    """Retrieve the stats True Positive, False Positive etc... per auditor
+
+    Args:
+        db_connection (Session): Session of the database connection
+        auditor (str): id of the auditor
+
+    Returns:
+        list: List of AuditorMetrics
+    """
+    true_positive: Query = select(DBaudit.auditor, func.count(DBaudit.auditor).label("true_positive"))
+    true_positive = true_positive.where(DBaudit.status == FindingStatus.TRUE_POSITIVE)
+    true_positive = true_positive.group_by(DBaudit.auditor)
+    true_positive = true_positive.subquery()
+
+    false_positive: Query = select(DBaudit.auditor, func.count(DBaudit.auditor).label("false_positive"))
+    false_positive = false_positive.where(DBaudit.status == FindingStatus.FALSE_POSITIVE)
+    false_positive = false_positive.group_by(DBaudit.auditor)
+    false_positive = false_positive.subquery()
+
+    clarification_required: Query = select(DBaudit.auditor, func.count(DBaudit.auditor).label("clarification_required"))
+    clarification_required = clarification_required.where(DBaudit.status == FindingStatus.CLARIFICATION_REQUIRED)
+    clarification_required = clarification_required.group_by(DBaudit.auditor)
+    clarification_required = clarification_required.subquery()
+
+    not_accessible: Query = select(DBaudit.auditor, func.count(DBaudit.auditor).label("not_accessible"))
+    not_accessible = not_accessible.where(DBaudit.status == FindingStatus.NOT_ACCESSIBLE)
+    not_accessible = not_accessible.group_by(DBaudit.auditor)
+    not_accessible = not_accessible.subquery()
+
+    outdated: Query = select(DBaudit.auditor, func.count(DBaudit.auditor).label("outdated"))
+    outdated = outdated.where(DBaudit.status == FindingStatus.OUTDATED)
+    outdated = outdated.group_by(DBaudit.auditor)
+    outdated = outdated.subquery()
+
+    not_analyzed: Query = select(DBaudit.auditor, func.count(DBaudit.auditor).label("not_analyzed"))
+    not_analyzed = not_analyzed.where(DBaudit.status == FindingStatus.NOT_ANALYZED)
+    not_analyzed = not_analyzed.group_by(DBaudit.auditor)
+    not_analyzed = not_analyzed.subquery()
+
+    total: Query = select(DBaudit.auditor, func.count(DBaudit.auditor).label("total"))
+    total = total.group_by(DBaudit.auditor)
+    total = total.subquery()
+
+    query = select(
+        DBaudit.auditor,
+        func.coalesce(true_positive.c.true_positive, 0).label("true_positive"),
+        func.coalesce(false_positive.c.false_positive, 0).label("false_positive"),
+        func.coalesce(clarification_required.c.clarification_required, 0).label("clarification_required"),
+        func.coalesce(not_accessible.c.not_accessible, 0).label("not_accessible"),
+        func.coalesce(outdated.c.outdated, 0).label("outdated"),
+        func.coalesce(not_analyzed.c.not_analyzed, 0).label("not_analyzed"),
+        func.coalesce(total.c.total, 0).label("total"),
+    )
+    query = query.join(true_positive, true_positive.c.auditor == DBaudit.auditor, isouter=True)
+    query = query.join(false_positive, false_positive.c.auditor == DBaudit.auditor, isouter=True)
+    query = query.join(clarification_required, clarification_required.c.auditor == DBaudit.auditor, isouter=True)
+    query = query.join(not_accessible, not_accessible.c.auditor == DBaudit.auditor, isouter=True)
+    query = query.join(outdated, outdated.c.auditor == DBaudit.auditor, isouter=True)
+    query = query.join(not_analyzed, not_analyzed.c.auditor == DBaudit.auditor, isouter=True)
+    query = query.join(total, total.c.auditor == DBaudit.auditor, isouter=True)
+
+    if auditor is not None:
+        query = query.where(DBaudit.auditor == auditor)
+
+    query = query.distinct()
+
+    return db_connection.execute(query).all()
