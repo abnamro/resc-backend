@@ -192,17 +192,29 @@ class TestFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
+    @patch("resc_backend.resc_web_service.crud.audit.get_audit_stats_count")
     @patch("resc_backend.resc_web_service.crud.audit.get_audit_count_by_auditor_over_time")
     @patch("resc_backend.resc_web_service.crud.audit.get_personal_audit_count")
-    def test_get_personal_audit_metrics(self, get_personal_audit_count, get_audit_count_by_auditor_over_time):
+    def test_get_personal_audit_metrics(self, get_personal_audit_count, get_audit_count_by_auditor_over_time, get_audit_stats_count):
+        auditor_results = [{
+            'auditor':'Anonymous',
+            'true_positive': 1,
+            'false_positive': 0,
+            'clarification_required': 0,
+            'not_accessible': 1,
+            'outdated': 0,
+            'not_analyzed': 0,
+            'total': 2,
+        }]
         get_personal_audit_count.return_value = 2
         get_audit_count_by_auditor_over_time.return_value = {}
+        get_audit_stats_count.return_value = auditor_results
         with self.client as client:
             response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_METRICS}{RWS_ROUTE_PERSONAL_AUDITS}")
 
             assert response.status_code == 200, response.text
             data = response.json()
-            assert len(data) == 7
+            assert len(data) == 8
             assert data["today"] == 2
             assert data["current_week"] == 2
             assert data["last_week"] == 2
@@ -210,6 +222,14 @@ class TestFindings(unittest.TestCase):
             assert data["current_year"] == 2
             assert data["forever"] == 2
             assert data["rank_current_week"] == 0
+            assert data["forever_breakdown"]["auditor"] == "Anonymous"
+            assert data["forever_breakdown"]["true_positive"] == 1
+            assert data["forever_breakdown"]["false_positive"] == 0
+            assert data["forever_breakdown"]["clarification_required"] == 0
+            assert data["forever_breakdown"]["not_accessible"] == 1
+            assert data["forever_breakdown"]["outdated"] == 0
+            assert data["forever_breakdown"]["not_analyzed"] == 0
+            assert data["forever_breakdown"]["total"] == 2
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_METRICS}{RWS_ROUTE_PERSONAL_AUDITS}")

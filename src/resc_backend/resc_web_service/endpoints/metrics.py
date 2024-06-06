@@ -28,6 +28,7 @@ from resc_backend.resc_web_service.dependencies import get_db_connection
 from resc_backend.resc_web_service.schema.audit_count_over_time import (
     AuditCountOverTime,
 )
+from resc_backend.resc_web_service.schema.auditor_metric import AuditorMetric
 from resc_backend.resc_web_service.schema.finding_count_over_time import (
     FindingCountOverTime,
 )
@@ -277,6 +278,14 @@ def get_personal_audit_metrics(
         auditor=request.user,
         time_period=TimePeriod.FOREVER,
     )
+
+    ret = audit_crud.get_audit_stats_count(db_connection=db_connection, auditor=request.user)
+    if len(ret) == 0:
+        logger.warning('Something went wrong. No Auditor found')
+    print(ret[0])
+
+    auditor_metrics = ret[0] if len(ret) > 0 else None
+    audit_counts.forever_breakdown = auditor_metrics
 
     audit_counts.rank_current_week = determine_audit_rank_current_week(
         auditor=request.user, db_connection=db_connection
