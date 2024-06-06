@@ -281,7 +281,6 @@ def get_personal_audit_metrics(
     ret = audit_crud.get_audit_stats_count(db_connection=db_connection, auditor=request.user)
     if len(ret) == 0:
         logger.warning("Something went wrong. No Auditor found")
-    print(ret[0])
 
     auditor_metrics = ret[0] if len(ret) > 0 else None
     audit_counts.forever_breakdown = auditor_metrics
