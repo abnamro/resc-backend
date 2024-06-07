@@ -303,5 +303,6 @@ def get_audit_stats_count(db_connection: Session, auditor: str | None) -> list[A
         query = query.where(DBaudit.auditor == auditor)
 
     query = query.distinct()
+    logger.info("before query execution.")
 
     return db_connection.execute(query).all()

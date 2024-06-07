@@ -199,16 +199,7 @@ class TestFindings(unittest.TestCase):
         self, get_personal_audit_count, get_audit_count_by_auditor_over_time, get_audit_stats_count
     ):
         auditor_results = [
-            {
-                "auditor": "Anonymous",
-                "true_positive": 1,
-                "false_positive": 0,
-                "clarification_required": 0,
-                "not_accessible": 1,
-                "outdated": 0,
-                "not_analyzed": 0,
-                "total": 2,
-            }
+            ("Anonymous", 1, 0, 0, 1, 0, 0, 2),
         ]
         get_personal_audit_count.return_value = 2
         get_audit_count_by_auditor_over_time.return_value = {}
