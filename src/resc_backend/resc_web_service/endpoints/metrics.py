@@ -286,14 +286,14 @@ def get_personal_audit_metrics(
         logger.warning("Something went wrong. No Auditor found")
     else:
         auditor_data = AuditorMetric(
-            auditor=ret[0][0],
-            true_positive=ret[0][1],
-            false_positive=ret[0][2],
-            clarification_required=ret[0][3],
-            not_accessible=ret[0][4],
-            outdated=ret[0][5],
-            not_analyzed=ret[0][6],
-            total=ret[0][7],
+            auditor=getattr(ret[0], "auditor"),
+            true_positive=getattr(ret[0], "true_positive"),
+            false_positive=getattr(ret[0], "false_positive"),
+            clarification_required=getattr(ret[0], "clarification_required"),
+            not_accessible=getattr(ret[0], "not_accessible"),
+            outdated=getattr(ret[0], "outdated"),
+            not_analyzed=getattr(ret[0], "not_analyzed"),
+            total=getattr(ret[0], "total"),
         )
 
     audit_counts.forever_breakdown = auditor_data

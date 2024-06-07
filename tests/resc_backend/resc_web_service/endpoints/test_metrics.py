@@ -3,6 +3,7 @@ import unittest
 from datetime import datetime, timedelta, UTC
 from collections.abc import Generator
 from unittest.mock import ANY, Mock, patch
+from collections import namedtuple
 
 # Third Party
 import pytest
@@ -198,8 +199,21 @@ class TestFindings(unittest.TestCase):
     def test_get_personal_audit_metrics(
         self, get_personal_audit_count, get_audit_count_by_auditor_over_time, get_audit_stats_count
     ):
+        AuditorMetric = namedtuple(
+            "AuditorMetric",
+            [
+                "auditor",
+                "true_positive",
+                "false_positive",
+                "clarification_required",
+                "not_accessible",
+                "outdated",
+                "not_analyzed",
+                "total",
+            ],
+        )
         auditor_results = [
-            ("Anonymous", 1, 0, 0, 1, 0, 0, 2),
+            AuditorMetric._make(["Anonymous", 1, 0, 0, 1, 0, 0, 2]),
         ]
         get_personal_audit_count.return_value = 2
         get_audit_count_by_auditor_over_time.return_value = {}
