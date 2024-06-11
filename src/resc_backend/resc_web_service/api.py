@@ -13,6 +13,7 @@ from tenacity import RetryError
 from resc_backend.constants import RWS_VERSION_PREFIX
 from resc_backend.db.connection import Session, engine
 from resc_backend.helpers.environment_wrapper import validate_environment
+from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.configuration import (
     AUTHENTICATION_REQUIRED,
     CORS_ALLOWED_DOMAINS,
@@ -20,10 +21,10 @@ from resc_backend.resc_web_service.configuration import (
     WEB_SERVICE_ENV_VARS,
 )
 from resc_backend.resc_web_service.dependencies import (
+    add_security_headers,
     check_db_initialized,
     requires_auth,
     requires_no_auth,
-    add_security_headers,
 )
 from resc_backend.resc_web_service.endpoints import (
     common,
@@ -32,15 +33,14 @@ from resc_backend.resc_web_service.endpoints import (
     health,
     metrics,
     repositories,
-    rules,
     rule_packs,
+    rules,
     scans,
     vcs_instances,
 )
 from resc_backend.resc_web_service.helpers.exception_handler import (
     add_exception_handlers,
 )
-from resc_backend.resc_web_service.cache_manager import CacheManager
 
 # Check and load environment variables
 env_variables = validate_environment(WEB_SERVICE_ENV_VARS)
