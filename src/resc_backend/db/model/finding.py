@@ -1,8 +1,8 @@
 # Standard Library
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 # Third Party
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, Boolean
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 
 # First Party
 from resc_backend.db.model import Base

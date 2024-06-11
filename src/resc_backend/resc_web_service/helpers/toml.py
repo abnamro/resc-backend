@@ -1,8 +1,8 @@
 # Third Party
 import tomlkit
 from tomlkit import aot, comment, document, nl, table
+from tomlkit.items import AoT, Array, String, StringType, Table
 from tomlkit.toml_document import TOMLDocument
-from tomlkit.items import String, StringType, Array, Table, AoT
 
 # First Party
 from resc_backend.constants import (

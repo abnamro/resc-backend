@@ -1,7 +1,7 @@
 # Standard Library
 import unittest
-from datetime import datetime, UTC
 from collections.abc import Generator
+from datetime import UTC, datetime
 from unittest.mock import ANY, patch
 from urllib.parse import quote, urlencode
 

@@ -1,6 +1,6 @@
 # Standard Library
 import unittest
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 # First Party
 from resc_backend.resc_web_service.schema.detailed_finding import DetailedFindingRead

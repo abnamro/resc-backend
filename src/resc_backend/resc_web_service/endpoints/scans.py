@@ -18,12 +18,12 @@ from resc_backend.constants import (
     RWS_ROUTE_SCANS,
     SCANS_TAG,
 )
-from resc_backend.db.model import DBscanFinding, DBfinding, DBscan
+from resc_backend.db.model import DBfinding, DBscan, DBscanFinding
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import audit as audit_crud
 from resc_backend.resc_web_service.crud import finding as finding_crud
-from resc_backend.resc_web_service.crud import scan as scan_crud
 from resc_backend.resc_web_service.crud import rule as rule_crud
+from resc_backend.resc_web_service.crud import scan as scan_crud
 from resc_backend.resc_web_service.crud import scan_finding as scan_finding_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
 from resc_backend.resc_web_service.filters import FindingsFilter

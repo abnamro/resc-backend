@@ -1,6 +1,6 @@
 # Standard Library
 import logging
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 
 # Third Party
 from fastapi import APIRouter, Depends, Query, Request, status

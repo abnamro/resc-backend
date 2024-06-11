@@ -1,7 +1,7 @@
 # Standard Library
 import sys
 import unittest
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 # Third Party
 from sqlalchemy import create_engine

@@ -1,6 +1,6 @@
 # Standard Library
 import logging
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 
 # Third Party
 from sqlalchemy import Column, extract, func, select, union
@@ -19,8 +19,8 @@ from resc_backend.db.model import (
     DBfinding,
     DBrepository,
     DBrule,
-    DBruleTag,
     DBrulePack,
+    DBruleTag,
     DBscan,
     DBscanFinding,
     DBtag,
