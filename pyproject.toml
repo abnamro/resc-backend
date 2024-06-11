@@ -36,3 +36,4 @@ ignore = ["ANN101","ANN102"]
     "E501"
     ] # Line too long (143 > 120)
 "tests/*" = ["ANN"]
+"src/resc_backend/resc_web_service/api.py" = ["I"]
