@@ -163,7 +163,6 @@ Run below commands to make sure that the unit tests are running and that the cod
 ```bash
 pip install tox      # install tox locally
 
-tox -v -e sort       # Run this command to validate the import sorting
 tox -v -e lint       # Run this command to lint the code according to this repository's standard
 tox -v -e pytest     # Run this command to run the unit tests
 tox -v               # Run this command to run all of the above tests
