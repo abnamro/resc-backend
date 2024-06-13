@@ -185,3 +185,22 @@ def get_scan_as_dir_rules_by_rule_pack_version(db_connection: Session, rule_pack
     db_rules = db_connection.execute(query).scalars().all()
 
     return db_rules
+
+def get_rule_by_rule_name_and_rule_pack_version(db_connection: Session, rule_pack_version: str, rule_name:str) -> RuleRead|None:
+    """
+        Fetch rule
+    :param db_connection:
+        Session of the database connection
+    :param rule_pack_version:
+        rule pack version
+    :param rule_name:
+        rule name
+    :return: List[str]
+        The output contains list of strings of rules which are applied as directory
+    """
+    query: Query = select(DBrule)
+    query = query.where(DBrule.rule_pack == rule_pack_version)
+    query = query.where(DBrule.rule_name == rule_name)
+    db_rule = db_connection.execute(query).first()
+
+    return db_rule
