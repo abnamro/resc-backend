@@ -108,9 +108,9 @@ class TestRules(unittest.TestCase):
         assert FastAPICache.get_coder() is not None
         assert cached_response.headers.get("cache-control") is not None
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_single_finding_status(self, get_distinct_rules_from_findings):
-        get_distinct_rules_from_findings.return_value = self.db_rules
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_single_finding_status(self, get_distinct_rule_names_from_findings):
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
@@ -128,9 +128,9 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_multiple_finding_status(self, get_distinct_rules_from_findings):
-        get_distinct_rules_from_findings.return_value = self.db_rules
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_multiple_finding_status(self, get_distinct_rule_names_from_findings):
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
@@ -152,9 +152,9 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_single_vcs_provider(self, get_distinct_rules_from_findings):
-        get_distinct_rules_from_findings.return_value = self.db_rules
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_single_vcs_provider(self, get_distinct_rule_names_from_findings):
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
@@ -172,9 +172,9 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_multiple_vcs_provider(self, get_distinct_rules_from_findings):
-        get_distinct_rules_from_findings.return_value = self.db_rules
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_multiple_vcs_provider(self, get_distinct_rule_names_from_findings):
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
@@ -196,10 +196,10 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_project_name(self, get_distinct_rules_from_findings):
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_project_name(self, get_distinct_rule_names_from_findings):
         project_name = "Test_Project"
-        get_distinct_rules_from_findings.return_value = self.db_rules
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?projectname={project_name}")
             assert response.status_code == 200, response.text
@@ -215,10 +215,10 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_repository_name(self, get_distinct_rules_from_findings):
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_repository_name(self, get_distinct_rule_names_from_findings):
         repository_name = "Test_Repository"
-        get_distinct_rules_from_findings.return_value = self.db_rules
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?repositoryname={repository_name}"
@@ -236,10 +236,10 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_start_date(self, get_distinct_rules_from_findings):
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_start_date(self, get_distinct_rule_names_from_findings):
         start_date_time = "1991-07-01T00:00:00"
-        get_distinct_rules_from_findings.return_value = self.db_rules
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?start_date_time={start_date_time}"
@@ -257,10 +257,10 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_end_date(self, get_distinct_rules_from_findings):
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_end_date(self, get_distinct_rule_names_from_findings):
         end_date_time = "1991-07-01T00:00:00"
-        get_distinct_rules_from_findings.return_value = self.db_rules
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?end_date_time={end_date_time}")
             assert response.status_code == 200, response.text
@@ -276,10 +276,10 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_by_rule_pack_version(self, get_distinct_rules_from_findings):
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_by_rule_pack_version(self, get_distinct_rule_names_from_findings):
         rule_pack_version = "rule_pack_1"
-        get_distinct_rules_from_findings.return_value = [self.db_rules[0]]
+        get_distinct_rule_names_from_findings.return_value = [self.db_rules[0].rule_name]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?rule_pack_version={rule_pack_version}"
@@ -296,13 +296,13 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_when_all_filters_selected(self, get_distinct_rules_from_findings):
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_when_all_filters_selected(self, get_distinct_rule_names_from_findings):
         project_name = "Test_Project"
         repository_name = "Test_Repository"
         start_date_time = "1991-07-01T00:00:00"
         end_date_time = "1991-07-01T00:00:00"
-        get_distinct_rules_from_findings.return_value = self.db_rules
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
@@ -332,9 +332,9 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_findings")
-    def test_get_distinct_rules_from_findings_when_no_filter_selected(self, get_distinct_rules_from_findings):
-        get_distinct_rules_from_findings.return_value = self.db_rules
+    @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
+    def test_get_distinct_rule_names_from_findings_when_no_filter_selected(self, get_distinct_rule_names_from_findings):
+        get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}")
             assert response.status_code == 200, response.text

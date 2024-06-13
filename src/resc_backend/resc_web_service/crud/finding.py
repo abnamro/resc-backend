@@ -394,7 +394,7 @@ def get_findings_by_rule(
     return findings
 
 
-def get_distinct_rules_name_from_findings(
+def get_distinct_rule_names_from_findings(
     db_connection: Session,
     scan_id: int = -1,
     finding_statuses: list[FindingStatus] = None,
