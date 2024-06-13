@@ -394,7 +394,7 @@ def get_findings_by_rule(
     return findings
 
 
-def get_distinct_rules_from_findings(
+def get_distinct_rules_name_from_findings(
     db_connection: Session,
     scan_id: int = -1,
     finding_statuses: list[FindingStatus] = None,
@@ -404,7 +404,7 @@ def get_distinct_rules_from_findings(
     start_date_time: datetime = None,
     end_date_time: datetime = None,
     rule_pack_versions: list[str] = None,
-) -> list[DBrule]:
+) -> list[str]:
     """
         Retrieve distinct rules detected
     :param db_connection:
@@ -428,7 +428,7 @@ def get_distinct_rules_from_findings(
     :return: rules
         List of unique rules
     """
-    query = db_connection.query(DBfinding.rule_name)
+    query = select(DBfinding.rule_name)
 
     if (
         vcs_providers or project_name or repository_name or start_date_time or end_date_time or rule_pack_versions
@@ -475,7 +475,10 @@ def get_distinct_rules_from_findings(
         if rule_pack_versions:
             query = query.where(DBscan.rule_pack.in_(rule_pack_versions))
 
-    rules = query.distinct().order_by(DBfinding.rule_name).all()
+    query = query.distinct().order_by(DBfinding.rule_name)
+
+    rules = db_connection.execute(query).scalars().all()
+
     return rules
 
 
