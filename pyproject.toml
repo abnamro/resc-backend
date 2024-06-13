@@ -3,6 +3,7 @@
 line-length = 120
 indent-width = 4
 target-version = "py312"
+src=["src"]
 
 [tool.ruff.format]
 exclude = ["alembic/*"]
@@ -25,7 +26,7 @@ select = [
     # flake8-annotations
     # "ANN",
     # isort
-    # "I",
+    "I",
     ]
 ignore = ["ANN101","ANN102"]
 

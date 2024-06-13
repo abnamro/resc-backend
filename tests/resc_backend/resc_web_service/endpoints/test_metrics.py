@@ -1,9 +1,9 @@
 # Standard Library
 import unittest
-from datetime import datetime, timedelta, UTC
-from collections.abc import Generator
-from unittest.mock import ANY, Mock, patch
 from collections import namedtuple
+from collections.abc import Generator
+from datetime import UTC, datetime, timedelta
+from unittest.mock import ANY, Mock, patch
 
 # Third Party
 import pytest

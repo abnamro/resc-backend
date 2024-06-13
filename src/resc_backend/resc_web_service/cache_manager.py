@@ -1,7 +1,7 @@
 # Standard Library
 import logging
-from typing import Any
 from collections.abc import Callable
+from typing import Any
 
 # Third Party
 from fastapi import Request, Response

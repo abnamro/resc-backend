@@ -3,7 +3,7 @@ import logging
 
 # Third Party
 from packaging.version import Version
-from sqlalchemy import func, update, case, literal_column
+from sqlalchemy import case, func, literal_column, update
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
@@ -12,9 +12,9 @@ from resc_backend.constants import (
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     MAX_RECORDS_PER_PAGE_LIMIT,
 )
-from resc_backend.db.model import DBscanFinding, DBrule, DBrulePack, DBruleTag, DBtag
-from resc_backend.resc_web_service.schema import rule_pack as rule_pack_schema
+from resc_backend.db.model import DBrule, DBrulePack, DBruleTag, DBscanFinding, DBtag
 from resc_backend.resc_web_service.crud.finding import query_untriaged_findings_for_rule_pack
+from resc_backend.resc_web_service.schema import rule_pack as rule_pack_schema
 
 logger = logging.getLogger(__name__)
 

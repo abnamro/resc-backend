@@ -1,8 +1,8 @@
 # Standard Library
 import json
 import unittest
-from datetime import datetime, UTC
 from collections.abc import Generator
+from datetime import UTC, datetime
 from unittest.mock import ANY, call, patch
 
 # Third Party

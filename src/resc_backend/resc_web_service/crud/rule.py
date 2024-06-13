@@ -6,13 +6,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
+from resc_backend.constants import RULE_TAG_SCAN_AS_DIR
+
 # First Party
 from resc_backend.db.model import DBrule, DBruleAllowList, DBrulePack, DBruleTag, DBscan, DBtag
 from resc_backend.resc_web_service.schema import (
     rule_allow_list as rule_allow_list_schema,
 )
 from resc_backend.resc_web_service.schema.rule import RuleCreate, RuleRead
-from resc_backend.constants import RULE_TAG_SCAN_AS_DIR
 
 logger = logging.getLogger(__name__)
 

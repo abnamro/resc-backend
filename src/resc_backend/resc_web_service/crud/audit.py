@@ -1,24 +1,24 @@
 # Standard Library
 import logging
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 from itertools import islice
 
 # Third Party
 from sqlalchemy import extract, func, select, update
 from sqlalchemy.engine import Row
-from sqlalchemy.orm import Session, Query
+from sqlalchemy.orm import Query, Session
 
 # First Party
 from resc_backend.constants import (
-    DEFAULT_RECORDS_PER_PAGE_LIMIT,
-    MAX_RECORDS_PER_PAGE_LIMIT,
     AUDIT_AUTOMATED_AUDITOR,
     AUDIT_AUTOMATED_COMMENT,
+    DEFAULT_RECORDS_PER_PAGE_LIMIT,
+    MAX_RECORDS_PER_PAGE_LIMIT,
 )
 from resc_backend.db.model import DBaudit
+from resc_backend.resc_web_service.schema.auditor_metric import AuditorMetric
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.time_period import TimePeriod
-from resc_backend.resc_web_service.schema.auditor_metric import AuditorMetric
 
 logger = logging.getLogger(__name__)
 

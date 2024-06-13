@@ -1,5 +1,5 @@
 # Standard Library
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 # First Party
