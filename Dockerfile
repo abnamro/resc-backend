@@ -1,4 +1,4 @@
-FROM python:3.12.3-alpine3.20
+FROM python:3.12-alpine3.20
 
 ARG NAME="resc_backend"
 ARG DESCRIPTION="Repository Scanner Backend"
