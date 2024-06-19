@@ -25,7 +25,7 @@ from resc_backend.resc_web_service.dependencies import get_db_connection
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.rule import RuleRead
 from resc_backend.resc_web_service.schema.rule_count_model import RuleFindingCountModel
-from resc_backend.resc_web_service.helpers.resc_swagger_models import Model404
+from resc_backend.resc_web_service.helpers.resc_swagger_models import Model404, Model422
 from resc_backend.resc_web_service.schema.status_count import StatusCount
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
@@ -83,12 +83,13 @@ def get_distinct_rules_from_findings(
 
 @router.get(
     f"{RWS_ROUTE_RULES}",
-    response_model=list[str],
+    response_model=RuleRead,
     summary="Get unique rule from rule pack",
     status_code=status.HTTP_200_OK,
     responses={
         200: {"description": "Retrieve the rule data for a rule pack"},
         404: {"model": Model404, "description": "Scan <scan_id> not found"},
+        422: {"model": Model422, "description": "RulePackVersion and RuleName required"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -96,7 +97,7 @@ def get_distinct_rules_from_findings(
 @cache(namespace=CACHE_NAMESPACE_RULE, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_rules_from_findings(
     rule_pack_version: str = Query(None, alias="rule_pack_version", title="RulePackVersion"),
-    rule_name: str = Query(None, alias="rule_rule_name", title="RuleName"),
+    rule_name: str = Query(None, alias="rule_name", title="RuleName"),
     db_connection: Session = Depends(get_db_connection),
 ) -> RuleRead:
     """
@@ -107,6 +108,12 @@ def get_distinct_rules_from_findings(
     - **rule_name**: filter on rule pack version
     - **return**: List[str] The output will contain a list of strings of unique rules in the findings table
     """
+    if rule_pack_version is None:
+        raise HTTPException(status_code=422, detail="rule_pack_version required")
+
+    if rule_name is None:
+        raise HTTPException(status_code=422, detail="rule_name required")
+
     db_rule = rule_crud.get_rule_by_rule_name_and_rule_pack_version(db_connection=db_connection,rule_name=rule_name,rule_pack_version=rule_pack_version)
     if db_rule == None:
         raise HTTPException(status_code=404, detail="Rule not found")

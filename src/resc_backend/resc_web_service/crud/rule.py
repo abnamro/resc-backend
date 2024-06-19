@@ -198,7 +198,18 @@ def get_rule_by_rule_name_and_rule_pack_version(db_connection: Session, rule_pac
     :return: List[str]
         The output contains list of strings of rules which are applied as directory
     """
-    query: Query = select(DBrule)
+    query: Query = select(
+        DBrule.id_,
+        DBrule.rule_name,
+        DBrule.description,
+        DBrule.entropy,
+        DBrule.secret_group,
+        DBrule.regex,
+        DBrule.path,
+        DBrule.keywords,
+        DBrule.rule_pack,
+    )
+    
     query = query.where(DBrule.rule_pack == rule_pack_version)
     query = query.where(DBrule.rule_name == rule_name)
     db_rule = db_connection.execute(query).first()

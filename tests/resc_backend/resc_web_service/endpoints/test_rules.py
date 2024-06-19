@@ -481,3 +481,35 @@ class TestRules(unittest.TestCase):
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
+
+    def test_get_rules_without_rule_pack(self):
+        with self.client as client:
+            response = client.get(
+                f"{RWS_VERSION_PREFIX}"
+                f"{RWS_ROUTE_RULES}"
+            )
+            assert response.status_code == 422
+            assert response.text == "{\"detail\":\"rule_pack_version required\"}"
+
+    def test_get_rules_without_rule_name(self):
+        with self.client as client:
+            response = client.get(
+                f"{RWS_VERSION_PREFIX}"
+                f"{RWS_ROUTE_RULES}"
+                f"?rule_pack_version=1.0.1"
+            )
+            assert response.status_code == 422
+            assert response.text == "{\"detail\":\"rule_name required\"}"
+
+    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
+    def test_get_rules_with_rule_name_and_rule_pack(self, get_rule_by_rule_name_and_rule_pack_version):
+        get_rule_by_rule_name_and_rule_pack_version.return_value = self.db_rule_list[0]
+        with self.client as client:
+            response = client.get(
+                f"{RWS_VERSION_PREFIX}"
+                f"{RWS_ROUTE_RULES}"
+                f"?rule_pack_version=1.0.1&rule_name=rule_name_1"
+            )
+            assert response.status_code == 200, response.text
+            data = response.json()
+            assert data["rule_name"] == self.db_rule_list[0].rule_name
