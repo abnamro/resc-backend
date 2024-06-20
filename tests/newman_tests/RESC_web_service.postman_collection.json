@@ -2028,6 +2028,216 @@
 									"body": "[\n \"in ea occaecat\",\n \"Excepteur dolor culpa occaecat eiusmod\"\n]"
 								}
 							]
+						},
+						{
+							"name": "Get rule from rule pack with non existing rule",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"const responseJson = pm.response.json();",
+											"pm.test(\"Response body matches\", function() {",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule not found\");",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/1.0.0/rules?rule_name=non-existent-rule",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resc",
+										"v1",
+										"rule-packs",
+										"1.0.0",
+										"rules"
+									],
+									"query": [
+										{
+											"key": "rule_name",
+											"value": "non-existent-rule"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get rule from rule pack with no rule",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 422\", function () {",
+											"    pm.response.to.have.status(422);",
+											"});",
+											"",
+											"const responseJson = pm.response.json();",
+											"pm.test(\"Response body matches\", function() {",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.missing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"field required\");",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/1.0.0/rules",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resc",
+										"v1",
+										"rule-packs",
+										"1.0.0",
+										"rules"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get rule from rule pack with non existing rule pack",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"const responseJson = pm.response.json();",
+											"pm.test(\"Response body matches\", function() {",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule not found\");",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/foo/rules?rule_name=non-existent-rule",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resc",
+										"v1",
+										"rule-packs",
+										"wrong-rule-pack",
+										"rules"
+									],
+									"query": [
+										{
+											"key": "rule_name",
+											"value": "non-existent-rule"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get rule from rule pack with existing rule and rule pack",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const responseJson = pm.response.json();",
+											"pm.test(\"Response body matches\", function() {",
+											"    pm.expect(responseJson).to.be.an(\"object\");",
+											"    pm.expect(responseJson[\"rule_name\"]).to.eql(\"github-oauth\");",
+											"    pm.expect(responseJson[\"rule_pack\"]).to.eql(\"1.0.0\");",
+											"    pm.expect(responseJson[\"description\"]).to.eql(\"GitHub OAuth Access Token\");",
+											"    pm.expect(responseJson[\"regex\"]).to.eql(\"ya29\\\\\\\\.[0-9A-Za-z\\\\\\\\-_]++\");",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/resc/v1/rule-packs/1.0.0/rules?rule_name=github-oauth",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resc",
+										"v1",
+										"rule-packs",
+										"1.0.0",
+										"rules"
+									],
+									"query": [
+										{
+											"key": "rule_name",
+											"value": "github-oauth"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
