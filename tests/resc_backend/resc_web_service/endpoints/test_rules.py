@@ -59,6 +59,7 @@ class TestRules(unittest.TestCase):
                     regex=f"regex_{i}",
                     path=f"path_{i}",
                     keywords=f"keywords_{i}",
+                    comment=f"comment_{i}",
                 )
             )
             self.db_rule_list[i - 1].id_ = i
@@ -93,6 +94,7 @@ class TestRules(unittest.TestCase):
             regex=rule.regex,
             path=rule.path,
             keywords=rule.keywords,
+            comment=rule.comment,
         )
 
     @staticmethod

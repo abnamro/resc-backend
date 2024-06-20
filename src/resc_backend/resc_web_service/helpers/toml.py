@@ -189,6 +189,8 @@ def create_rule_array_toml_table(rule_dictionary: dict) -> AoT:
                     delimiter=",",
                 )
                 rule_table.add("keywords", multiline_keyword_array)
+            if "comment" in rule_dict:
+                rule_table.add("comment", rule_dict["comment"])
 
             # Rule Allow List Table
             if "allow_list" in rule_dict:

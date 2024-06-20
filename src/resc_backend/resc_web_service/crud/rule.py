@@ -96,6 +96,7 @@ def create_rule(db_connection: Session, rule: RuleCreate):
         keywords=rule.keywords,
         rule_pack=rule.rule_pack,
         allow_list=rule.allow_list,
+        comment=rule.comment,
     )
     db_connection.add(db_rule)
     db_connection.commit()
@@ -122,6 +123,8 @@ def get_rules_by_rule_pack_version(db_connection: Session, rule_pack_version: st
         DBrule.regex,
         DBrule.path,
         DBrule.keywords,
+        DBrule.comment,
+        DBrule.description.label("rule_description"),
         DBruleAllowList.description,
         DBruleAllowList.regexes,
         DBruleAllowList.paths,
