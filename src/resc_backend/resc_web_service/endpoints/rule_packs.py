@@ -317,6 +317,7 @@ def insert_rules(
             entropy = rule["entropy"] if "entropy" in rule else None
             secret_group = rule["secretGroup"] if "secretGroup" in rule else None
             path = rule["path"] if "path" in rule else None
+            comment = rule["comment"] if "comment" in rule else None
 
             if "keywords" in rule:
                 keyword_array = rule["keywords"]
@@ -346,6 +347,7 @@ def insert_rules(
                 regex=regex,
                 path=path,
                 keywords=keywords,
+                comment=comment,
             )
             created_rule = rule_crud.create_rule(rule=rule_obj, db_connection=db_connection)
             if not created_rule.id_:

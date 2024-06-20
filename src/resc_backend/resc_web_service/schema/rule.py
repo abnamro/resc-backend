@@ -6,7 +6,8 @@ from pydantic import BaseModel, conint, constr
 
 class RuleBase(BaseModel):
     rule_name: constr(min_length=1, max_length=400)
-    description: constr(max_length=2000) | None = None
+    description: constr(max_length=4000) | None = None
+    comment: constr(max_length=2000) | None = None
     entropy: float | None = None
     secret_group: int | None = None
     regex: str | None = None

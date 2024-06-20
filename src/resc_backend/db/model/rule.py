@@ -21,12 +21,13 @@ class DBrule(Base):
     rule_pack = Column(String(100), ForeignKey(DBrulePack.version), nullable=False)
     allow_list = Column(Integer, ForeignKey(DBruleAllowList.id_), nullable=True)
     rule_name = Column(String(400), nullable=False)
-    description = Column(String(2000), nullable=True)
+    description = Column(String(4000), nullable=True)
     entropy = Column(Float, nullable=True)
     secret_group = Column(Integer, nullable=True)
     regex = Column(Text, nullable=True)
     path = Column(Text, nullable=True)
     keywords = Column(Text, nullable=True)
+    comment = Column(String(2000), nullable=True)
     __table_args__ = (UniqueConstraint("rule_name", "rule_pack", name="unique_rule_name_per_rule_pack_version"),)
 
     def __init__(
@@ -40,6 +41,7 @@ class DBrule(Base):
         regex: str = None,
         path: str = None,
         keywords: str = None,
+        comment: str = None,
     ):
         self.rule_pack = rule_pack
         self.allow_list = allow_list
@@ -50,6 +52,7 @@ class DBrule(Base):
         self.regex = regex
         self.path = path
         self.keywords = keywords
+        self.comment = comment
 
     @staticmethod
     def create_from_metadata(
@@ -61,6 +64,7 @@ class DBrule(Base):
         regex: str,
         path: str,
         keywords: str,
+        comment: str,
         allow_list: int,
     ):
         db_rule = DBrule(
@@ -72,6 +76,7 @@ class DBrule(Base):
             regex=regex,
             path=path,
             keywords=keywords,
+            comment=comment,
             allow_list=allow_list,
         )
         return db_rule
