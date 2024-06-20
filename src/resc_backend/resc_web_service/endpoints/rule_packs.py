@@ -21,7 +21,11 @@ from resc_backend.constants import (
     ERROR_MESSAGE_503,
     REDIS_CACHE_EXPIRE,
     RULE_PACKS_TAG,
+    RWS_ROUTE_MARK_AS_OUTDATED,
     RWS_ROUTE_RULE_PACKS,
+    RWS_ROUTE_RULES,
+    RWS_ROUTE_TAGS,
+    RWS_ROUTE_VERSIONS,
 )
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import audit as audit_crud
@@ -56,7 +60,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.get(
-    "/versions",
+    f"{RWS_ROUTE_VERSIONS}",
     response_model=PaginationModel[RulePackRead],
     summary="Get rule packs",
     status_code=status.HTTP_200_OK,
@@ -361,7 +365,7 @@ def insert_rules(
 
 
 @router.get(
-    "/tags",
+    f"{RWS_ROUTE_TAGS}",
     response_model=list[str],
     summary="Get rule packs' tags",
     status_code=status.HTTP_200_OK,
@@ -435,7 +439,7 @@ def determine_uploaded_rule_pack_activation(
 
 
 @router.post(
-    "/mark-as-outdated",
+    f"{RWS_ROUTE_MARK_AS_OUTDATED}",
     summary="Mark rule pack as outdated",
     response_model=dict,
     status_code=status.HTTP_200_OK,
@@ -503,7 +507,7 @@ async def mark_rule_pack_as_outdated(
 
 
 @router.get(
-    "/{rule_pack_version}",
+    "/{rule_pack_version}" f"{RWS_ROUTE_RULES}",
     response_model=RuleRead,
     summary="Get unique rule from rule pack",
     status_code=status.HTTP_200_OK,

@@ -454,7 +454,7 @@ class TestRules(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
     def test_get_rules_without_rule_name(self, get_rule_by_rule_name_and_rule_pack_version):
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULE_PACKS}" f"/1.0.1")
+            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULE_PACKS}" "/1.0.1/rules")
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "rule_name"]
@@ -478,7 +478,9 @@ class TestRules(unittest.TestCase):
 
         get_rule_by_rule_name_and_rule_pack_version.return_value = rule
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULE_PACKS}" "/1.0.1" f"?rule_name=rule_name_1")
+            response = client.get(
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULE_PACKS}" "/1.0.1/rules?rule_name=rule_name_1"
+            )
             assert response.status_code == 200, response.text
             data = response.json()
             assert data["rule_name"] == rule.rule_name
