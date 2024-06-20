@@ -66,7 +66,7 @@ def get_distinct_rules_from_findings(
     - **rule_pack_version**: Optional, filter on rule pack version
     - **return**: List[str] The output will contain a list of strings of unique rules in the findings table
     """
-    distinct_rules = finding_crud.get_distinct_rules_from_findings(
+    return finding_crud.get_distinct_rule_names_from_findings(
         db_connection,
         finding_statuses=finding_statuses,
         vcs_providers=vcs_providers,
@@ -76,8 +76,6 @@ def get_distinct_rules_from_findings(
         end_date_time=end_date_time,
         rule_pack_versions=rule_pack_versions,
     )
-    rules = [rule.rule_name for rule in distinct_rules]
-    return rules
 
 
 @router.get(

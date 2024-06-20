@@ -44,6 +44,10 @@ RWS_ROUTE_AUTH_CHECK = "/auth-check"
 
 RWS_ROUTE_HEALTH = "/health"
 
+RWS_ROUTE_TAGS = "/tags"
+RWS_ROUTE_VERSIONS = "/versions"
+RWS_ROUTE_MARK_AS_OUTDATED = "/mark-as-outdated"
+
 REPOSITORIES_TAG = "resc-repositories"
 SCANS_TAG = "resc-scans"
 FINDINGS_TAG = "resc-findings"

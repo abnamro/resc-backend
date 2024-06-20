@@ -26,12 +26,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Lint
+      - uses: chartboost/ruff-action@v1
+      # Format check
       - uses: chartboost/ruff-action@v1
         with:
-          src: "./src"
-      - uses: chartboost/ruff-action@v1
-        with:
-          src: "./tests"
+          args: 'format --check'
 
   python-basic-validation:
     name: Python Basic Validation

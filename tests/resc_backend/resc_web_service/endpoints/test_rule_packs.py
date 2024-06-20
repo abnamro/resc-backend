@@ -18,6 +18,7 @@ from resc_backend.constants import (
     RWS_ROUTE_RULE_PACKS,
     RWS_VERSION_PREFIX,
 )
+from resc_backend.db.model.rule import DBrule
 from resc_backend.db.model.rule_allow_list import DBruleAllowList
 from resc_backend.db.model.rule_pack import DBrulePack
 from resc_backend.resc_web_service.api import app
@@ -449,3 +450,37 @@ class TestRules(unittest.TestCase):
             cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_RULE_PACKS}/tags")
             self.assert_cache(cached_response)
             assert rule_packs_tags.json() == cached_response.json()
+
+    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
+    def test_get_rules_without_rule_name(self, get_rule_by_rule_name_and_rule_pack_version):
+        with self.client as client:
+            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULE_PACKS}" "/1.0.1/rules")
+            assert response.status_code == 422, response.text
+            data = response.json()
+            assert data["detail"][0]["loc"] == ["query", "rule_name"]
+            assert data["detail"][0]["msg"] == "field required"
+            get_rule_by_rule_name_and_rule_pack_version.assert_not_called()
+
+    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
+    def test_get_rules_with_rule_name_and_rule_pack(self, get_rule_by_rule_name_and_rule_pack_version):
+        rule = DBrule(
+            rule_pack="1.0.1",
+            allow_list=1,
+            rule_name="rule_name_1",
+            description="description_1",
+            entropy=1.0,
+            secret_group=1,
+            regex="regex_1",
+            path="path_1",
+            keywords="keywords_1",
+        )
+        rule.id_ = 1
+
+        get_rule_by_rule_name_and_rule_pack_version.return_value = rule
+        with self.client as client:
+            response = client.get(
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULE_PACKS}" "/1.0.1/rules?rule_name=rule_name_1"
+            )
+            assert response.status_code == 200, response.text
+            data = response.json()
+            assert data["rule_name"] == rule.rule_name
