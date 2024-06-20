@@ -482,24 +482,34 @@ class TestRules(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    def test_get_rules_without_rule_pack(self):
+    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
+    def test_get_rules_without_rule_pack(self, get_rule_by_rule_name_and_rule_pack_version):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_RULES}"
             )
-            assert response.status_code == 422
-            assert response.text == "{\"detail\":\"rule_pack_version required\"}"
+            assert response.status_code == 422, response.text
+            data = response.json()
+            assert data["detail"][0]["loc"] == ["query", "rule_pack_version"]
+            assert data["detail"][0]["msg"] == "field required"
+            assert data["detail"][1]["loc"] == ["query", "rule_name"]
+            assert data["detail"][1]["msg"] == "field required"
+            get_rule_by_rule_name_and_rule_pack_version.assert_not_called()
 
-    def test_get_rules_without_rule_name(self):
+    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
+    def test_get_rules_without_rule_name(self, get_rule_by_rule_name_and_rule_pack_version):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_RULES}"
                 f"?rule_pack_version=1.0.1"
             )
-            assert response.status_code == 422
-            assert response.text == "{\"detail\":\"rule_name required\"}"
+            assert response.status_code == 422, response.text
+            data = response.json()
+            assert data["detail"][0]["loc"] == ["query", "rule_name"]
+            assert data["detail"][0]["msg"] == "field required"
+            get_rule_by_rule_name_and_rule_pack_version.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
     def test_get_rules_with_rule_name_and_rule_pack(self, get_rule_by_rule_name_and_rule_pack_version):

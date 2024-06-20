@@ -96,8 +96,8 @@ def get_distinct_rules_from_findings(
 )
 @cache(namespace=CACHE_NAMESPACE_RULE, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_rules_from_findings(
-    rule_pack_version: str = Query(None, alias="rule_pack_version", title="RulePackVersion"),
-    rule_name: str = Query(None, alias="rule_name", title="RuleName"),
+    rule_pack_version: str = Query(alias="rule_pack_version", title="RulePackVersion"),
+    rule_name: str = Query(alias="rule_name", title="RuleName"),
     db_connection: Session = Depends(get_db_connection),
 ) -> RuleRead:
     """
@@ -108,12 +108,6 @@ def get_distinct_rules_from_findings(
     - **rule_name**: filter on rule pack version
     - **return**: List[str] The output will contain a list of strings of unique rules in the findings table
     """
-    if rule_pack_version is None:
-        raise HTTPException(status_code=422, detail="rule_pack_version required")
-
-    if rule_name is None:
-        raise HTTPException(status_code=422, detail="rule_name required")
-
     db_rule = rule_crud.get_rule_by_rule_name_and_rule_pack_version(db_connection=db_connection,rule_name=rule_name,rule_pack_version=rule_pack_version)
     if db_rule == None:
         raise HTTPException(status_code=404, detail="Rule not found")
