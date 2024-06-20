@@ -513,8 +513,8 @@ async def mark_rule_pack_as_outdated(
     status_code=status.HTTP_200_OK,
     responses={
         200: {"description": "Retrieve the rule data for a rule pack"},
-        404: {"model": Model404, "description": "Scan <scan_id> not found"},
-        422: {"model": Model422, "description": "RulePackVersion and RuleName required"},
+        404: {"model": Model404, "description": "Rule <rule_name> for <rule_pack_version> not found"},
+        422: {"model": Model422, "description": "rule_pack_version and rule_name required"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -539,4 +539,4 @@ def get_rule_from_rule_pack(
     if db_rule is None:
         raise HTTPException(status_code=404, detail="Rule not found")
 
-    return db_rule
+    return RuleRead.from_orm(db_rule)
