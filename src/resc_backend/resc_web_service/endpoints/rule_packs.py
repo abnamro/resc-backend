@@ -46,7 +46,7 @@ from resc_backend.resc_web_service.helpers.rule import (
 from resc_backend.resc_web_service.helpers.toml import create_toml_rule_file
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.pagination_model import PaginationModel
-from resc_backend.resc_web_service.schema.rule import RuleCreate
+from resc_backend.resc_web_service.schema.rule import RuleCreate, RuleRead
 from resc_backend.resc_web_service.schema.rule_allow_list import RuleAllowList
 from resc_backend.resc_web_service.schema.rule_pack import RulePackCreate, RulePackRead, RulePackVersion
 
@@ -498,3 +498,39 @@ async def mark_rule_pack_as_outdated(
     )
 
     return {"audited": len(audits)}
+
+
+@router.get(
+    "/{rule_pack_version}",
+    response_model=RuleRead,
+    summary="Get unique rule from rule pack",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Retrieve the rule data for a rule pack"},
+        404: {"model": Model404, "description": "Scan <scan_id> not found"},
+        422: {"model": Model422, "description": "RulePackVersion and RuleName required"},
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
+@cache(namespace=CACHE_NAMESPACE_RULE, expire=REDIS_CACHE_EXPIRE)
+def get_rule_from_rule_pack(
+    rule_pack_version: str,
+    rule_name: str = Query(alias="rule_name", title="RuleName"),
+    db_connection: Session = Depends(get_db_connection),
+) -> RuleRead:
+    """
+        Retrieve the rule data from a rule_name and rule_pack
+
+    - **db_connection**: Session of the database connection
+    - **rule_pack_version**: filter on rule pack version
+    - **rule_name**: filter on rule pack version
+    - **return**: List[str] The output will contain a list of strings of unique rules in the findings table
+    """
+    db_rule = rule_crud.get_rule_by_rule_name_and_rule_pack_version(
+        db_connection=db_connection, rule_name=rule_name, rule_pack_version=rule_pack_version
+    )
+    if db_rule is None:
+        raise HTTPException(status_code=404, detail="Rule not found")
+
+    return db_rule

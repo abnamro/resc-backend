@@ -186,7 +186,10 @@ def get_scan_as_dir_rules_by_rule_pack_version(db_connection: Session, rule_pack
 
     return db_rules
 
-def get_rule_by_rule_name_and_rule_pack_version(db_connection: Session, rule_pack_version: str, rule_name:str) -> RuleRead|None:
+
+def get_rule_by_rule_name_and_rule_pack_version(
+    db_connection: Session, rule_pack_version: str, rule_name: str
+) -> RuleRead | None:
     """
         Fetch rule
     :param db_connection:
@@ -209,7 +212,7 @@ def get_rule_by_rule_name_and_rule_pack_version(db_connection: Session, rule_pac
         DBrule.keywords,
         DBrule.rule_pack,
     )
-    
+
     query = query.where(DBrule.rule_pack == rule_pack_version)
     query = query.where(DBrule.rule_name == rule_name)
     db_rule = db_connection.execute(query).first()

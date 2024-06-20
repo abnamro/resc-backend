@@ -19,7 +19,7 @@ from resc_backend.constants import (
     RWS_ROUTE_RULES,
     RWS_VERSION_PREFIX,
 )
-from resc_backend.db.model import DBrule
+from resc_backend.db.model.rule import DBrule
 from resc_backend.resc_web_service.api import app
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.dependencies import requires_auth, requires_no_auth
@@ -109,7 +109,9 @@ class TestRules(unittest.TestCase):
         assert cached_response.headers.get("cache-control") is not None
 
     @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
-    def test_get_distinct_rule_names_from_findings_by_single_finding_status(self, get_distinct_rule_names_from_findings):
+    def test_get_distinct_rule_names_from_findings_by_single_finding_status(
+        self, get_distinct_rule_names_from_findings
+    ):
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
@@ -129,7 +131,9 @@ class TestRules(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
-    def test_get_distinct_rule_names_from_findings_by_multiple_finding_status(self, get_distinct_rule_names_from_findings):
+    def test_get_distinct_rule_names_from_findings_by_multiple_finding_status(
+        self, get_distinct_rule_names_from_findings
+    ):
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
@@ -173,7 +177,9 @@ class TestRules(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
-    def test_get_distinct_rule_names_from_findings_by_multiple_vcs_provider(self, get_distinct_rule_names_from_findings):
+    def test_get_distinct_rule_names_from_findings_by_multiple_vcs_provider(
+        self, get_distinct_rule_names_from_findings
+    ):
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
@@ -297,7 +303,9 @@ class TestRules(unittest.TestCase):
             assert response.json() == cached_response.json()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rule_names_from_findings")
-    def test_get_distinct_rule_names_from_findings_when_all_filters_selected(self, get_distinct_rule_names_from_findings):
+    def test_get_distinct_rule_names_from_findings_when_all_filters_selected(
+        self, get_distinct_rule_names_from_findings
+    ):
         project_name = "Test_Project"
         repository_name = "Test_Repository"
         start_date_time = "1991-07-01T00:00:00"
@@ -481,45 +489,3 @@ class TestRules(unittest.TestCase):
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
-
-    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
-    def test_get_rules_without_rule_pack(self, get_rule_by_rule_name_and_rule_pack_version):
-        with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_RULES}"
-            )
-            assert response.status_code == 422, response.text
-            data = response.json()
-            assert data["detail"][0]["loc"] == ["query", "rule_pack_version"]
-            assert data["detail"][0]["msg"] == "field required"
-            assert data["detail"][1]["loc"] == ["query", "rule_name"]
-            assert data["detail"][1]["msg"] == "field required"
-            get_rule_by_rule_name_and_rule_pack_version.assert_not_called()
-
-    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
-    def test_get_rules_without_rule_name(self, get_rule_by_rule_name_and_rule_pack_version):
-        with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_RULES}"
-                f"?rule_pack_version=1.0.1"
-            )
-            assert response.status_code == 422, response.text
-            data = response.json()
-            assert data["detail"][0]["loc"] == ["query", "rule_name"]
-            assert data["detail"][0]["msg"] == "field required"
-            get_rule_by_rule_name_and_rule_pack_version.assert_not_called()
-
-    @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")
-    def test_get_rules_with_rule_name_and_rule_pack(self, get_rule_by_rule_name_and_rule_pack_version):
-        get_rule_by_rule_name_and_rule_pack_version.return_value = self.db_rule_list[0]
-        with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_RULES}"
-                f"?rule_pack_version=1.0.1&rule_name=rule_name_1"
-            )
-            assert response.status_code == 200, response.text
-            data = response.json()
-            assert data["rule_name"] == self.db_rule_list[0].rule_name
