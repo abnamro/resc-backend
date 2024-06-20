@@ -57,7 +57,8 @@ def create_rule_dictionary(rule: Rule, allow_list_dict: dict, tags: str) -> dict
     rule_dict = {}
     if rule.rule_name:
         rule_dict["id"] = rule.rule_name
-        rule_dict["description"] = rule.rule_name
+    if rule.rule_description:
+        rule_dict["description"] = rule.rule_description
     if tags:
         rule_dict["tags"] = tags
     if rule.entropy:
@@ -72,6 +73,8 @@ def create_rule_dictionary(rule: Rule, allow_list_dict: dict, tags: str) -> dict
         rule_dict["keywords"] = rule.keywords
     if allow_list_dict:
         rule_dict["allow_list"] = allow_list_dict
+    if rule.comment:
+        rule_dict["comment"] = rule.comment
     return rule_dict
 
 
