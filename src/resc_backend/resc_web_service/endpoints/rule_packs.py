@@ -540,6 +540,4 @@ def get_rule_from_rule_pack(
     if db_rule is None:
         raise HTTPException(status_code=404, detail="Rule not found")
 
-    logger.info(json.dumps(db_rule))
-
-    return db_rule
+    return RuleRead.from_orm(db_rule)
