@@ -315,8 +315,8 @@ async def audit_findings(
             )
         )
 
-        # Clear cache related to findings
-        await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
+    # Clear cache related to findings
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
     return len(audits)
 
 

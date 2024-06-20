@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from resc_backend.constants import (
     CACHE_NAMESPACE_FINDING,
     CACHE_NAMESPACE_RULE,
+    CACHE_NAMESPACE_RULE_PACK,
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     ERROR_MESSAGE_500,
     ERROR_MESSAGE_503,
@@ -304,6 +305,7 @@ async def create_scan_findings(
     # Clear cache related to findings
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_RULE)
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_RULE_PACK)
 
     return len(created_findings)
 
