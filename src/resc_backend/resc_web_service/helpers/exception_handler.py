@@ -28,7 +28,7 @@ def add_exception_handlers(app: FastAPI):
         log_warning(request, exc, "400 Bad Request")
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+            content=jsonable_encoder({"detail": exc}),
         )
 
     @app.exception_handler(Exception)
