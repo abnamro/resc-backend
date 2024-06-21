@@ -28,19 +28,19 @@ WEEK = "week"
 DAY = "day"
 
 
-def create_audit(
+def create_audits(
     db_connection: Session,
-    finding_id: int,
+    finding_ids: set[int],
     auditor: str,
     status: FindingStatus,
     comment: str = "",
-) -> DBaudit:
+) -> list[DBaudit]:
     """
         Audit finding, updating the status and comment
     :param db_connection:
         Session of the database connection
-    :param finding_id:
-        id of the finding to audit
+    :param finding_ids:
+        List of id of the finding to audit
     :param auditor:
         identifier of the person performing the audit action
     :param status:
@@ -50,26 +50,39 @@ def create_audit(
     :return: DBaudit
         The output will contain the audit that was created
     """
-    # UPDATE FINDING to set is_latest to FALSE.
-    db_connection.execute(update(DBaudit).where(DBaudit.finding_id == finding_id).values(is_latest=False))
+    # Iterate over those ids by chunk.
+    # This is necessary because SQL tends to crash when you do IN with more than 1000 values.
+    # source: trust me bro.
+    iterator = iter(finding_ids)
+    db_audits = []
+    while chunk := list(islice(iterator, 1000)):
+        db_connection.execute(update(DBaudit).where(DBaudit.finding_id.in_(chunk)).values(is_latest=False))
+        db_audits_created = []
 
-    # Insert new Audit.
-    db_audit = DBaudit(
-        finding_id=finding_id,
-        auditor=auditor,
-        status=status,
-        comment=comment,
-        timestamp=datetime.now(UTC),
-        is_latest=True,
-    )
-    db_connection.add(db_audit)
+        # Loop around the findings and audit one by one.
+        for finding_id in chunk:
+            db_audit = DBaudit(
+                finding_id=finding_id,
+                auditor=auditor,
+                status=status,
+                comment=comment,
+                timestamp=datetime.now(UTC),
+                is_latest=True,
+            )
+            db_audits_created.append(db_audit)
+
+        # Insert new Audits by chunk.
+        db_connection.add_all(db_audits_created)
+
+        db_audits.extend(db_audits_created)
+
+    # Commit the change.
     db_connection.commit()
-    db_connection.refresh(db_audit)
 
-    return db_audit
+    return db_audits
 
 
-def create_automated_audit(db_connection: Session, findings_ids: list[int], status: FindingStatus) -> list[DBaudit]:
+def create_automated_audits(db_connection: Session, findings_ids: list[int], status: FindingStatus) -> list[DBaudit]:
     """
         Create automated audit for a list of findings.
 

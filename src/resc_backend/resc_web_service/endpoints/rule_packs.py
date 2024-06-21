@@ -499,7 +499,7 @@ async def mark_rule_pack_as_outdated(
     findings: list[int] = finding_crud.get_untriaged_finding_for_old_rulepacks(
         db_connection=db_connection, version=rulepack.version
     )
-    audits = audit_crud.create_automated_audit(
+    audits = audit_crud.create_automated_audits(
         db_connection=db_connection, findings_ids=findings, status=FindingStatus.OUTDATED
     )
 
