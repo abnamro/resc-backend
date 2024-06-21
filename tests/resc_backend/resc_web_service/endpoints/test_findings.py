@@ -612,7 +612,7 @@ class TestFindings(unittest.TestCase):
             comment="Hello World!",
         )
         count_findings.return_value = 2
-        create_audits.return_value = 1
+        create_audits.return_value = [1, 2]
         clear_cache_by_namespace.return_value = None
         response = self.client.post(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_AUDIT}/",
