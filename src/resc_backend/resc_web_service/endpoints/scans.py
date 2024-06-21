@@ -286,7 +286,7 @@ async def create_scan_findings(
     findings_to_audit: list[int] = finding_crud.get_findings_from_repo_of_scan_as_dir(
         db_connection=db_connection, scan=db_scan
     )
-    audit_crud.create_automated_audit(
+    audit_crud.create_automated_audits(
         db_connection=db_connection, findings_ids=findings_to_audit, status=FindingStatus.OUTDATED
     )
 
@@ -294,7 +294,7 @@ async def create_scan_findings(
     old_findings_to_audit: list[int] = finding_crud.get_untriaged_finding_outdated_for_current_scan(
         db_connection=db_connection, scan=db_scan
     )
-    audit_crud.create_automated_audit(
+    audit_crud.create_automated_audits(
         db_connection=db_connection, findings_ids=old_findings_to_audit, status=FindingStatus.OUTDATED
     )
 

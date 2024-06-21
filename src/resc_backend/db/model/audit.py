@@ -35,7 +35,9 @@ class DBaudit(Base):
     timestamp = Column(DateTime, nullable=False, default=datetime.now(UTC))
     is_latest = Column(Boolean, nullable=False, default=False, server_default=text("0"))
 
-    def __init__(self, finding_id, status, auditor, comment, timestamp, is_latest):
+    def __init__(
+        self, finding_id: int, status: str, auditor: str, comment: str | None, timestamp: datetime, is_latest: bool
+    ):
         sanitized_comment = html.escape(comment) if comment else comment
         self.finding_id = finding_id
         self.status = status
@@ -43,26 +45,6 @@ class DBaudit(Base):
         self.comment = sanitized_comment
         self.timestamp = timestamp
         self.is_latest = is_latest
-
-    @staticmethod
-    def create_from_metadata(
-        finding_id: int,
-        status: str,
-        auditor: str,
-        comment: str,
-        timestamp: datetime,
-        is_latest: bool,
-    ):
-        sanitized_comment = html.escape(comment) if comment else comment
-        db_audit = DBaudit(
-            finding_id=finding_id,
-            auditor=auditor,
-            status=status,
-            comment=sanitized_comment,
-            timestamp=timestamp,
-            is_latest=is_latest,
-        )
-        return db_audit
 
     @staticmethod
     def create_automated(

@@ -173,10 +173,16 @@ def create_or_update_findings(db_connection: Session, findings: list[finding_sch
     return db_findings
 
 
-def get_finding(db_connection: Session, finding_id: int):
+def get_finding(db_connection: Session, finding_id: int) -> DBfinding:
     finding = db_connection.query(DBfinding)
     finding = finding.where(DBfinding.id_ == finding_id).first()
     return finding
+
+
+def count_findings(db_connection: Session, finding_ids: set[int]) -> int:
+    query = db_connection.query(func.count(DBfinding.id_))
+    query = query.where(DBfinding.id_.in_(finding_ids))
+    return query.scalar()
 
 
 def get_findings(db_connection: Session, skip: int = 0, limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT):

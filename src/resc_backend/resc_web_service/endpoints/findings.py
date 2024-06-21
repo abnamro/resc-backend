@@ -300,20 +300,22 @@ async def audit_findings(
     - **return**: int
         The output will contain count of successful saved audits
     """
-    audits = []
-    for finding_id in audit.finding_ids:
-        db_finding = finding_crud.get_finding(db_connection, finding_id=finding_id)
-        if db_finding is None:
-            raise HTTPException(status_code=404, detail=f"Finding {finding_id} not found")
-        audits.append(
-            audit_crud.create_audit(
-                db_connection=db_connection,
-                finding_id=db_finding.id_,
-                auditor=request.user,
-                status=audit.status,
-                comment=audit.comment,
-            )
-        )
+    finding_ids = set(audit.finding_ids)
+
+    count_findings = finding_crud.count_findings(db_connection, finding_ids=finding_ids)
+
+    # Just to be safe, we compare the length of query with the number of findings in DB
+    # This is faster than checking for each finding if it is in the database.
+    if count_findings != len(finding_ids):
+        raise HTTPException(status_code=404, detail="Some findings where not found.")
+
+    audits = audit_crud.create_audits(
+        db_connection=db_connection,
+        finding_ids=finding_ids,
+        auditor=request.user,
+        status=audit.status,
+        comment=audit.comment,
+    )
 
     # Clear cache related to findings
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)

@@ -13447,7 +13447,7 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Finding 999 not found\");",
+											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Some findings where not found.\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",

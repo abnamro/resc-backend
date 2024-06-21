@@ -602,63 +602,49 @@ class TestFindings(unittest.TestCase):
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_finding")
-    @patch("resc_backend.resc_web_service.crud.scan_finding.get_scan_findings")
-    @patch("resc_backend.resc_web_service.crud.audit.create_audit")
+    @patch("resc_backend.resc_web_service.crud.finding.count_findings")
+    @patch("resc_backend.resc_web_service.crud.audit.create_audits")
     @patch("resc_backend.resc_web_service.cache_manager.CacheManager.clear_cache_by_namespace")
-    def test_audit_findings(self, clear_cache_by_namespace, audit_findings, get_scan_findings, get_finding):
+    def test_audit_findings(self, clear_cache_by_namespace, create_audits, count_findings):
         audit_multiple = AuditMultiple(
             finding_ids=[1, 2],
             status=FindingStatus.FALSE_POSITIVE.value,
             comment="Hello World!",
         )
-        get_scan_findings.return_value = [self.db_scan_findings[1]]
-        get_finding.return_value = self.db_findings[1]
-        audit_findings.return_value = 1
+        count_findings.return_value = 2
+        create_audits.return_value = [1, 2]
         clear_cache_by_namespace.return_value = None
         response = self.client.post(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_AUDIT}/",
             json=self.create_json_body_multiple_audit(audit_multiple),
         )
         assert response.status_code == 201, response.text
-        get_finding.assert_has_calls([call(ANY, finding_id=1), call(ANY, finding_id=2)], any_order=False)
-        audit_findings.assert_has_calls(
-            [
-                call(
-                    db_connection=ANY,
-                    finding_id=get_finding.return_value.id_,
-                    auditor="Anonymous",
-                    status=audit_multiple.status,
-                    comment=audit_multiple.comment,
-                ),
-                call(
-                    db_connection=ANY,
-                    finding_id=get_finding.return_value.id_,
-                    auditor="Anonymous",
-                    status=audit_multiple.status,
-                    comment=audit_multiple.comment,
-                ),
-            ],
-            any_order=False,
+        count_findings.assert_called_once_with(ANY, finding_ids={1, 2})
+        create_audits.assert_called_once_with(
+            db_connection=ANY,
+            finding_ids={1, 2},
+            auditor="Anonymous",
+            status=audit_multiple.status,
+            comment=audit_multiple.comment,
         )
-        clear_cache_by_namespace.assert_has_calls([call(namespace=CACHE_NAMESPACE_FINDING)])
+        clear_cache_by_namespace.assert_called_once_with(namespace=CACHE_NAMESPACE_FINDING)
 
-    @patch("resc_backend.resc_web_service.crud.finding.get_finding")
-    @patch("resc_backend.resc_web_service.crud.audit.create_audit")
-    def test_audit_findings_non_existing(self, audit_findings, get_finding):
+    @patch("resc_backend.resc_web_service.crud.finding.count_findings")
+    @patch("resc_backend.resc_web_service.crud.audit.create_audits")
+    def test_audit_findings_non_existing(self, create_audits, count_findings):
         audit_multiple = AuditMultiple(
             finding_ids=[1, 2],
             status=FindingStatus.FALSE_POSITIVE.value,
             comment="Hello World!",
         )
-        get_finding.return_value = None
+        count_findings.return_value = 0
         response = self.client.post(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_AUDIT}/",
             json=self.create_json_body_multiple_audit(audit_multiple),
         )
         assert response.status_code == 404, response.text
-        get_finding.assert_called_once_with(ANY, finding_id=1)
-        audit_findings.assert_not_called()
+        count_findings.assert_called_once_with(ANY, finding_ids={1, 2})
+        create_audits.assert_not_called()
 
     def test_get_supported_statuses(self):
         with self.client as client:
