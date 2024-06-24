@@ -122,7 +122,7 @@ def get_rule_packs(
     },
 )
 async def download_rule_pack_toml_file(
-    version: str | None = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
+    rule_pack_version: str | None = Query(None, pattern=r"^\d+(?:\.\d+){2}$"),
     db_connection: Session = Depends(get_db_connection),
 ) -> FileResponse:
     """
@@ -132,9 +132,9 @@ async def download_rule_pack_toml_file(
     - **version**: Optional, filter on rule pack version
     - **return**: [FileResponse] The output returns rule pack file downloaded in TOML format
     """
-    if not version:
+    if not rule_pack_version:
         logger.info("rule pack version not specified, downloading the currently active version")
-    rule_pack_from_db = read_rule_pack(version=version, db_connection=db_connection)
+    rule_pack_from_db = read_rule_pack(version=rule_pack_version, db_connection=db_connection)
     if rule_pack_from_db:
         version = rule_pack_from_db.version
         rules = rule_crud.get_rules_by_rule_pack_version(db_connection=db_connection, rule_pack_version=version)
@@ -146,7 +146,7 @@ async def download_rule_pack_toml_file(
         )
         generated_toml_dict = create_toml_dictionary(version, rules, global_allow_list, rule_tag_names)
     else:
-        raise HTTPException(status_code=404, detail=f"No rule pack found with version {version}")
+        raise HTTPException(status_code=404, detail=f"No rule pack found with version {rule_pack_version}")
 
     toml_file = create_toml_rule_file(generated_toml_dict)
     return FileResponse(toml_file.name, filename="RESC-SECRETS-RULE.toml")
