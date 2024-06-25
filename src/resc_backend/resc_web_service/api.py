@@ -93,7 +93,7 @@ def generate_logger_config(log_file_path, debug=True):
     return logging_config
 
 
-logging.config.dictConfig(generate_logger_config("local_logs.log"))
+logging.config.dictConfig(generate_logger_config("local_logs.log", False))
 logger = logging.getLogger(__name__)
 tags_metadata = [
     {"name": "health", "description": "Checks health for API"},
