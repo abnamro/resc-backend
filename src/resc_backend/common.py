@@ -15,7 +15,7 @@ def get_logging_settings_path():
     return base_dir + "/static/logging.ini"
 
 
-def initialise_logs(log_file_path: str, debug=True):
+def initialise_logs(log_file_path: str, debug: bool = True):
     logging_ini_file = get_logging_settings_path()
     logging.config.fileConfig(
         logging_ini_file,
@@ -23,7 +23,7 @@ def initialise_logs(log_file_path: str, debug=True):
         disable_existing_loggers=False,
     )
     logger_config = logging.getLogger("root")
-    if int(debug) == 1:
+    if debug:
         logger_config.setLevel(logging.DEBUG)
     else:
         logger_config.setLevel(logging.INFO)
