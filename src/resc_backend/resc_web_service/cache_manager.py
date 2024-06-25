@@ -21,7 +21,7 @@ from resc_backend.resc_web_service.configuration import (
     RESC_REDIS_SERVICE_PORT,
 )
 
-logger_config = initialise_logs(LOG_FILE_CACHING)
+logger_config = initialise_logs(LOG_FILE_CACHING, False)
 logger = logging.getLogger(__name__)
 
 
