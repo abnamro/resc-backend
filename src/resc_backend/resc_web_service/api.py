@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 # Third Party
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from setuptools.config import read_configuration as config
+from setuptools.config.setupcfg import read_configuration as config
 from starlette.responses import RedirectResponse
 from starlette.status import HTTP_302_FOUND
 from tenacity import RetryError

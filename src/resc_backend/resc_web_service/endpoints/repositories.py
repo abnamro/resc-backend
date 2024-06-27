@@ -56,7 +56,7 @@ router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
 def get_all_repositories(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcs_providers: list[VCSProviders] = Query(None),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     include_deleted_repositories: bool | None = Query(False),
@@ -239,7 +239,7 @@ async def delete_repository(repository_id: int, db_connection: Session = Depends
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_projects(
-    vcs_providers: list[VCSProviders] = Query(None),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
     include_deleted_repositories: bool | None = Query(False),
@@ -280,7 +280,7 @@ def get_distinct_projects(
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_repositories(
-    vcs_providers: list[VCSProviders] = Query(None),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     project_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
     include_deleted_repositories: bool | None = Query(default=False),
@@ -370,7 +370,7 @@ def get_findings_metadata_for_repository(
 def get_all_repositories_with_findings_metadata(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcs_providers: list[VCSProviders] = Query(None),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
