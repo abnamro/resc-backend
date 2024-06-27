@@ -1,8 +1,10 @@
 # Standard Library
 import logging
+from typing import Annotated
 
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import StringConstraints
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -14,7 +16,6 @@ from resc_backend.constants import (
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     ERROR_MESSAGE_500,
     ERROR_MESSAGE_503,
-    REGEX_VALIDATION,
     RWS_ROUTE_DETECTED_RULES,
     RWS_ROUTE_FINDINGS,
     RWS_ROUTE_SCANS,
@@ -326,7 +327,9 @@ def get_scan_findings(
     scan_id: int,
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    rules: list[REGEX_VALIDATION] = Query([], alias="rule", title="rule"),
+    rules: list[Annotated[str, StringConstraints(pattern=r"^[A-z0-9 .\-_%]*$")]] = Query(
+        [], alias="rule", title="rule"
+    ),
     statuses: list[FindingStatus] = Query([], alias="status", title="status"),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[finding_schema.FindingRead]:
@@ -373,7 +376,9 @@ def get_scans_findings(
     scan_ids: list[int] = Query([], alias="scan_id", title="Scan ids"),
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    rules: list[REGEX_VALIDATION] = Query([], alias="rule", title="rule"),
+    rules: list[Annotated[str, StringConstraints(pattern=r"^[A-z0-9 .\-_%]*$")]] = Query(
+        [], alias="rule", title="rule"
+    ),
     statuses: list[FindingStatus] | None = Query([], alias="status", title="status"),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[finding_schema.FindingRead]:
