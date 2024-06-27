@@ -1,5 +1,5 @@
 # Third Party
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class AuditorMetric(BaseModel):
@@ -11,6 +11,4 @@ class AuditorMetric(BaseModel):
     outdated: int
     not_analyzed: int
     total: int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

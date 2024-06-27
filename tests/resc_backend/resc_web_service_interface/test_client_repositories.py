@@ -13,12 +13,12 @@ def test_create_repository(post):
 
     repository = RepositoryCreate(
         project_key="project_key",
-        repository_id=1,
+        repository_id="1",
         repository_name="repository_name",
         repository_url="http://fake.repo.com",
         vcs_instance=1,
     )
-    expected_json = repository.json()
+    expected_json = repository.model_dump_json()
 
     _ = create_repository(url, repository)
     post.assert_called_once()

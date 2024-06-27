@@ -1,7 +1,8 @@
 # Standard Library
+from typing import Annotated
 
 # Third Party
-from pydantic import BaseModel, conint, conlist, constr, validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationInfo, field_validator
 
 # First Party
 from resc_backend.constants import AZURE_DEVOPS
@@ -9,16 +10,16 @@ from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
 
 class VCSInstanceBase(BaseModel):
-    name: constr(max_length=200)
+    name: Annotated[str, StringConstraints(max_length=200)]
     provider_type: VCSProviders
-    hostname: constr(max_length=200)
-    port: conint(gt=-0, lt=65536)
-    scheme: constr(max_length=20)
-    exceptions: conlist(item_type=str, min_items=None, max_items=500) | None
-    scope: conlist(item_type=str, min_items=None, max_items=500) | None
-    organization: constr(max_length=200) | None
+    hostname: Annotated[str, StringConstraints(max_length=200)]
+    port: Annotated[int, Field(gt=-0, lt=65536)]
+    scheme: Annotated[str, StringConstraints(max_length=20)]
+    exceptions: Annotated[list[str], Field(min_items=None, max_length=500)] | None = None
+    scope: Annotated[list[str], Field(min_items=None, max_length=500)] | None = None
+    organization: Annotated[str, StringConstraints(max_length=200)] | None = None
 
-    @validator("scheme", pre=True)
+    @field_validator("scheme", mode="before")
     @classmethod
     def check_scheme(cls, value):
         allowed_schemes = ["http", "https"]
@@ -26,19 +27,19 @@ class VCSInstanceBase(BaseModel):
             raise ValueError(f"The scheme '{value}' must be one of the following {', '.join(allowed_schemes)}")
         return value
 
-    @validator("organization", pre=True)
+    @field_validator("organization", mode="before")
     @classmethod
-    def check_organization(cls, value, values):
-        if not value and values.get("provider_type", None) == AZURE_DEVOPS:
+    def check_organization(cls, value, values: ValidationInfo):
+        if not value and values.data["provider_type"] == AZURE_DEVOPS:
             raise ValueError("The organization field needs to be specified for Azure devops vcs instances")
         return value
 
-    @validator("scope", pre=True)
+    @field_validator("scope", mode="before")
     @classmethod
-    def check_scope_and_exceptions(cls, value, values):
-        if value and values.get("exceptions", None):
+    def check_scope_and_exceptions(cls, value, values: ValidationInfo):
+        if value and values.data["exceptions"]:
             raise ValueError(
-                "You cannot specify bot the scope and exceptions to the scan, only one setting" " is supported."
+                "You cannot specify both the scope and exceptions to the scan, only one setting is supported."
             )
         return value
 
@@ -48,7 +49,7 @@ class VCSInstanceCreate(VCSInstanceBase):
 
 
 class VCSInstanceRead(VCSInstanceBase):
-    id_: conint(gt=0)
+    id_: Annotated[int, Field(gt=0)]
 
     @classmethod
     def create_from_db_vcs_instance(cls, db_vcs_instance):
@@ -73,5 +74,4 @@ class VCSInstanceRead(VCSInstanceBase):
 
         return vcs_instance_read
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

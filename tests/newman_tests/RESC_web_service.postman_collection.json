@@ -323,8 +323,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.str.regex\"); ",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"string does not match regex \\\"^\\\\d+(?:\\\\.\\\\d+){2}$\\\"\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"string_pattern_mismatch\"); ",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"String should match pattern \\'^\\\\d+(?:\\\\.\\\\d+){2}$\\'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -769,11 +769,11 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -950,8 +950,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.str.regex\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"string does not match regex \\\"^\\\\d+(?:\\\\.\\\\d+){2}$\\\"\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"string_pattern_mismatch\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"String should match pattern \\'^\\\\d+(?:\\\\.\\\\d+){2}$\\'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -1132,8 +1132,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.bool\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value could not be parsed to a boolean\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"bool_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid boolean, unable to interpret input\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -1489,8 +1489,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.str.regex\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"string does not match regex \\\"^\\\\d+(?:\\\\.\\\\d+){2}$\\\"\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"string_pattern_mismatch\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"String should match pattern \\'^\\\\d+(?:\\\\.\\\\d+){2}$\\'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -2096,8 +2096,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.missing\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"field required\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"missing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Field required\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -2386,14 +2386,14 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'AZURE_DEVOPS', 'BITBUCKET', 'GITHUB_PUBLIC'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"",
 											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"value_error\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"The scheme 'http/https' must be one of the following http, https\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Value error, The scheme 'http/https' must be one of the following http, https\");",
 											"",
 											"    pm.expect(responseJson[\"detail\"][2][\"type\"]).to.eql(\"value_error\");",
-											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"You cannot specify bot the scope and exceptions to the scan, only one setting is supported.\");",
+											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Value error, You cannot specify both the scope and exceptions to the scan, only one setting is supported.\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -2909,8 +2909,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'AZURE_DEVOPS', 'BITBUCKET', 'GITHUB_PUBLIC'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -3549,14 +3549,14 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'AZURE_DEVOPS', 'BITBUCKET', 'GITHUB_PUBLIC'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"",
 											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"value_error\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"The scheme 'http/https' must be one of the following http, https\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Value error, The scheme 'http/https' must be one of the following http, https\");",
 											"",
 											"    pm.expect(responseJson[\"detail\"][2][\"type\"]).to.eql(\"value_error\");",
-											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"You cannot specify bot the scope and exceptions to the scan, only one setting is supported.\");",
+											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Value error, You cannot specify both the scope and exceptions to the scan, only one setting is supported.\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -3761,8 +3761,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -3971,8 +3971,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.url.scheme\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"invalid or missing URL scheme\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"url_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid URL, relative URL without a base\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -4373,8 +4373,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -4591,7 +4591,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&projectfilter=test-project",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&project_filter=test-project",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4610,7 +4610,7 @@
 											"value": "100"
 										},
 										{
-											"key": "projectfilter",
+											"key": "project_filter",
 											"value": "test-project"
 										}
 									]
@@ -4683,7 +4683,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&projectfilter=test-project",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&project_filter=test-project",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4702,7 +4702,7 @@
 											"value": "100"
 										},
 										{
-											"key": "projectfilter",
+											"key": "project_filter",
 											"value": "test-project"
 										}
 									]
@@ -4778,7 +4778,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repositoryfilter=test-repository",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repository_filter=test-repository",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4797,7 +4797,7 @@
 											"value": "100"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										}
 									]
@@ -4868,7 +4868,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repositoryfilter=notexists",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repository_filter=notexists",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4887,7 +4887,7 @@
 											"value": "100"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "notexists"
 										}
 									]
@@ -4980,7 +4980,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcsprovider=AZURE_DEVOPS",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcs_provider=AZURE_DEVOPS",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4999,7 +4999,7 @@
 											"value": "100"
 										},
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										}
 									]
@@ -5052,8 +5052,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'AZURE_DEVOPS', 'BITBUCKET', 'GITHUB_PUBLIC'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -5068,7 +5068,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcsprovider=invalid",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcs_provider=invalid",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5087,7 +5087,7 @@
 											"value": "100"
 										},
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "invalid"
 										}
 									]
@@ -5163,7 +5163,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcsprovider=AZURE_DEVOPS&projectfilter=test-project&repositoryfilter=test-repository",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcs_provider=AZURE_DEVOPS&project_filter=test-project&repository_filter=test-repository",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5182,15 +5182,15 @@
 											"value": "100"
 										},
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "projectfilter",
+											"key": "project_filter",
 											"value": "test-project"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										}
 									]
@@ -5498,10 +5498,10 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.url.scheme\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"invalid or missing URL scheme\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"url_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid URL, relative URL without a base\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -5646,7 +5646,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5659,7 +5659,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -5730,7 +5730,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?onlyifhasfindings=true",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?only_if_has_findings=true",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5743,7 +5743,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "true"
 										}
 									]
@@ -5816,7 +5816,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5829,7 +5829,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -5899,7 +5899,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repositoryfilter=test-repository&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=test-repository&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5912,11 +5912,11 @@
 									],
 									"query": [
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -5983,7 +5983,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repositoryfilter=nonexistent&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=nonexistent&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5996,11 +5996,11 @@
 									],
 									"query": [
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "nonexistent"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6072,7 +6072,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcsprovider=AZURE_DEVOPS&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6085,11 +6085,11 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6142,8 +6142,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'AZURE_DEVOPS', 'BITBUCKET', 'GITHUB_PUBLIC'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -6158,7 +6158,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcsprovider=invalid&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=invalid&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6171,11 +6171,11 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "invalid"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6245,7 +6245,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcsprovider=AZURE_DEVOPS&repositoryfilter=test-repository&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&repository_filter=test-repository&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6258,15 +6258,15 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6339,7 +6339,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6352,7 +6352,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6421,7 +6421,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?onlyifhasfindings=true",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?only_if_has_findings=true",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6434,7 +6434,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "true"
 										}
 									]
@@ -6506,7 +6506,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcsprovider=AZURE_DEVOPS&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6519,11 +6519,11 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6576,8 +6576,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'AZURE_DEVOPS', 'BITBUCKET', 'GITHUB_PUBLIC'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -6592,7 +6592,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcsprovider=invalid&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=invalid&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6605,11 +6605,11 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "invalid"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6679,7 +6679,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?projectname=test-project&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?project_name=test-project&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6692,11 +6692,11 @@
 									],
 									"query": [
 										{
-											"key": "projectname",
+											"key": "project_name",
 											"value": "test-project"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6763,7 +6763,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?projectname=nonexistent&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?project_name=nonexistent&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6776,11 +6776,11 @@
 									],
 									"query": [
 										{
-											"key": "projectname",
+											"key": "project_name",
 											"value": "nonexistent"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6850,7 +6850,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcsprovider=AZURE_DEVOPS&projectname=test-project&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&project_name=test-project&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6863,15 +6863,15 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "projectname",
+											"key": "project_name",
 											"value": "test-project"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -7100,7 +7100,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/findings-metadata/?skip=0&limit=100&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/findings-metadata/?skip=0&limit=100&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -7121,7 +7121,7 @@
 											"value": "100"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -7249,8 +7249,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -7500,8 +7500,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -7662,8 +7662,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -7883,14 +7883,14 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'BASE', 'INCREMENTAL'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'BASE' or 'INCREMENTAL'\");",
 											"",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"",
-											"    pm.expect(responseJson[\"detail\"][2][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][2][\"type\"]).to.eql(\"string_type\");",
+											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Input should be a valid string\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -8174,8 +8174,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -8407,11 +8407,11 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -8751,14 +8751,14 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'BASE', 'INCREMENTAL'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'BASE' or 'INCREMENTAL'\");",
 											"",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"",
-											"    pm.expect(responseJson[\"detail\"][2][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][2][\"type\"]).to.eql(\"string_type\");",
+											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Input should be a valid string\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -9070,8 +9070,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -9677,8 +9677,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"",
 											"});",
 											"",
@@ -10001,8 +10001,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -10497,8 +10497,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE', 'OUTDATED'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE' or 'OUTDATED'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -10701,8 +10701,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE', 'OUTDATED'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE' or 'OUTDATED'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -10961,8 +10961,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -11198,8 +11198,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -11401,8 +11401,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -11914,11 +11914,11 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -12092,8 +12092,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -12354,8 +12354,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -12852,10 +12852,10 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -13053,10 +13053,10 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -13239,10 +13239,10 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -13567,10 +13567,10 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"type_error.enum\");",
-											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"value is not a valid enumeration member; permitted: 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE', 'OUTDATED'\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"type\"]).to.eql(\"enum\");",
+											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE' or 'OUTDATED'\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -13770,8 +13770,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -13988,8 +13988,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"value_error.datetime\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"invalid datetime format\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"datetime_from_date_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid datetime or date, invalid date separator, expected `-`\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -14010,7 +14010,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"event_sent_on\": \"2023-01-31\"\n}"
+									"raw": "{\n  \"event_sent_on\": \"2023/12/31\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/resc/v1/findings/:finding_id",
@@ -14114,8 +14114,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -14558,8 +14558,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
@@ -16008,8 +16008,8 @@
 											"const responseJson = pm.response.json();",
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"object\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"type_error.integer\");",
-											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"value is not a valid integer\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"type\"]).to.eql(\"int_parsing\");",
+											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",

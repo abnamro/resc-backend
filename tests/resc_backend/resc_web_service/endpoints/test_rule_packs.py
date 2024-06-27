@@ -76,7 +76,7 @@ class TestRules(unittest.TestCase):
 
     @staticmethod
     def create_json_body_for_rule_pack(rule_pack: DBrulePack):
-        return json.loads(TestRules.cast_db_rule_pack_to_rule_pack_create(rule_pack).json())
+        return json.loads(TestRules.cast_db_rule_pack_to_rule_pack_create(rule_pack).model_dump_json())
 
     @staticmethod
     def assert_rule_packs(data, rule_packs):
@@ -266,7 +266,7 @@ class TestRules(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 0"
             get_rule_packs.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -287,7 +287,7 @@ class TestRules(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 1"
             get_rule_packs.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -458,7 +458,7 @@ class TestRules(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "rule_name"]
-            assert data["detail"][0]["msg"] == "field required"
+            assert data["detail"][0]["msg"] == "Field required"
             get_rule_by_rule_name_and_rule_pack_version.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.rule.get_rule_by_rule_name_and_rule_pack_version")

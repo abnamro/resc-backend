@@ -42,6 +42,7 @@ def get_repositories(
     project_filter: str = "",
     repository_filter: str = "",
     only_if_has_findings: bool = False,
+    include_deleted: bool = False,
 ):
     """
         Retrieve repository records optionally filtered
@@ -77,10 +78,15 @@ def get_repositories(
         DBrepository.repository_name,
         DBrepository.repository_url,
         DBrepository.vcs_instance,
+        DBrepository.deleted_at,
         DBVcsInstance.provider_type,
         func.coalesce(DBscan.id_, None).label("last_scan_id"),
         func.coalesce(DBscan.timestamp, None).label("last_scan_timestamp"),
     )
+
+    if not include_deleted:
+        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
+
     query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
     query = query.join(
         sub_query,
@@ -132,6 +138,7 @@ def get_repositories_count(
     project_filter: str = "",
     repository_filter: str = "",
     only_if_has_findings: bool = False,
+    include_deleted: bool = False,
 ) -> int:
     """
         Retrieve count of repository records optionally filtered
@@ -149,6 +156,9 @@ def get_repositories_count(
         count of repositories
     """
     query = db_connection.query(func.count(DBrepository.id_))
+
+    if not include_deleted:
+        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
 
     if only_if_has_findings:
         last_scan_sub_query = _get_max_base_scan(db_connection)
@@ -196,8 +206,9 @@ def update_repository(
     db_repository = db_connection.query(DBrepository).filter_by(id_=repository_id).first()
 
     db_repository.repository_name = repository.repository_name
-    db_repository.repository_url = repository.repository_url
+    db_repository.repository_url = str(repository.repository_url)
     db_repository.vcs_instance = repository.vcs_instance
+    db_repository.deleted_at = repository.deleted_at
 
     db_connection.commit()
     db_connection.refresh(db_repository)
@@ -209,8 +220,9 @@ def create_repository(db_connection: Session, repository: repository_schema.Repo
         project_key=repository.project_key,
         repository_id=repository.repository_id,
         repository_name=repository.repository_name,
-        repository_url=repository.repository_url,
+        repository_url=str(repository.repository_url),
         vcs_instance=repository.vcs_instance,
+        deleted_at=None,
     )
     db_connection.add(db_repository)
     db_connection.commit()
@@ -238,6 +250,7 @@ def get_distinct_projects(
     vcs_providers: list[VCSProviders] = None,
     repository_filter: str = "",
     only_if_has_findings: bool = False,
+    include_deleted: bool = False,
 ):
     """
         Retrieve all unique project names
@@ -253,6 +266,9 @@ def get_distinct_projects(
         The output will contain a list of unique projects
     """
     query = db_connection.query(DBrepository.project_key)
+
+    if not include_deleted:
+        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
 
     if only_if_has_findings:
         last_scan_sub_query = _get_max_base_scan(db_connection)
@@ -285,6 +301,7 @@ def get_distinct_repositories(
     vcs_providers: list[VCSProviders] = None,
     project_name: str = "",
     only_if_has_findings: bool = False,
+    include_deleted: bool = False,
 ):
     """
         Retrieve all unique repository names
@@ -300,6 +317,9 @@ def get_distinct_repositories(
         The output will contain a list of unique repositories
     """
     query = db_connection.query(DBrepository.repository_name)
+
+    if not include_deleted:
+        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
 
     if only_if_has_findings:
         last_scan_sub_query = _get_max_base_scan(db_connection)

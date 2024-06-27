@@ -1,5 +1,8 @@
 # Third Party
-from pydantic import BaseModel, conint, conlist, constr
+
+from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 from resc_backend.constants import MAX_RECORDS_PER_PAGE_LIMIT
 
@@ -13,9 +16,9 @@ class RuleFindingCountModel(BaseModel):
         Type of the object in the data list
     """
 
-    rule_name: constr(max_length=100)
-    finding_count: conint(gt=-1) = 0
-    finding_statuses_count: conlist(item_type=StatusCount, min_items=None, max_items=MAX_RECORDS_PER_PAGE_LIMIT) = []
-
-    class Config:
-        orm_mode = True
+    rule_name: Annotated[str, StringConstraints(max_length=100)]
+    finding_count: Annotated[int, Field(gt=-1)] = 0
+    finding_statuses_count: Annotated[
+        list[StatusCount], Field(min_length=None, max_length=MAX_RECORDS_PER_PAGE_LIMIT)
+    ] = []
+    model_config = ConfigDict(from_attributes=True)

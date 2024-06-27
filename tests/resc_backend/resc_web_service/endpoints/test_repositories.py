@@ -113,7 +113,7 @@ class TestRepositories(unittest.TestCase):
 
     @staticmethod
     def create_json_body(repository):
-        return json.loads(TestRepositories.cast_db_repository_to_repository_create(repository).json())
+        return json.loads(TestRepositories.cast_db_repository_to_repository_create(repository).model_dump_json())
 
     @staticmethod
     def cast_db_repository_to_repository_create(repository):
@@ -219,7 +219,7 @@ class TestRepositories(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         create_repository.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.repository.create_repository")
@@ -231,15 +231,15 @@ class TestRepositories(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "project_key"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         assert data["detail"][1]["loc"] == ["body", "repository_id"]
-        assert data["detail"][1]["msg"] == "field required"
+        assert data["detail"][1]["msg"] == "Field required"
         assert data["detail"][2]["loc"] == ["body", "repository_name"]
-        assert data["detail"][2]["msg"] == "field required"
+        assert data["detail"][2]["msg"] == "Field required"
         assert data["detail"][3]["loc"] == ["body", "repository_url"]
-        assert data["detail"][3]["msg"] == "field required"
+        assert data["detail"][3]["msg"] == "Field required"
         assert data["detail"][4]["loc"] == ["body", "vcs_instance"]
-        assert data["detail"][4]["msg"] == "field required"
+        assert data["detail"][4]["msg"] == "Field required"
         create_repository.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_repository")
@@ -252,15 +252,15 @@ class TestRepositories(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "project_key"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         assert data["detail"][1]["loc"] == ["body", "repository_id"]
-        assert data["detail"][1]["msg"] == "field required"
+        assert data["detail"][1]["msg"] == "Field required"
         assert data["detail"][2]["loc"] == ["body", "repository_name"]
-        assert data["detail"][2]["msg"] == "field required"
+        assert data["detail"][2]["msg"] == "Field required"
         assert data["detail"][3]["loc"] == ["body", "repository_url"]
-        assert data["detail"][3]["msg"] == "field required"
+        assert data["detail"][3]["msg"] == "Field required"
         assert data["detail"][4]["loc"] == ["body", "vcs_instance"]
-        assert data["detail"][4]["msg"] == "field required"
+        assert data["detail"][4]["msg"] == "Field required"
         update_repository.assert_not_called()
         get_repository.assert_not_called()
 
@@ -273,7 +273,7 @@ class TestRepositories(unittest.TestCase):
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}/{repository_id}",
             json={
                 "project_key": "dummy_project_key",
-                "repository_id": 47857774,
+                "repository_id": "47857774",
                 "repository_name": "updated_name",
                 "repository_url": "http://fake.repo.com",
                 "vcs_instance": 1,
@@ -324,7 +324,7 @@ class TestRepositories(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "skip"]
-        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
+        assert data["detail"][0]["msg"] == "Input should be greater than or equal to 0"
         get_repositories.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_repositories")
@@ -336,7 +336,7 @@ class TestRepositories(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "limit"]
-        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
+        assert data["detail"][0]["msg"] == "Input should be greater than or equal to 1"
         get_repositories.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.repository.get_distinct_projects")
@@ -346,7 +346,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -361,7 +361,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -373,8 +373,8 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&vcs_provider={VCSProviders.AZURE_DEVOPS.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -389,8 +389,8 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&vcs_provider={VCSProviders.AZURE_DEVOPS.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -431,7 +431,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
                 f"&repositoryfilter={repository_name}"
             )
             assert response.status_code == 200, response.text
@@ -447,7 +447,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_PROJECTS}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
                 f"&repositoryfilter={repository_name}"
             )
             self.assert_cache(cached_response)
@@ -481,7 +481,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -496,7 +496,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -508,8 +508,8 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&vcs_provider={VCSProviders.AZURE_DEVOPS.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -524,8 +524,8 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&vcs_provider={VCSProviders.AZURE_DEVOPS.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -538,7 +538,7 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"projectname={project_name}"
+                f"project_name={project_name}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -553,7 +553,7 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"projectname={project_name}"
+                f"project_name={project_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -566,8 +566,8 @@ class TestRepositories(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&projectname={project_name}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&project_name={project_name}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -582,8 +582,8 @@ class TestRepositories(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_REPOSITORIES}{RWS_ROUTE_DISTINCT_REPOSITORIES}/?"
-                f"vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&projectname={project_name}"
+                f"vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&project_name={project_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()

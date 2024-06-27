@@ -1,15 +1,17 @@
 # Standard Library
 
 # Third Party
-from pydantic import BaseModel, conint, constr
+from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 
 class RuleAllowListBase(BaseModel):
-    description: constr(max_length=2000) | None
-    regexes: str | None
-    paths: str | None
-    commits: str | None
-    stop_words: str | None
+    description: Annotated[str, StringConstraints(max_length=2000)] | None = None
+    regexes: str | None = None
+    paths: str | None = None
+    commits: str | None = None
+    stop_words: str | None = None
 
 
 class RuleAllowListCreate(RuleAllowListBase):
@@ -23,7 +25,5 @@ class RuleAllowList(RuleAllowListBase):
 
 
 class RuleAllowListRead(RuleAllowListBase):
-    id_: conint(gt=0)
-
-    class Config:
-        orm_mode = True
+    id_: Annotated[int, Field(gt=0)]
+    model_config = ConfigDict(from_attributes=True)

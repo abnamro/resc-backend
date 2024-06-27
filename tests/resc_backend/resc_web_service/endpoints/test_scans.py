@@ -203,7 +203,7 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         create_scan.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
@@ -212,13 +212,13 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "last_scanned_commit"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         assert data["detail"][1]["loc"] == ["body", "timestamp"]
-        assert data["detail"][1]["msg"] == "field required"
+        assert data["detail"][1]["msg"] == "Field required"
         assert data["detail"][2]["loc"] == ["body", "rule_pack"]
-        assert data["detail"][2]["msg"] == "field required"
+        assert data["detail"][2]["msg"] == "Field required"
         assert data["detail"][3]["loc"] == ["body", "repository_id"]
-        assert data["detail"][3]["msg"] == "field required"
+        assert data["detail"][3]["msg"] == "Field required"
         create_scan.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
@@ -235,7 +235,7 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "timestamp"]
-        assert data["detail"][0]["msg"] == "invalid datetime format"
+        assert data["detail"][0]["msg"] == "Input should be a valid datetime or date, invalid character in year"
         create_scan.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.scan.get_scan")
@@ -287,13 +287,13 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "last_scanned_commit"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         assert data["detail"][1]["loc"] == ["body", "timestamp"]
-        assert data["detail"][1]["msg"] == "field required"
+        assert data["detail"][1]["msg"] == "Field required"
         assert data["detail"][2]["loc"] == ["body", "rule_pack"]
-        assert data["detail"][2]["msg"] == "field required"
+        assert data["detail"][2]["msg"] == "Field required"
         assert data["detail"][3]["loc"] == ["body", "repository_id"]
-        assert data["detail"][3]["msg"] == "field required"
+        assert data["detail"][3]["msg"] == "Field required"
         update_scan.assert_not_called()
         get_scan.assert_not_called()
 
@@ -318,7 +318,7 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "skip"]
-        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
+        assert data["detail"][0]["msg"] == "Input should be greater than or equal to 0"
         get_scans.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.scan.get_scans")
@@ -327,7 +327,7 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "limit"]
-        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
+        assert data["detail"][0]["msg"] == "Input should be greater than or equal to 1"
         get_scans.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_scans_findings")
@@ -364,8 +364,8 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["path", "scan_id"]
-        assert data["detail"][0]["msg"] == "value is not a valid integer"
-        assert data["detail"][0]["type"] == "type_error.integer"
+        assert data["detail"][0]["msg"] == "Input should be a valid integer, unable to parse string as an integer"
+        assert data["detail"][0]["type"] == "int_parsing"
 
     @patch("resc_backend.resc_web_service.crud.finding.get_distinct_rules_from_scans")
     def test_get_distinct_rules_from_scans(self, get_distinct_rules_from_scans):

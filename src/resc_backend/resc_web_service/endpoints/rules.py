@@ -45,12 +45,15 @@ logger = logging.getLogger(__name__)
 @cache(namespace=CACHE_NAMESPACE_RULE, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_rules_from_findings(
     finding_statuses: list[FindingStatus] = Query(None, alias="findingstatus", title="FindingStatuses"),
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
     project_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     start_date_time: datetime | None = Query(None),
     end_date_time: datetime | None = Query(None),
     rule_pack_versions: list[str] | None = Query(None, alias="rule_pack_version", title="RulePackVersion"),
+    include_deleted_repositories: bool | None = Query(
+        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
+    ),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -75,6 +78,7 @@ def get_distinct_rules_from_findings(
         start_date_time=start_date_time,
         end_date_time=end_date_time,
         rule_pack_versions=rule_pack_versions,
+        include_deleted_repositories=include_deleted_repositories,
     )
 
 
@@ -93,6 +97,9 @@ def get_distinct_rules_from_findings(
 def get_rules_finding_status_count(
     rule_pack_versions: list[str] | None = Query(None, alias="rule_pack_version", title="RulePackVersion"),
     rule_tags: list[str] | None = Query(None, alias="rule_tag", title="RuleTag"),
+    include_deleted_repositories: bool | None = Query(
+        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
+    ),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[RuleFindingCountModel]:
     """
@@ -104,7 +111,10 @@ def get_rules_finding_status_count(
     - **return**: List[str] The output will contain a list of strings of unique rules with counts per status
     """
     rule_finding_counts = finding_crud.get_rule_findings_count_by_status(
-        db_connection, rule_pack_versions=rule_pack_versions, rule_tags=rule_tags
+        db_connection,
+        rule_pack_versions=rule_pack_versions,
+        rule_tags=rule_tags,
+        include_deleted_repositories=include_deleted_repositories,
     )
     rule_findings_counts = []
 

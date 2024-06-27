@@ -21,7 +21,7 @@ def create_findings(url: str, findings: list[FindingCreate]) -> requests.Respons
 
     findings_json = []
     for finding in findings:
-        findings_json.append(json.loads(finding.json()))
+        findings_json.append(json.loads(finding.model_dump_json()))
 
     response = requests.post(api_url, json=findings_json, proxies={"http": "", "https": ""}, timeout=10)
     return response
@@ -32,7 +32,7 @@ def create_findings_with_scan_id(url: str, findings: list[FindingCreate], scan_i
 
     findings_json = []
     for finding in findings:
-        findings_json.append(json.loads(finding.json()))
+        findings_json.append(json.loads(finding.model_dump_json()))
 
     response = requests.post(api_url, json=findings_json, proxies={"http": "", "https": ""}, timeout=10)
     return response

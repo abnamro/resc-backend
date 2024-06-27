@@ -8,7 +8,7 @@ from resc_backend.resc_web_service.schema.finding import FindingCreate
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service_interface.findings import create_findings
 
-findings = []
+findings: list[FindingCreate] = []
 for i in range(1, 6):
     findings.append(
         FindingCreate(
@@ -37,7 +37,7 @@ def test_create_findings(post):
 
     findings_json = []
     for finding in findings:
-        findings_json.append(json.loads(finding.json()))
+        findings_json.append(json.loads(finding.model_dump_json()))
 
     _ = create_findings(url, findings)
     post.assert_called_once()

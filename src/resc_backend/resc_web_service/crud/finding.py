@@ -197,8 +197,8 @@ def get_scans_findings(
     scan_ids: list[int],
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-    rules_filter: list[str] = None,
-    statuses_filter: list[FindingStatus] = None,
+    rules_filter: list[str] | None = None,
+    statuses_filter: list[FindingStatus] | None = None,
 ) -> list[DBfinding]:
     """
         Retrieve all finding child objects of a scan object from the database
@@ -342,16 +342,18 @@ def get_total_findings_count(db_connection: Session, findings_filter: FindingsFi
                 isouter=True,
             )
 
-        if (
-            (findings_filter.vcs_providers and findings_filter.vcs_providers is not None)
-            or findings_filter.project_name
-            or findings_filter.repository_name
-            or findings_filter.start_date_time
-            or findings_filter.end_date_time
-        ):
+        if findings_filter.start_date_time or findings_filter.end_date_time:
             query = query.join(DBscanFinding, DBscanFinding.finding_id == DBfinding.id_)
             query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
-            query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
+
+        if (
+            findings_filter.vcs_providers
+            and findings_filter.vcs_providers is not None
+            or findings_filter.project_name
+            or findings_filter.repository_name
+            or not findings_filter.include_deleted_repositories
+        ):
+            query = query.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
             query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
 
         if findings_filter.start_date_time:
@@ -361,6 +363,14 @@ def get_total_findings_count(db_connection: Session, findings_filter: FindingsFi
 
         if findings_filter.repository_name:
             query = query.where(DBrepository.repository_name == findings_filter.repository_name)
+
+        if not findings_filter.include_deleted_repositories and findings_filter.end_date_time:
+            query = query.where(
+                (DBrepository.deleted_at == None)  # noqa: E711
+                | (DBrepository.deleted_at > findings_filter.end_date_time)
+            )
+        elif not findings_filter.include_deleted_repositories:
+            query = query.where(DBrepository.deleted_at == None)  # noqa: E711
 
         if findings_filter.vcs_providers and findings_filter.vcs_providers is not None:
             query = query.where(DBVcsInstance.provider_type.in_(findings_filter.vcs_providers))
@@ -392,10 +402,15 @@ def get_findings_by_rule(
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
     rule_name: str = "",
+    include_deleted_repositories: bool = False,
 ):
     limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
     findings = db_connection.query(DBfinding)
+    findings = findings.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
     findings = findings.where(DBfinding.rule_name == rule_name)
+    if not include_deleted_repositories:
+        findings = findings.where(DBrepository.deleted_at == None)  # noqa: E711
+
     findings = findings.order_by(DBfinding.id_).offset(skip).limit(limit_val).all()
     return findings
 
@@ -410,6 +425,7 @@ def get_distinct_rule_names_from_findings(
     start_date_time: datetime = None,
     end_date_time: datetime = None,
     rule_pack_versions: list[str] = None,
+    include_deleted_repositories: bool = False,
 ) -> list[str]:
     """
         Retrieve distinct rules detected
@@ -436,12 +452,12 @@ def get_distinct_rule_names_from_findings(
     """
     query = select(DBfinding.rule_name)
 
-    if (
-        vcs_providers or project_name or repository_name or start_date_time or end_date_time or rule_pack_versions
-    ) and scan_id < 0:
+    if (start_date_time or end_date_time or rule_pack_versions) and scan_id < 0:
         query = query.join(DBscanFinding, DBscanFinding.finding_id == DBfinding.id_)
         query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
-        query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
+
+    if vcs_providers or project_name or repository_name or not include_deleted_repositories:
+        query = query.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
         query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
 
     if finding_statuses:
@@ -472,6 +488,14 @@ def get_distinct_rule_names_from_findings(
         if repository_name:
             query = query.where(DBrepository.repository_name == repository_name)
 
+        if not include_deleted_repositories and end_date_time:
+            query = query.where(
+                (DBrepository.deleted_at == None)  # noqa: E711
+                | (DBrepository.deleted_at > end_date_time)
+            )
+        elif not include_deleted_repositories:
+            query = query.where(DBrepository.deleted_at == None)  # noqa: E711
+
         if start_date_time:
             query = query.where(DBscan.timestamp >= start_date_time)
 
@@ -493,6 +517,7 @@ def get_findings_count_by_status(
     scan_ids: list[int] = None,
     finding_statuses: list[FindingStatus] = None,
     rule_name: str = "",
+    include_deleted_repositories: bool = False,
 ):
     """
         Retrieve count of findings based on finding status
@@ -513,6 +538,10 @@ def get_findings_count_by_status(
         (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
         isouter=True,
     )
+
+    if not include_deleted_repositories:
+        query = query.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
+        query = query.where(DBrepository.deleted_at == None)  # noqa: E711
 
     if scan_ids and len(scan_ids) > 0:
         query = query.join(DBscanFinding, DBscanFinding.finding_id == DBfinding.id_)
@@ -538,6 +567,7 @@ def get_rule_findings_count_by_status(
     db_connection: Session,
     rule_pack_versions: list[str] = None,
     rule_tags: list[str] = None,
+    include_deleted_repositories: bool = False,
 ):
     """
         Retrieve count of findings based on rulename and status
@@ -551,6 +581,10 @@ def get_rule_findings_count_by_status(
         per rulename and status the count of findings
     """
     query = db_connection.query(DBfinding.rule_name, DBaudit.status, func.count(DBfinding.id_))
+
+    if not include_deleted_repositories:
+        query = query.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
+        query = query.where(DBrepository.deleted_at == None)  # noqa: E711
 
     max_base_scan_subquery = db_connection.query(
         DBscan.repository_id, func.max(DBscan.id_).label("latest_base_scan_id")
@@ -658,6 +692,15 @@ def get_findings_count_by_time(
 
     query: Query = query.join(DBscanFinding, DBscanFinding.scan_id == DBscan.id_)
 
+    query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
+    if end_date_time:
+        query = query.where(
+            (DBrepository.deleted_at == None)  # noqa: E711
+            | (DBrepository.deleted_at > end_date_time)
+        )
+    else:
+        query = query.where(DBrepository.deleted_at == None)  # noqa: E711
+
     if start_date_time:
         query = query.where(DBscan.timestamp >= start_date_time)
     if end_date_time:
@@ -714,6 +757,14 @@ def get_findings_count_by_time_total(
         )
 
     query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
+    query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
+    if end_date_time:
+        query = query.where(
+            (DBrepository.deleted_at == None)  # noqa: E711
+            | (DBrepository.deleted_at > end_date_time)
+        )
+    else:
+        query = query.where(DBrepository.deleted_at == None)  # noqa: E711
 
     if start_date_time:
         query = query.where(DBscan.timestamp >= start_date_time)
@@ -879,6 +930,10 @@ def get_finding_audit_status_count_over_time(db_connection: Session, status: Fin
         query = query.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
         query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
         query = query.where(DBaudit.status == status)
+        query = query.where(
+            (DBrepository.deleted_at == None)  # noqa: E711
+            | (DBrepository.deleted_at > last_nth_week_date_time)
+        )
         query = query.group_by(DBVcsInstance.provider_type)
 
         all_tables.append(query)
@@ -918,6 +973,10 @@ def get_finding_count_by_vcs_provider_over_time(db_connection: Session, weeks: i
         query = query.where(DBscan.timestamp <= last_nth_week_date_time)
         query = query.join(DBrepository, DBrepository.id_ == DBscan.repository_id)
         query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
+        query = query.where(
+            (DBrepository.deleted_at == None)  # noqa: E711
+            | (DBrepository.deleted_at > last_nth_week_date_time)
+        )
         query = query.group_by(DBVcsInstance.provider_type)
 
         all_tables.append(query)
@@ -957,6 +1016,10 @@ def get_untriaged_finding_count_by_vcs_provider_over_time(db_connection: Session
         query = query.join(max_base_scan, max_base_scan.c.repository_id == DBscan.repository_id)
         query = query.where(DBscan.id_ >= max_base_scan.c.scan_id)
         query = query.where(DBscan.timestamp <= last_nth_week_date_time)
+        query = query.where(
+            (DBrepository.deleted_at == None)  # noqa: E711
+            | (DBrepository.deleted_at > last_nth_week_date_time)
+        )
         query = query.join(
             max_audit_subquery,
             max_audit_subquery.c.finding_id == DBfinding.id_,

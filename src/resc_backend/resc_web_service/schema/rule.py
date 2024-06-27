@@ -1,13 +1,15 @@
 # Standard Library
 
 # Third Party
-from pydantic import BaseModel, conint, constr
+from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 
 class RuleBase(BaseModel):
-    rule_name: constr(min_length=1, max_length=400)
-    description: constr(max_length=4000) | None = None
-    comment: constr(max_length=2000) | None = None
+    rule_name: Annotated[str, StringConstraints(min_length=1, max_length=400)]
+    description: Annotated[str, StringConstraints(max_length=4000)] | None = None
+    comment: Annotated[str, StringConstraints(max_length=2000)] | None = None
     entropy: float | None = None
     secret_group: int | None = None
     regex: str | None = None
@@ -16,8 +18,8 @@ class RuleBase(BaseModel):
 
 
 class RuleCreate(RuleBase):
-    rule_pack: constr(regex=r"^(\d+\.)?(\d+\.)?(\*|\d+)$")
-    allow_list: conint(gt=0) | None = None
+    rule_pack: Annotated[str, StringConstraints(pattern=r"^(\d+\.)?(\d+\.)?(\*|\d+)$")]
+    allow_list: Annotated[int, Field(gt=0)] | None = None
 
     @classmethod
     def create_from_base_class(cls, base_object: RuleBase, rule_pack: str, allow_list=int):
@@ -29,7 +31,5 @@ class Rule(RuleBase):
 
 
 class RuleRead(RuleCreate):
-    id_: conint(gt=0)
-
-    class Config:
-        orm_mode = True
+    id_: Annotated[int, Field(gt=0)]
+    model_config = ConfigDict(from_attributes=True)

@@ -99,7 +99,7 @@ class TestRules(unittest.TestCase):
 
     @staticmethod
     def create_json_body_for_rule(rule: DBrule):
-        return json.loads(TestRules.cast_db_rule_to_rule_create(rule).json())
+        return json.loads(TestRules.cast_db_rule_to_rule_create(rule).model_dump_json())
 
     @staticmethod
     def assert_cache(cached_response):
@@ -163,7 +163,7 @@ class TestRules(unittest.TestCase):
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -173,7 +173,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -186,8 +186,8 @@ class TestRules(unittest.TestCase):
         with self.client as client:
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
+                f"{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&vcs_provider={VCSProviders.AZURE_DEVOPS.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -198,8 +198,8 @@ class TestRules(unittest.TestCase):
             # Make the second request to retrieve response from cache
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
-                f"{RWS_ROUTE_DETECTED_RULES}?vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&vcsprovider={VCSProviders.AZURE_DEVOPS.value}"
+                f"{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&vcs_provider={VCSProviders.AZURE_DEVOPS.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -209,7 +209,7 @@ class TestRules(unittest.TestCase):
         project_name = "Test_Project"
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?projectname={project_name}")
+            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?project_name={project_name}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_rules)
@@ -218,7 +218,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?projectname={project_name}"
+                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?project_name={project_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -317,8 +317,8 @@ class TestRules(unittest.TestCase):
             response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
-                f"&vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&projectname={project_name}"
+                f"&vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&project_name={project_name}"
                 f"&repositoryname={repository_name}"
                 f"&start_date_time={start_date_time}"
                 f"&end_date_time={end_date_time}"
@@ -333,8 +333,8 @@ class TestRules(unittest.TestCase):
             cached_response = client.get(
                 f"{RWS_VERSION_PREFIX}"
                 f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
-                f"&vcsprovider={VCSProviders.BITBUCKET.value}"
-                f"&projectname={project_name}"
+                f"&vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"&project_name={project_name}"
                 f"&repositoryname={repository_name}"
                 f"&start_date_time={start_date_time}"
                 f"&end_date_time={end_date_time}"
