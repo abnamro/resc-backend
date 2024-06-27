@@ -5646,7 +5646,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5659,7 +5659,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -5730,7 +5730,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?onlyifhasfindings=true",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?only_if_has_findings=true",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5743,7 +5743,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "true"
 										}
 									]
@@ -5816,7 +5816,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5829,7 +5829,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -5899,7 +5899,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=test-repository&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=test-repository&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5916,7 +5916,7 @@
 											"value": "test-repository"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -5983,7 +5983,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=nonexistent&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=nonexistent&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6000,7 +6000,7 @@
 											"value": "nonexistent"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6072,7 +6072,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6089,7 +6089,7 @@
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6158,7 +6158,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=invalid&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=invalid&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6175,7 +6175,7 @@
 											"value": "invalid"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6245,7 +6245,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&repository_filter=test-repository&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&repository_filter=test-repository&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6266,7 +6266,7 @@
 											"value": "test-repository"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6339,7 +6339,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6352,7 +6352,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6421,7 +6421,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?onlyifhasfindings=true",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?only_if_has_findings=true",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6434,7 +6434,7 @@
 									],
 									"query": [
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "true"
 										}
 									]
@@ -6506,7 +6506,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6523,7 +6523,7 @@
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6592,7 +6592,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=invalid&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=invalid&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6609,7 +6609,7 @@
 											"value": "invalid"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6679,7 +6679,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?projectname=test-project&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?project_name=test-project&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6692,11 +6692,11 @@
 									],
 									"query": [
 										{
-											"key": "projectname",
+											"key": "project_name",
 											"value": "test-project"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6763,7 +6763,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?projectname=nonexistent&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?project_name=nonexistent&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6776,11 +6776,11 @@
 									],
 									"query": [
 										{
-											"key": "projectname",
+											"key": "project_name",
 											"value": "nonexistent"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -6850,7 +6850,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&projectname=test-project&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&project_name=test-project&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6867,11 +6867,11 @@
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "projectname",
+											"key": "project_name",
 											"value": "test-project"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
@@ -7100,7 +7100,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/findings-metadata/?skip=0&limit=100&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/findings-metadata/?skip=0&limit=100&only_if_has_findings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -7121,7 +7121,7 @@
 											"value": "100"
 										},
 										{
-											"key": "onlyifhasfindings",
+											"key": "only_if_has_findings",
 											"value": "false"
 										}
 									]
