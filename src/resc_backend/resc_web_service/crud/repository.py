@@ -43,10 +43,12 @@ def _only_if_has_untriaged_findings_condition(db_connection: Session) -> Query:
         (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
         isouter=True,
     )
-    has_untriaged_sub_query = has_untriaged_sub_query.where((DBaudit.status == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED))  # noqa: E711
+    has_untriaged_sub_query = has_untriaged_sub_query.where(
+        (DBaudit.status == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED)
+    )  # noqa: E711
     has_untriaged_sub_query = has_untriaged_sub_query.distinct()
-    
-    
+
+
 def get_repositories(
     db_connection: Session,
     vcs_providers: list[VCSProviders] = None,
@@ -57,7 +59,7 @@ def get_repositories(
     only_if_has_findings: bool = False,
     include_deleted: bool = False,
     only_if_has_untriaged_findings: bool = False,
-    ):
+):
     """
         Retrieve repository records optionally filtered
     :param db_connection:
@@ -491,5 +493,3 @@ def undelete_repository(db_connection: Session, repository_id: int):
     """
     db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).update(delete_at=None)
     db_connection.commit()
-
-
