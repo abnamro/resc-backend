@@ -239,12 +239,10 @@ async def delete_repository(repository_id: int, db_connection: Session = Depends
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_projects(
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(False),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -282,10 +280,11 @@ def get_distinct_projects(
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_repositories(
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None),
     project_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
-    include_deleted_repositories: bool | None = Query(False, title="IncludeDeletedRepositories"),
+    include_deleted_repositories: bool | None = Query(default=False),
+    only_if_has_untriaged_findings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -295,6 +294,7 @@ def get_distinct_repositories(
     - **vcs_providers**: Optional, filter of supported vcs provider types
     - **project_name**: Optional, filter on project name. It is used as a full string match filter
     - **only_if_has_findings**: Optional, filter all repositories that have findings
+    - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
     - **return**: List[str]
         The output will contain a list of unique repositories
     """
@@ -305,6 +305,7 @@ def get_distinct_repositories(
         project_name=project_name,
         only_if_has_findings=only_if_has_findings,
         include_deleted=include_deleted_repositories,
+        only_if_has_untriaged_findings=only_if_has_untriaged_findings,
     )
     repositories = [repo.repository_name for repo in distinct_repositories]
     return repositories
@@ -369,13 +370,12 @@ def get_findings_metadata_for_repository(
 def get_all_repositories_with_findings_metadata(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None),
     project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(default=False),
+    only_if_has_untriaged_findings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_enriched_schema.RepositoryEnrichedRead]:
     """
@@ -388,6 +388,7 @@ def get_all_repositories_with_findings_metadata(
     - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
     - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
     - **only_if_has_findings**: Optional, filter all repositories those have findings
+    - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
     - **return**: [RepositoryEnrichedRead]
         The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,
         or an empty list if no repository
@@ -402,6 +403,7 @@ def get_all_repositories_with_findings_metadata(
         repository_filter=repository_filter,
         only_if_has_findings=only_if_has_findings,
         include_deleted=include_deleted_repositories,
+        only_if_has_untriaged_findings=only_if_has_untriaged_findings,
     )
 
     total_repositories = repository_crud.get_repositories_count(
@@ -411,6 +413,7 @@ def get_all_repositories_with_findings_metadata(
         repository_filter=repository_filter,
         only_if_has_findings=only_if_has_findings,
         include_deleted=include_deleted_repositories,
+        only_if_has_untriaged_findings=only_if_has_untriaged_findings,
     )
     repository_list = []
     repo_ids = [repo.id_ for repo in repositories]
