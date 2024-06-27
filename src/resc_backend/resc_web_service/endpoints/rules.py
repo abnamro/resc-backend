@@ -45,7 +45,7 @@ logger = logging.getLogger(__name__)
 @cache(namespace=CACHE_NAMESPACE_RULE, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_rules_from_findings(
     finding_statuses: list[FindingStatus] = Query(None, alias="findingstatus", title="FindingStatuses"),
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
     project_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     start_date_time: datetime | None = Query(None),

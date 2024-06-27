@@ -4591,7 +4591,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&projectfilter=test-project",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&project_filter=test-project",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4610,7 +4610,7 @@
 											"value": "100"
 										},
 										{
-											"key": "projectfilter",
+											"key": "project_filter",
 											"value": "test-project"
 										}
 									]
@@ -4683,7 +4683,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&projectfilter=test-project",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&project_filter=test-project",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4702,7 +4702,7 @@
 											"value": "100"
 										},
 										{
-											"key": "projectfilter",
+											"key": "project_filter",
 											"value": "test-project"
 										}
 									]
@@ -4778,7 +4778,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repositoryfilter=test-repository",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repository_filter=test-repository",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4797,7 +4797,7 @@
 											"value": "100"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										}
 									]
@@ -4868,7 +4868,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repositoryfilter=notexists",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&repository_filter=notexists",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4887,7 +4887,7 @@
 											"value": "100"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "notexists"
 										}
 									]
@@ -4980,7 +4980,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcsprovider=AZURE_DEVOPS",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcs_provider=AZURE_DEVOPS",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -4999,7 +4999,7 @@
 											"value": "100"
 										},
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										}
 									]
@@ -5068,7 +5068,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcsprovider=invalid",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcs_provider=invalid",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5087,7 +5087,7 @@
 											"value": "100"
 										},
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "invalid"
 										}
 									]
@@ -5163,7 +5163,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcsprovider=AZURE_DEVOPS&projectfilter=test-project&repositoryfilter=test-repository",
+									"raw": "{{baseUrl}}/resc/v1/repositories?skip=0&limit=100&vcs_provider=AZURE_DEVOPS&project_filter=test-project&repository_filter=test-repository",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5182,15 +5182,15 @@
 											"value": "100"
 										},
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "projectfilter",
+											"key": "project_filter",
 											"value": "test-project"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										}
 									]
@@ -5899,7 +5899,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repositoryfilter=test-repository&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=test-repository&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5912,7 +5912,7 @@
 									],
 									"query": [
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										},
 										{
@@ -5983,7 +5983,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repositoryfilter=nonexistent&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?repository_filter=nonexistent&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5996,7 +5996,7 @@
 									],
 									"query": [
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "nonexistent"
 										},
 										{
@@ -6072,7 +6072,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcsprovider=AZURE_DEVOPS&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6085,7 +6085,7 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
@@ -6158,7 +6158,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcsprovider=invalid&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=invalid&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6171,7 +6171,7 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "invalid"
 										},
 										{
@@ -6245,7 +6245,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcsprovider=AZURE_DEVOPS&repositoryfilter=test-repository&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&repository_filter=test-repository&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6258,11 +6258,11 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
-											"key": "repositoryfilter",
+											"key": "repository_filter",
 											"value": "test-repository"
 										},
 										{
@@ -6506,7 +6506,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcsprovider=AZURE_DEVOPS&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6519,7 +6519,7 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{
@@ -6592,7 +6592,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcsprovider=invalid&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=invalid&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6605,7 +6605,7 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "invalid"
 										},
 										{
@@ -6850,7 +6850,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcsprovider=AZURE_DEVOPS&projectname=test-project&onlyifhasfindings=false",
+									"raw": "{{baseUrl}}/resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&projectname=test-project&onlyifhasfindings=false",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6863,7 +6863,7 @@
 									],
 									"query": [
 										{
-											"key": "vcsprovider",
+											"key": "vcs_provider",
 											"value": "AZURE_DEVOPS"
 										},
 										{

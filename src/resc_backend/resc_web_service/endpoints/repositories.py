@@ -52,9 +52,9 @@ router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
 def get_all_repositories(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    projectfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     include_deleted_repositories: bool | None = Query(
         False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
     ),
@@ -66,7 +66,7 @@ def get_all_repositories(
     - **db_connection**: Session of the database connection
     - **skip**: Integer amount of records to skip to support pagination
     - **limit**: Integer amount of records to return, to support pagination
-    - **vcsproviders**: Optional, filter on supported vcs provider types
+    - **vcs_providers**: Optional, filter on supported vcs provider types
     - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
     - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
     - **return**: [RepositoryRead]
@@ -78,17 +78,17 @@ def get_all_repositories(
         db_connection,
         skip=skip,
         limit=limit,
-        vcs_providers=vcsproviders,
-        project_filter=projectfilter,
-        repository_filter=repositoryfilter,
+        vcs_providers=vcs_providers,
+        project_filter=project_filter,
+        repository_filter=repository_filter,
         include_deleted=include_deleted_repositories,
     )
 
     total_repositories = repository_crud.get_repositories_count(
         db_connection,
-        vcs_providers=vcsproviders,
-        project_filter=projectfilter,
-        repository_filter=repositoryfilter,
+        vcs_providers=vcs_providers,
+        project_filter=project_filter,
+        repository_filter=repository_filter,
         include_deleted=include_deleted_repositories,
     )
 
@@ -237,8 +237,8 @@ async def delete_repository(repository_id: int, db_connection: Session = Depends
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_projects(
-    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     include_deleted_repositories: bool | None = Query(
         False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
@@ -249,7 +249,7 @@ def get_distinct_projects(
         Retrieve all unique project names
 
     - **db_connection**: Session of the database connection
-    - **vcsproviders**: Optional, filter on supported vcs provider types
+    - **vcs_providers**: Optional, filter on supported vcs provider types
     - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
     - **onlyifhasfindings**: Optional, filter all projects those have findings
     - **return**: List[str]
@@ -258,8 +258,8 @@ def get_distinct_projects(
 
     distinct_projects = repository_crud.get_distinct_projects(
         db_connection,
-        vcs_providers=vcsproviders,
-        repository_filter=repositoryfilter,
+        vcs_providers=vcs_providers,
+        repository_filter=repository_filter,
         only_if_has_findings=onlyifhasfindings,
         include_deleted=include_deleted_repositories,
     )
@@ -280,7 +280,7 @@ def get_distinct_projects(
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_repositories(
-    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
     projectname: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     include_deleted_repositories: bool | None = Query(
@@ -292,7 +292,7 @@ def get_distinct_repositories(
         Retrieve all unique repository names
 
     - **db_connection**: Session of the database connection
-    - **vcsproviders**: Optional, filter of supported vcs provider types
+    - **vcs_providers**: Optional, filter of supported vcs provider types
     - **projectname**: Optional, filter on project name. It is used as a full string match filter
     - **onlyifhasfindings**: Optional, filter all repositories that have findings
     - **return**: List[str]
@@ -301,7 +301,7 @@ def get_distinct_repositories(
 
     distinct_repositories = repository_crud.get_distinct_repositories(
         db_connection,
-        vcs_providers=vcsproviders,
+        vcs_providers=vcs_providers,
         project_name=projectname,
         only_if_has_findings=onlyifhasfindings,
         include_deleted=include_deleted_repositories,
@@ -369,9 +369,9 @@ def get_findings_metadata_for_repository(
 def get_all_repositories_with_findings_metadata(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
-    projectfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
     include_deleted_repositories: bool | None = Query(
         False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
@@ -384,7 +384,7 @@ def get_all_repositories_with_findings_metadata(
     - **db_connection**: Session of the database connection
     - **skip**: Integer amount of records to skip to support pagination
     - **limit**: Integer amount of records to return, to support pagination
-    - **vcsproviders**: Optional, filter on supported vcs provider types
+    - **vcs_providers**: Optional, filter on supported vcs provider types
     - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
     - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
     - **onlyifhasfindings**: Optional, filter all repositories those have findings
@@ -397,18 +397,18 @@ def get_all_repositories_with_findings_metadata(
         db_connection,
         skip=skip,
         limit=limit,
-        vcs_providers=vcsproviders,
-        project_filter=projectfilter,
-        repository_filter=repositoryfilter,
+        vcs_providers=vcs_providers,
+        project_filter=project_filter,
+        repository_filter=repository_filter,
         only_if_has_findings=onlyifhasfindings,
         include_deleted=include_deleted_repositories,
     )
 
     total_repositories = repository_crud.get_repositories_count(
         db_connection,
-        vcs_providers=vcsproviders,
-        project_filter=projectfilter,
-        repository_filter=repositoryfilter,
+        vcs_providers=vcs_providers,
+        project_filter=project_filter,
+        repository_filter=repository_filter,
         only_if_has_findings=onlyifhasfindings,
         include_deleted=include_deleted_repositories,
     )
