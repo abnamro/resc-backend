@@ -206,7 +206,7 @@ def update_repository(
     db_repository = db_connection.query(DBrepository).filter_by(id_=repository_id).first()
 
     db_repository.repository_name = repository.repository_name
-    db_repository.repository_url = repository.repository_url
+    db_repository.repository_url = str(repository.repository_url)
     db_repository.vcs_instance = repository.vcs_instance
     db_repository.deleted_at = repository.deleted_at
 
@@ -220,7 +220,7 @@ def create_repository(db_connection: Session, repository: repository_schema.Repo
         project_key=repository.project_key,
         repository_id=repository.repository_id,
         repository_name=repository.repository_name,
-        repository_url=repository.repository_url,
+        repository_url=str(repository.repository_url),
         vcs_instance=repository.vcs_instance,
         deleted_at=None,
     )

@@ -1,26 +1,27 @@
 # Standard Library
 import datetime
 import sys
+from typing import Annotated
 
 # Third Party
-from pydantic import BaseModel, conint, conlist, constr
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 # First Party
 from resc_backend.db.model import DBfinding
 
 
 class FindingBase(BaseModel):
-    file_path: constr(max_length=500)
-    line_number: conint(gt=-1)
-    column_start: conint(gt=-1)
-    column_end: conint(gt=-1)
-    commit_id: constr(max_length=120)
+    file_path: Annotated[str, StringConstraints(max_length=500)]
+    line_number: Annotated[int, Field(gt=-1)]
+    column_start: Annotated[int, Field(gt=-1)]
+    column_end: Annotated[int, Field(gt=-1)]
+    commit_id: Annotated[str, StringConstraints(max_length=120)]
     commit_message: str
     commit_timestamp: datetime.datetime
-    author: constr(max_length=200)
-    email: constr(max_length=100)
-    event_sent_on: datetime.datetime | None
-    rule_name: constr(max_length=400)
+    author: Annotated[str, StringConstraints(max_length=200)]
+    email: Annotated[str, StringConstraints(max_length=100)]
+    event_sent_on: datetime.datetime | None = None
+    rule_name: Annotated[str, StringConstraints(max_length=400)]
 
 
 class FindingPatch(BaseModel):
@@ -28,7 +29,7 @@ class FindingPatch(BaseModel):
 
 
 class FindingCreate(FindingBase):
-    repository_id: conint(gt=0)
+    repository_id: Annotated[int, Field(gt=0)]
 
     @classmethod
     def create_from_base_class(cls, base_object: FindingBase, repository_id: int):
@@ -40,11 +41,9 @@ class Finding(FindingBase):
 
 
 class FindingRead(FindingCreate):
-    id_: conint(gt=0)
-    scan_ids: conlist(conint(gt=0), min_items=None, max_items=sys.maxsize) | None
-
-    class Config:
-        orm_mode = True
+    id_: Annotated[int, Field(gt=0)]
+    scan_ids: Annotated[list[Annotated[int, Field(gt=0)]], Field(min_items=None, max_length=sys.maxsize)] | None = None
+    model_config = ConfigDict(from_attributes=True)
 
     @classmethod
     def create_from_db_entities(cls, db_finding: DBfinding, scan_ids: list[int]):

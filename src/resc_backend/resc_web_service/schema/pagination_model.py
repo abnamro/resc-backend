@@ -1,10 +1,9 @@
 # Standard Library
-from typing import Generic, TypeVar
+from typing import Annotated, Generic, TypeVar
 
 # Third Party
 # pylint: disable=no-name-in-module
-from pydantic import BaseModel, conint, conlist
-from pydantic.generics import GenericModel
+from pydantic import BaseModel, ConfigDict, Field
 
 # First Party
 from resc_backend.constants import MAX_RECORDS_PER_PAGE_LIMIT
@@ -12,7 +11,7 @@ from resc_backend.constants import MAX_RECORDS_PER_PAGE_LIMIT
 Model = TypeVar("Model", bound=BaseModel)
 
 
-class PaginationModel(GenericModel, Generic[Model]):
+class PaginationModel(BaseModel, Generic[Model]):
     """
         Generic encapsulation class for paginated endpoints to standardize output of the API
         example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
@@ -21,10 +20,8 @@ class PaginationModel(GenericModel, Generic[Model]):
     """
 
     # data: List[Model]
-    data: conlist(item_type=Model, min_items=None, max_items=MAX_RECORDS_PER_PAGE_LIMIT)
-    total: conint(gt=-1)
-    limit: conint(gt=-1)
-    skip: conint(gt=-1)
-
-    class Config:
-        orm_mode = True
+    data: Annotated[list[Model], Field(min_length=None, max_length=MAX_RECORDS_PER_PAGE_LIMIT)]
+    total: Annotated[int, Field(gt=-1)]
+    limit: Annotated[int, Field(gt=-1)]
+    skip: Annotated[int, Field(gt=-1)]
+    model_config = ConfigDict(from_attributes=True)

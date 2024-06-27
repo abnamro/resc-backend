@@ -52,7 +52,7 @@ class TestVCSInstances(unittest.TestCase):
 
     @staticmethod
     def create_json_body(vcs_instance: DBVcsInstance):
-        return json.loads(TestVCSInstances.cast_db_vcs_instance_to_vcs_instance_create(vcs_instance).json())
+        return json.loads(TestVCSInstances.cast_db_vcs_instance_to_vcs_instance_create(vcs_instance).model_dump_json())
 
     @staticmethod
     def assert_vcs_instance(data, vcs_instance):
@@ -92,7 +92,7 @@ class TestVCSInstances(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         create_vcs_instance_if_not_exists.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.create_vcs_instance_if_not_exists")
@@ -102,20 +102,20 @@ class TestVCSInstances(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "name"]
-        assert data["detail"][0]["msg"] == "field required"
-        assert data["detail"][0]["type"] == "value_error.missing"
+        assert data["detail"][0]["msg"] == "Field required"
+        assert data["detail"][0]["type"] == "missing"
         assert data["detail"][1]["loc"] == ["body", "provider_type"]
-        assert data["detail"][1]["msg"] == "field required"
-        assert data["detail"][1]["msg"] == "field required"
+        assert data["detail"][1]["msg"] == "Field required"
+        assert data["detail"][1]["msg"] == "Field required"
         assert data["detail"][2]["loc"] == ["body", "hostname"]
-        assert data["detail"][2]["msg"] == "field required"
-        assert data["detail"][2]["msg"] == "field required"
+        assert data["detail"][2]["msg"] == "Field required"
+        assert data["detail"][2]["msg"] == "Field required"
         assert data["detail"][3]["loc"] == ["body", "port"]
-        assert data["detail"][3]["msg"] == "field required"
-        assert data["detail"][3]["msg"] == "field required"
+        assert data["detail"][3]["msg"] == "Field required"
+        assert data["detail"][3]["msg"] == "Field required"
         assert data["detail"][4]["loc"] == ["body", "scheme"]
-        assert data["detail"][4]["msg"] == "field required"
-        assert data["detail"][4]["msg"] == "field required"
+        assert data["detail"][4]["msg"] == "Field required"
+        assert data["detail"][4]["msg"] == "Field required"
         create_vcs_instance_if_not_exists.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instance")
@@ -156,7 +156,7 @@ class TestVCSInstances(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "skip"]
-        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
+        assert data["detail"][0]["msg"] == "Input should be greater than or equal to 0"
         get_vcs_instances.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances")
@@ -165,7 +165,7 @@ class TestVCSInstances(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["query", "limit"]
-        assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
+        assert data["detail"][0]["msg"] == "Input should be greater than or equal to 1"
         get_vcs_instances.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.vcs_instance.get_vcs_instances_count")
@@ -263,20 +263,20 @@ class TestVCSInstances(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body", "name"]
-        assert data["detail"][0]["msg"] == "field required"
-        assert data["detail"][0]["type"] == "value_error.missing"
+        assert data["detail"][0]["msg"] == "Field required"
+        assert data["detail"][0]["type"] == "missing"
         assert data["detail"][1]["loc"] == ["body", "provider_type"]
-        assert data["detail"][1]["msg"] == "field required"
-        assert data["detail"][1]["msg"] == "field required"
+        assert data["detail"][1]["msg"] == "Field required"
+        assert data["detail"][1]["msg"] == "Field required"
         assert data["detail"][2]["loc"] == ["body", "hostname"]
-        assert data["detail"][2]["msg"] == "field required"
-        assert data["detail"][2]["msg"] == "field required"
+        assert data["detail"][2]["msg"] == "Field required"
+        assert data["detail"][2]["msg"] == "Field required"
         assert data["detail"][3]["loc"] == ["body", "port"]
-        assert data["detail"][3]["msg"] == "field required"
-        assert data["detail"][3]["msg"] == "field required"
+        assert data["detail"][3]["msg"] == "Field required"
+        assert data["detail"][3]["msg"] == "Field required"
         assert data["detail"][4]["loc"] == ["body", "scheme"]
-        assert data["detail"][4]["msg"] == "field required"
-        assert data["detail"][4]["msg"] == "field required"
+        assert data["detail"][4]["msg"] == "Field required"
+        assert data["detail"][4]["msg"] == "Field required"
         update_vcs_instance.assert_not_called()
         get_vcs_instance.assert_not_called()
 

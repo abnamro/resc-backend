@@ -189,11 +189,11 @@ class TestFindings(unittest.TestCase):
 
     @staticmethod
     def create_json_body(finding: DBfinding, scan_findings: list[DBscanFinding]):
-        return json.loads(TestFindings.cast_db_finding_to_finding_create(finding, scan_findings).json())
+        return json.loads(TestFindings.cast_db_finding_to_finding_create(finding, scan_findings).model_dump_json())
 
     @staticmethod
     def create_json_body_multiple_audit(audit_multiple: AuditMultiple):
-        return json.loads(audit_multiple.json())
+        return json.loads(audit_multiple.model_dump_json())
 
     @staticmethod
     def assert_cache(cached_response):
@@ -288,7 +288,7 @@ class TestFindings(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body"]
-        assert data["detail"][0]["msg"] == "field required"
+        assert data["detail"][0]["msg"] == "Field required"
         create_finding.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.finding.create_findings")
@@ -300,7 +300,7 @@ class TestFindings(unittest.TestCase):
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["body"]
-        assert data["detail"][0]["msg"] == "value is not a valid list"
+        assert data["detail"][0]["msg"] == "Input should be a valid list"
         create_finding.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.finding.get_finding")
@@ -400,7 +400,7 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 0"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -421,7 +421,7 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 1"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -575,7 +575,7 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 0"
             get_findings_by_rule.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -597,7 +597,7 @@ class TestFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 1"
             get_findings_by_rule.assert_not_called()
 
             # Make the second request to retrieve response from cache

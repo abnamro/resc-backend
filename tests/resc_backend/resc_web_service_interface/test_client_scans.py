@@ -19,7 +19,7 @@ def test_create_scan(post):
         repository_id=1,
         rule_pack="1.2",
     )
-    expected_json = scan.json()
+    expected_json = scan.model_dump_json()
 
     _ = create_scan(url, scan)
     post.assert_called_once()

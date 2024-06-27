@@ -1,16 +1,17 @@
 import datetime
+from typing import Annotated
 
 # Third Party
-from pydantic import BaseModel, HttpUrl, conint, constr
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, StringConstraints
 
 
 class RepositoryBase(BaseModel):
-    project_key: constr(min_length=1, max_length=100)
-    repository_id: constr(min_length=1, max_length=100)
-    repository_name: constr(min_length=1, max_length=100)
+    project_key: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    repository_id: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    repository_name: Annotated[str, StringConstraints(min_length=1, max_length=100)]
     repository_url: HttpUrl
-    deleted_at: datetime.datetime = None
-    vcs_instance: conint(gt=0)
+    deleted_at: datetime.datetime | None = None
+    vcs_instance: Annotated[int, Field(gt=0)]
 
 
 class Repository(RepositoryBase):
@@ -22,7 +23,5 @@ class RepositoryCreate(RepositoryBase):
 
 
 class RepositoryRead(RepositoryBase):
-    id_: conint(gt=0)
-
-    class Config:
-        orm_mode = True
+    id_: Annotated[int, Field(gt=0)]
+    model_config = ConfigDict(from_attributes=True)

@@ -197,8 +197,8 @@ def get_scans_findings(
     scan_ids: list[int],
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
-    rules_filter: list[str] = None,
-    statuses_filter: list[FindingStatus] = None,
+    rules_filter: list[str] | None = None,
+    statuses_filter: list[FindingStatus] | None = None,
 ) -> list[DBfinding]:
     """
         Retrieve all finding child objects of a scan object from the database

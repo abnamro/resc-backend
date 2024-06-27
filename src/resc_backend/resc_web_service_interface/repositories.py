@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def create_repository(url: str, repository: Repository):
     api_url = f"{url}{RWS_VERSION_PREFIX}{RWS_ROUTE_REPOSITORIES}"
-    response = requests.post(api_url, data=repository.json(), proxies={"http": "", "https": ""}, timeout=10)
+    response = requests.post(api_url, data=repository.model_dump_json(), proxies={"http": "", "https": ""}, timeout=10)
     return response
 
 

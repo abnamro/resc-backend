@@ -1,3 +1,7 @@
+from typing import Annotated
+
+from pydantic import StringConstraints
+
 PROJECT_QUEUE = "projects"
 REPOSITORY_QUEUE = "repositories"
 
@@ -111,3 +115,5 @@ CONTENT_SECURITY_POLICY = (
 
 AUDIT_AUTOMATED_COMMENT = "automated"
 AUDIT_AUTOMATED_AUDITOR = "resc"
+
+REGEX_VALIDATION = Annotated[str, StringConstraints(pattern=r"^[A-z0-9 .\-_%]*$")]

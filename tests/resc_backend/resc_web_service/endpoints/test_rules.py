@@ -99,7 +99,7 @@ class TestRules(unittest.TestCase):
 
     @staticmethod
     def create_json_body_for_rule(rule: DBrule):
-        return json.loads(TestRules.cast_db_rule_to_rule_create(rule).json())
+        return json.loads(TestRules.cast_db_rule_to_rule_create(rule).model_dump_json())
 
     @staticmethod
     def assert_cache(cached_response):

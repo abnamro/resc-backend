@@ -8,7 +8,6 @@ from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, 
 from fastapi.responses import FileResponse
 from fastapi_cache.decorator import cache
 from packaging.version import Version
-from pydantic import Required
 from sqlalchemy.orm import Session
 
 # First Party
@@ -175,7 +174,7 @@ async def download_rule_pack_toml_file(
     },
 )
 async def upload_rule_pack_toml_file(
-    version: str = Query(default=Required, pattern=r"^\d+(?:\.\d+){2}$"),
+    version: str = Query(pattern=r"^\d+(?:\.\d+){2}$"),
     rule_file: UploadFile = File(...),
     db_connection: Session = Depends(get_db_connection),
 ) -> dict:
@@ -539,4 +538,4 @@ def get_rule_from_rule_pack(
     if db_rule is None:
         raise HTTPException(status_code=404, detail="Rule not found")
 
-    return RuleRead.from_orm(db_rule)
+    return RuleRead.model_validate(db_rule)

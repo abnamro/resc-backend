@@ -2,8 +2,8 @@
 from datetime import UTC, datetime
 
 # Third Party
-import pydantic
 import pytest
+from pydantic import ValidationError
 
 # First Party
 from resc_backend.db.model import DBfinding
@@ -38,7 +38,7 @@ def test_pagination_model_invalid_data():
     total = -999
     limit = -50
     skip = -1
-    with pytest.raises(pydantic.error_wrappers.ValidationError) as validation_error:
+    with pytest.raises(ValidationError) as validation_error:
         PaginationModel[int](data=str_list, total=total, limit=limit, skip=skip)
 
     validation_errors = validation_error.value.errors()
@@ -46,11 +46,11 @@ def test_pagination_model_invalid_data():
     for i in range(0, 5):
         assert validation_errors[i]["loc"][0] == "data"
         assert validation_errors[i]["loc"][1] == i
-        assert validation_errors[i]["msg"] == "value is not a valid integer"
-        assert validation_errors[i]["type"] == "type_error.integer"
+        assert validation_errors[i]["msg"] == "Input should be a valid integer, unable to parse string as an integer"
+        assert validation_errors[i]["type"] == "int_parsing"
     for i in range(5, 8):
-        assert validation_errors[i]["msg"] == "ensure this value is greater than -1"
-        assert validation_errors[i]["type"] == "value_error.number.not_gt"
+        assert validation_errors[i]["msg"] == "Input should be greater than -1"
+        assert validation_errors[i]["type"] == "greater_than"
 
 
 def test_pagination_model_findings():

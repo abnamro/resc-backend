@@ -21,7 +21,7 @@ def test_create_vcs_instance(post):
         scope=["Project1", "Project2"],
         organization="dummy_org",
     )
-    expected_json = vcs_instance.json()
+    expected_json = vcs_instance.model_dump_json()
 
     _ = create_vcs_instance(url, vcs_instance)
     post.assert_called_once()

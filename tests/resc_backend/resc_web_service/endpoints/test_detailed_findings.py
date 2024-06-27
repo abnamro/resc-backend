@@ -59,7 +59,7 @@ class TestDetailedFindings(unittest.TestCase):
                     author=f"author_{i}",
                     email=f"email_{i}",
                     rule_name=f"rule_name_{i}",
-                    rule_pack=i,
+                    rule_pack=f"{i}",
                     project_key=f"_{i}",
                     repository_name=f"_{i}",
                     repository_url=f"http://fake.repo.com/_{i}",
@@ -90,7 +90,7 @@ class TestDetailedFindings(unittest.TestCase):
         assert data["id_"] == detailed_finding.id_
         assert data["project_key"] == detailed_finding.project_key
         assert data["repository_name"] == detailed_finding.repository_name
-        assert data["repository_url"] == detailed_finding.repository_url
+        assert data["repository_url"] == str(detailed_finding.repository_url)
         assert datetime.fromisoformat(data["timestamp"]) == detailed_finding.timestamp
         assert data["vcs_provider"] == detailed_finding.vcs_provider
         assert data["last_scanned_commit"] == detailed_finding.last_scanned_commit
@@ -162,7 +162,7 @@ class TestDetailedFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "skip"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 0"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 0"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache
@@ -183,7 +183,7 @@ class TestDetailedFindings(unittest.TestCase):
             assert response.status_code == 422, response.text
             data = response.json()
             assert data["detail"][0]["loc"] == ["query", "limit"]
-            assert data["detail"][0]["msg"] == "ensure this value is greater than or equal to 1"
+            assert data["detail"][0]["msg"] == "Input should be greater than or equal to 1"
             get_findings.assert_not_called()
 
             # Make the second request to retrieve response from cache

@@ -1,36 +1,40 @@
 # Standard Library
 import datetime
+import logging
+from typing import Annotated
 
 # Third Party
-from pydantic import BaseModel, HttpUrl, conint, constr, root_validator
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, StringConstraints, model_validator
 
 # First Party
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
+logger = logging.getLogger(__name__)
+
 
 class DetailedFindingBase(BaseModel):
     file_path: str
-    line_number: conint(gt=-1)
-    column_start: conint(gt=-1)
-    column_end: conint(gt=-1)
-    commit_id: constr(max_length=120)
+    line_number: Annotated[int, Field(gt=-1)]
+    column_start: Annotated[int, Field(gt=-1)]
+    column_end: Annotated[int, Field(gt=-1)]
+    commit_id: Annotated[str, StringConstraints(max_length=120)]
     commit_message: str
     commit_timestamp: datetime.datetime
-    author: constr(max_length=200)
-    email: constr(max_length=100)
+    author: Annotated[str, StringConstraints(max_length=200)]
+    email: Annotated[str, StringConstraints(max_length=100)]
     status: FindingStatus | None = FindingStatus.NOT_ANALYZED.value
-    comment: constr(max_length=255) | None = None
-    rule_name: constr(max_length=200)
-    rule_pack: constr(max_length=100)
-    project_key: constr(min_length=1, max_length=100)
-    repository_name: constr(min_length=1, max_length=100)
+    comment: Annotated[str, StringConstraints(max_length=255)] | None = None
+    rule_name: Annotated[str, StringConstraints(max_length=200)]
+    rule_pack: Annotated[str, StringConstraints(max_length=100)]
+    project_key: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    repository_name: Annotated[str, StringConstraints(min_length=1, max_length=100)]
     repository_url: HttpUrl
     timestamp: datetime.datetime
     vcs_provider: VCSProviders
-    last_scanned_commit: constr(min_length=1, max_length=100)
-    scan_id: conint(gt=0)
-    event_sent_on: datetime.datetime | None
+    last_scanned_commit: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    scan_id: Annotated[int, Field(gt=0)]
+    event_sent_on: datetime.datetime | None = None
     is_dir_scan: bool
 
 
@@ -39,8 +43,8 @@ class DetailedFinding(DetailedFindingBase):
 
 
 class DetailedFindingRead(DetailedFinding):
-    id_: conint(gt=0)
-    commit_url: constr(min_length=1) | None
+    id_: Annotated[int, Field(gt=0)]
+    commit_url: Annotated[str, StringConstraints(min_length=1)] | None = None
 
     @staticmethod
     def build_bitbucket_commit_url(
@@ -93,11 +97,15 @@ class DetailedFindingRead(DetailedFinding):
         github_commit_url = f"{repository_url}/commit/{commit_id}?path=/{file_path}"
         return github_commit_url
 
-    @root_validator
-    def build_commit_url(cls, values) -> dict:  # noqa: N805
-        if values["status"] is None:
+    @model_validator(mode="before")
+    def build_commit_url(cls, values: (tuple | dict)) -> dict:  # noqa: N805
+        # We are dealing with a namedtuple (i.e. from a database query)
+        if hasattr(values, "_asdict"):
+            values = values._asdict()
+
+        if "status" not in values or values["status"] is None:
             values["status"] = FindingStatus.NOT_ANALYZED.value
-        if values["comment"] is None:
+        if "comment" not in values or values["comment"] is None:
             values["comment"] = ""
         if values["vcs_provider"] == VCSProviders.BITBUCKET:
             values["commit_url"] = cls.build_bitbucket_commit_url(
@@ -126,7 +134,7 @@ class DetailedFindingRead(DetailedFinding):
             )
         else:
             raise NotImplementedError(f"Unsupported VCSProvider: {values['vcs_provider']}")
+
         return values
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
