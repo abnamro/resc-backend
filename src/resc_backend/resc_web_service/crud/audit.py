@@ -129,7 +129,7 @@ def clear_outdated_no_longer_outdated(db_connection: Session, findings_ids: list
         query = query.where(DBaudit.comment == AUDIT_AUTOMATED_COMMENT)
         query.delete(synchronize_session=False)
 
-    db_connection.commit()
+    fix_last_audit(db_connection, findings_ids)
 
 
 def get_finding_audits(
@@ -318,3 +318,45 @@ def get_audit_stats_count(db_connection: Session, auditor: str | None) -> list[A
     query = query.distinct()
 
     return db_connection.execute(query).all()
+
+
+def fix_last_audit(db_connection: Session, finding_ids: list[int]) -> None:
+    # Iterate over those ids by chunk.
+    # This is necessary because SQL tends to crash when you do IN with more than 1000 values.
+    # source: trust me bro.
+    finding_ids_iterator = iter(finding_ids)
+    while chunk := list(islice(finding_ids_iterator, 1000)):
+        # Create a sub query with group by on finding.
+        max_audit_subquery: Query = select(DBaudit.finding_id, func.max(DBaudit.id_).label("audit_id"))
+        max_audit_subquery = max_audit_subquery.where(DBaudit.finding_id.in_(chunk))
+        max_audit_subquery = max_audit_subquery.group_by(DBaudit.finding_id)
+        max_audit_subquery = max_audit_subquery.subquery()
+
+        # Select the id from previously selected tupples.
+        latest_audits_query = select(DBaudit.id_)
+        latest_audits_query = latest_audits_query.join(max_audit_subquery, max_audit_subquery.c.audit_id == DBaudit.id_)
+        latest_audits = db_connection.execute(latest_audits_query).scalars().all()
+        query = update(DBaudit).where(DBaudit.id_.in_(latest_audits)).values(is_latest=True)
+        db_connection.execute(query)
+
+    db_connection.commit()
+
+
+def revert_last_audit(db_connection: Session, finding_ids: list[int], status: FindingStatus | None) -> None:
+    """
+    Revert the last audit for a set of findings with specific status
+
+    Args:
+        db_connection (Session): Database session
+        finding_ids (list[int]): List of findings
+        status (FindingStatus | None): status to remove.
+    """
+    iterator = iter(finding_ids)
+    while chunk := list(islice(iterator, 1000)):
+        query = db_connection.query(DBaudit)
+        query = query.where(DBaudit.finding_id.in_(chunk))
+        if status is not None:
+            query = query.where(DBaudit.status == status)
+        query.delete(synchronize_session=False)
+
+    fix_last_audit(db_connection, finding_ids)

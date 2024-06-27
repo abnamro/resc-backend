@@ -1,4 +1,5 @@
 # Standard Library
+from datetime import UTC, datetime
 
 # Third Party
 from sqlalchemy import func
@@ -429,4 +430,28 @@ def delete_repositories_by_vcs_instance_id(db_connection: Session, vcs_instance_
         DBrepository.vcs_instance == DBVcsInstance.id_,
         DBVcsInstance.id_ == vcs_instance_id,
     ).delete(synchronize_session=False)
+    db_connection.commit()
+
+
+def soft_delete_repository(db_connection: Session, repository_id: int):
+    """
+        Soft delete a repository object
+    :param db_connection:
+        Session of the database connection
+    :param repository_id:
+        id of the repository to be deleted
+    """
+    db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).update(delete_at=datetime.now(UTC))
+    db_connection.commit()
+
+
+def undelete_repository(db_connection: Session, repository_id: int):
+    """
+        Undelete a repository object
+    :param db_connection:
+        Session of the database connection
+    :param repository_id:
+        id of the repository to be undeleted
+    """
+    db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).update(delete_at=None)
     db_connection.commit()

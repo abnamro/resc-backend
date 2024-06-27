@@ -81,6 +81,8 @@ def get_all_detailed_findings(
 
             - end_date_time of type datetime with the following format: 1970-01-31T00:00:00
 
+            - include_deleted_repositories of type boolean
+
     - **db_connection**
 
         Session of the database connection

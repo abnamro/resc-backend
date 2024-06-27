@@ -1,12 +1,13 @@
 # Standard Library
 
 # Third Party
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from fastapi_cache.decorator import cache
 from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
+    AUDIT_AUTOMATED_COMMENT,
     CACHE_NAMESPACE_FINDING,
     CACHE_NAMESPACE_REPOSITORY,
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
@@ -22,6 +23,8 @@ from resc_backend.constants import (
     RWS_ROUTE_SCANS,
 )
 from resc_backend.resc_web_service.cache_manager import CacheManager
+from resc_backend.resc_web_service.crud import audit as audit_crud
+from resc_backend.resc_web_service.crud import finding as finding_crud
 from resc_backend.resc_web_service.crud import repository as repository_crud
 from resc_backend.resc_web_service.crud import scan as scan_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
@@ -32,6 +35,7 @@ from resc_backend.resc_web_service.schema import (
 )
 from resc_backend.resc_web_service.schema import scan as scan_schema
 from resc_backend.resc_web_service.schema.finding_count_model import FindingCountModel
+from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.pagination_model import PaginationModel
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
@@ -52,12 +56,10 @@ router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
 def get_all_repositories(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None),
     project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(False),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_schema.RepositoryRead]:
     """
@@ -283,9 +285,7 @@ def get_distinct_repositories(
     vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
     project_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(False, title="IncludeDeletedRepositories"),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -506,3 +506,57 @@ def get_scans_for_repository(
     total_scans = scan_crud.get_scans_count(db_connection, repository_id=repository_id)
 
     return PaginationModel[scan_schema.ScanRead](data=scans, total=total_scans, limit=limit, skip=skip)
+
+
+@router.get(
+    "/{repository_id}/toggle-deleted",
+    summary="Toggle the deleted_at for a repository",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Toggle the deleted_at of repository <repository_id>"},
+        404: {"model": Model404, "description": "Repository <repository_id> not found"},
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
+async def toggle_deleted_at_for_repository(
+    request: Request, repository_id: int, db_connection: Session = Depends(get_db_connection)
+):
+    """
+        Toggle the deleted_at for a repository
+
+        Audit all associated findings as GONE (if not audited).
+
+    - **db_connection**: Session of the database connection
+    - **repository_id**: ID of the repository to toggle
+    - **return**: The output will contain the updated metadata of the repository
+    """
+    db_repository = repository_crud.get_repository(db_connection, repository_id=repository_id)
+    if db_repository is None:
+        raise HTTPException(status_code=404, detail="Repository not found")
+
+    if db_repository.deleted_at is None:
+        # we DELETE
+        repository_crud.soft_delete_repository(db_connection, repository_id=repository_id)
+        finding_ids = finding_crud.get_finding_for_repository(db_connection, repository_id=repository_id, status=None)
+        audit_crud.create_audits(
+            db_connection=db_connection,
+            finding_ids=finding_ids,
+            auditor=request.user,
+            status=FindingStatus.NOT_ACCESSIBLE,
+            comment=AUDIT_AUTOMATED_COMMENT,
+        )
+    else:
+        # we UNdeleted
+        repository_crud.undelete_repository(db_connection, repository_id=repository_id)
+        finding_ids = finding_crud.get_finding_for_repository(
+            db_connection, repository_id=repository_id, status=FindingStatus.NOT_ACCESSIBLE
+        )
+        audit_crud.revert_last_audit(db_connection, finding_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE)
+
+    # Clear cache related to repository
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_REPOSITORY)
+    # Clear cache related to findings
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
+
+    return repository_crud.get_repository(db_connection, repository_id=repository_id)

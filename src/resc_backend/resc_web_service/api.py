@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 # Third Party
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from setuptools.config import read_configuration as config
 from starlette.responses import RedirectResponse
 from starlette.status import HTTP_302_FOUND
 from tenacity import RetryError
@@ -119,12 +120,15 @@ async def lifespan(_: FastAPI):
     await app_shutdown()
 
 
+read_version = config("setup.cfg")["metadata"]["version"]
+
 app = FastAPI(
     title="Repository Scanner (RESC)",
     description="RESC API helps you to perform several operations upon findings "
     "obtained from multiple source code repositories.",
     openapi_tags=tags_metadata,
     lifespan=lifespan,
+    version=read_version,
 )
 
 if env_variables[ENABLE_CORS].lower() in ["true"]:
