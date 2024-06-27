@@ -1,3 +1,5 @@
+import datetime
+
 # Third Party
 from pydantic import BaseModel, HttpUrl, conint, constr
 
@@ -7,6 +9,7 @@ class RepositoryBase(BaseModel):
     repository_id: constr(min_length=1, max_length=100)
     repository_name: constr(min_length=1, max_length=100)
     repository_url: HttpUrl
+    deleted_at: datetime.datetime = None
     vcs_instance: conint(gt=0)
 
 

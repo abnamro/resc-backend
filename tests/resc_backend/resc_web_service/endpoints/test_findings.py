@@ -491,7 +491,9 @@ class TestFindings(unittest.TestCase):
             assert data["total"] == 0
             assert data["limit"] == 5
             assert data["skip"] == 0
-            get_findings_by_rule.assert_called_once_with(ANY, skip=0, limit=5, rule_name=rule_name)
+            get_findings_by_rule.assert_called_once_with(
+                ANY, skip=0, limit=5, rule_name=rule_name, include_deleted_repositories=False
+            )
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
@@ -520,7 +522,9 @@ class TestFindings(unittest.TestCase):
             assert data["total"] == 2
             assert data["limit"] == 5
             assert data["skip"] == 0
-            get_findings_by_rule.assert_called_once_with(ANY, skip=0, limit=5, rule_name=rule_name)
+            get_findings_by_rule.assert_called_once_with(
+                ANY, skip=0, limit=5, rule_name=rule_name, include_deleted_repositories=False
+            )
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
@@ -548,7 +552,9 @@ class TestFindings(unittest.TestCase):
             assert data["total"] == 1
             assert data["limit"] == 5
             assert data["skip"] == 0
-            get_findings_by_rule.assert_called_once_with(ANY, skip=0, limit=5, rule_name=rule_name)
+            get_findings_by_rule.assert_called_once_with(
+                ANY, skip=0, limit=5, rule_name=rule_name, include_deleted_repositories=False
+            )
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(

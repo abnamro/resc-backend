@@ -55,6 +55,9 @@ def get_all_repositories(
     vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     projectfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
+    include_deleted_repositories: bool | None = Query(
+        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
+    ),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_schema.RepositoryRead]:
     """
@@ -78,6 +81,7 @@ def get_all_repositories(
         vcs_providers=vcsproviders,
         project_filter=projectfilter,
         repository_filter=repositoryfilter,
+        include_deleted=include_deleted_repositories,
     )
 
     total_repositories = repository_crud.get_repositories_count(
@@ -85,6 +89,7 @@ def get_all_repositories(
         vcs_providers=vcsproviders,
         project_filter=projectfilter,
         repository_filter=repositoryfilter,
+        include_deleted=include_deleted_repositories,
     )
 
     return PaginationModel[repository_schema.RepositoryRead](
@@ -235,6 +240,9 @@ def get_distinct_projects(
     vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
+    include_deleted_repositories: bool | None = Query(
+        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
+    ),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -253,6 +261,7 @@ def get_distinct_projects(
         vcs_providers=vcsproviders,
         repository_filter=repositoryfilter,
         only_if_has_findings=onlyifhasfindings,
+        include_deleted=include_deleted_repositories,
     )
     projects = [project.project_key for project in distinct_projects]
     return projects
@@ -274,6 +283,9 @@ def get_distinct_repositories(
     vcsproviders: list[VCSProviders] = Query(None, alias="vcsprovider", title="VCSProviders"),
     projectname: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
+    include_deleted_repositories: bool | None = Query(
+        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
+    ),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -292,6 +304,7 @@ def get_distinct_repositories(
         vcs_providers=vcsproviders,
         project_name=projectname,
         only_if_has_findings=onlyifhasfindings,
+        include_deleted=include_deleted_repositories,
     )
     repositories = [repo.repository_name for repo in distinct_repositories]
     return repositories
@@ -360,6 +373,9 @@ def get_all_repositories_with_findings_metadata(
     projectfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repositoryfilter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     onlyifhasfindings: bool = Query(default=False),
+    include_deleted_repositories: bool | None = Query(
+        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
+    ),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_enriched_schema.RepositoryEnrichedRead]:
     """
@@ -385,6 +401,7 @@ def get_all_repositories_with_findings_metadata(
         project_filter=projectfilter,
         repository_filter=repositoryfilter,
         only_if_has_findings=onlyifhasfindings,
+        include_deleted=include_deleted_repositories,
     )
 
     total_repositories = repository_crud.get_repositories_count(
@@ -393,6 +410,7 @@ def get_all_repositories_with_findings_metadata(
         project_filter=projectfilter,
         repository_filter=repositoryfilter,
         only_if_has_findings=onlyifhasfindings,
+        include_deleted=include_deleted_repositories,
     )
     repository_list = []
     repo_ids = [repo.id_ for repo in repositories]
@@ -409,6 +427,7 @@ def get_all_repositories_with_findings_metadata(
             vcs_provider=repo.provider_type,
             last_scan_id=repo.last_scan_id,
             last_scan_timestamp=repo.last_scan_timestamp,
+            deleted_at=repo.deleted_at,
             true_positive=repo_findings_meta_data[repo.id_]["true_positive"],
             false_positive=repo_findings_meta_data[repo.id_]["false_positive"],
             not_analyzed=repo_findings_meta_data[repo.id_]["not_analyzed"],

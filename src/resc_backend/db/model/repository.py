@@ -1,5 +1,5 @@
 # Third Party
-from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, UniqueConstraint
 
 # First Party
 from resc_backend.db.model import Base
@@ -14,6 +14,7 @@ class DBrepository(Base):
     repository_id = Column(String(100), nullable=False)
     repository_name = Column(String(100), nullable=False)
     repository_url = Column(String(200), nullable=False)
+    deleted_at = Column(DateTime, nullable=True)
     __table_args__ = (
         UniqueConstraint(
             "project_key",
@@ -23,12 +24,13 @@ class DBrepository(Base):
         ),
     )
 
-    def __init__(self, project_key, repository_id, repository_name, repository_url, vcs_instance):
+    def __init__(self, project_key, repository_id, repository_name, repository_url, vcs_instance, deleted_at=None):
         self.project_key = project_key
         self.repository_id = repository_id
         self.repository_name = repository_name
         self.repository_url = repository_url
         self.vcs_instance = vcs_instance
+        self.deleted_at = deleted_at
 
     @staticmethod
     def create_from_repository(repository: Repository):
@@ -38,5 +40,6 @@ class DBrepository(Base):
             repository_name=repository.repository_name,
             repository_url=repository.repository_url,
             vcs_instance=repository.vcs_instance,
+            deleted_at=repository.deleted_at,
         )
         return db_repository

@@ -148,6 +148,14 @@ def _query_apply_findings_filters(query: Query, findings_filter: FindingsFilter)
         else:
             query = query.where(DBfinding.event_sent_on == None)  # noqa: E711
 
+    if not findings_filter.include_deleted_repositories and findings_filter.end_date_time:
+        query = query.where(
+            (DBrepository.deleted_at == None)  # noqa: E711
+            | (DBrepository.deleted_at > findings_filter.end_date_time)
+        )
+    elif not findings_filter.include_deleted_repositories:
+        query = query.where(DBrepository.deleted_at == None)  # noqa: E711
+
     if findings_filter.repository_name:
         query = query.where(DBrepository.repository_name == findings_filter.repository_name)
 

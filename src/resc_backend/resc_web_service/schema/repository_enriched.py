@@ -23,6 +23,7 @@ class RepositoryEnrichedBase(BaseModel):
     clarification_required: conint(gt=-1)
     outdated: conint(gt=-1)
     total_findings_count: conint(gt=-1)
+    deleted_at: datetime.datetime = None
 
 
 class RepositoryEnriched(RepositoryEnrichedBase):

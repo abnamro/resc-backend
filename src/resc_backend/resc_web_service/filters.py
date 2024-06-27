@@ -23,6 +23,7 @@ class FindingsFilter:
     end_date_time: datetime = None
     event_sent: bool = None
     rule_pack_versions: list[str] = None
+    include_deleted_repositories: bool = False
 
     @validator("end_date_time")
     @classmethod
