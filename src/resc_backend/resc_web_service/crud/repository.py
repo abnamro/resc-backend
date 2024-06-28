@@ -44,7 +44,7 @@ def _only_if_has_untriaged_findings_condition(db_connection: Session) -> Query:
         isouter=True,
     )
     has_untriaged_sub_query = has_untriaged_sub_query.where(
-        (DBaudit.status == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED) # noqa: E711
+        (DBaudit.status == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED)  # noqa: E711
     )  # noqa: E711
     has_untriaged_sub_query = has_untriaged_sub_query.distinct()
 

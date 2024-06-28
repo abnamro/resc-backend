@@ -355,6 +355,7 @@ def revert_last_audit(db_connection: Session, finding_ids: list[int], status: Fi
     while chunk := list(islice(iterator, 1000)):
         query = db_connection.query(DBaudit)
         query = query.where(DBaudit.finding_id.in_(chunk))
+        query = query.where(DBaudit.is_latest == True)  # noqa: E712
         if status is not None:
             query = query.where(DBaudit.status == status)
         query.delete(synchronize_session=False)
