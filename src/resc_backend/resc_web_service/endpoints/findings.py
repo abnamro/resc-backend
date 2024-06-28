@@ -252,9 +252,7 @@ def get_findings_by_rule(
     rule_name: str,
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(False),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[finding_schema.FindingRead]:
     """
@@ -264,6 +262,7 @@ def get_findings_by_rule(
     - **rule_name**: Name of the rule to filter the findings by
     - **skip**: Integer amount of records to skip to support pagination
     - **limit**: Integer amount of records to return, to support pagination
+    - **include_deleted_repositories**: boolean flag to include deleted repositories
     - **return**: [FindingRead]
         The output will contain a PaginationModel containing the list of FindingRead type objects,
         or an empty list if no finding was found for the given rule

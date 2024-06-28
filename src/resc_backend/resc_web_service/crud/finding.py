@@ -322,6 +322,48 @@ def get_untriaged_finding_outdated_for_current_scan(db_connection: Session, scan
     return db_connection.execute(query).scalars().all()
 
 
+def get_finding_for_repository(
+    db_connection: Session, repository_id: int, status: FindingStatus | None, not_status: FindingStatus | None
+) -> list[int]:
+    """
+    Retrieve the findings associated to a repository.
+    Optionally filter by status.
+
+    Args:
+        db_connection (Session): Database connection
+        repository_id (int): repository id
+        status (FindingStatus | None): Status to filter on.
+
+    Returns:
+        list[int]: List of finding ids
+    """
+
+    query = select(DBfinding.id_)
+    query = query.where(DBfinding.repository_id == repository_id)
+
+    # Set up the join for filtering
+    if status is not None or not_status is not None:
+        query = query.join(
+            DBaudit,
+            (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
+            isouter=True,
+        )
+
+    # filter by status
+    if status == FindingStatus.NOT_ANALYZED:
+        query = query.where((DBaudit.status == FindingStatus.NOT_ANALYZED) | (DBaudit.status == None))  # noqa: E711
+    elif status is not None:
+        query = query.where(DBaudit.status == status)
+
+    # filter by status negation.
+    if not_status == FindingStatus.NOT_ANALYZED:
+        query = query.where((DBaudit.status != FindingStatus.NOT_ANALYZED) & (DBaudit.status != None))  # noqa: E711
+    elif not_status is not None:
+        query = query.where(DBaudit.status != not_status)
+
+    return db_connection.execute(query).scalars().all()
+
+
 def get_total_findings_count(db_connection: Session, findings_filter: FindingsFilter = None) -> int:
     """
         Retrieve count of finding records of a given scan

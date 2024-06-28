@@ -1,12 +1,13 @@
 # Standard Library
 
 # Third Party
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from fastapi_cache.decorator import cache
 from sqlalchemy.orm import Session
 
 # First Party
 from resc_backend.constants import (
+    AUDIT_AUTOMATED_COMMENT,
     CACHE_NAMESPACE_FINDING,
     CACHE_NAMESPACE_REPOSITORY,
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
@@ -22,6 +23,8 @@ from resc_backend.constants import (
     RWS_ROUTE_SCANS,
 )
 from resc_backend.resc_web_service.cache_manager import CacheManager
+from resc_backend.resc_web_service.crud import audit as audit_crud
+from resc_backend.resc_web_service.crud import finding as finding_crud
 from resc_backend.resc_web_service.crud import repository as repository_crud
 from resc_backend.resc_web_service.crud import scan as scan_crud
 from resc_backend.resc_web_service.dependencies import get_db_connection
@@ -32,6 +35,7 @@ from resc_backend.resc_web_service.schema import (
 )
 from resc_backend.resc_web_service.schema import scan as scan_schema
 from resc_backend.resc_web_service.schema.finding_count_model import FindingCountModel
+from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.pagination_model import PaginationModel
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
@@ -52,12 +56,10 @@ router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
 def get_all_repositories(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(False),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_schema.RepositoryRead]:
     """
@@ -237,12 +239,10 @@ async def delete_repository(repository_id: int, db_connection: Session = Depends
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_projects(
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(False),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -280,12 +280,11 @@ def get_distinct_projects(
 )
 @cache(namespace=CACHE_NAMESPACE_REPOSITORY, expire=REDIS_CACHE_EXPIRE)
 def get_distinct_repositories(
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     project_name: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(default=False),
+    only_if_has_untriaged_findings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
 ) -> list[str]:
     """
@@ -295,6 +294,7 @@ def get_distinct_repositories(
     - **vcs_providers**: Optional, filter of supported vcs provider types
     - **project_name**: Optional, filter on project name. It is used as a full string match filter
     - **only_if_has_findings**: Optional, filter all repositories that have findings
+    - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
     - **return**: List[str]
         The output will contain a list of unique repositories
     """
@@ -305,6 +305,7 @@ def get_distinct_repositories(
         project_name=project_name,
         only_if_has_findings=only_if_has_findings,
         include_deleted=include_deleted_repositories,
+        only_if_has_untriaged_findings=only_if_has_untriaged_findings,
     )
     repositories = [repo.repository_name for repo in distinct_repositories]
     return repositories
@@ -369,13 +370,12 @@ def get_findings_metadata_for_repository(
 def get_all_repositories_with_findings_metadata(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
-    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider", title="VCSProviders"),
+    vcs_providers: list[VCSProviders] = Query(None, alias="vcs_provider"),
     project_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     repository_filter: str | None = Query("", pattern=r"^[A-z0-9 .\-_%]*$"),
     only_if_has_findings: bool = Query(default=False),
-    include_deleted_repositories: bool | None = Query(
-        False, alias="include_deleted_repositories", title="IncludeDeletedRepositories"
-    ),
+    include_deleted_repositories: bool | None = Query(default=False),
+    only_if_has_untriaged_findings: bool = Query(default=False),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[repository_enriched_schema.RepositoryEnrichedRead]:
     """
@@ -388,6 +388,7 @@ def get_all_repositories_with_findings_metadata(
     - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
     - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
     - **only_if_has_findings**: Optional, filter all repositories those have findings
+    - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
     - **return**: [RepositoryEnrichedRead]
         The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,
         or an empty list if no repository
@@ -402,6 +403,7 @@ def get_all_repositories_with_findings_metadata(
         repository_filter=repository_filter,
         only_if_has_findings=only_if_has_findings,
         include_deleted=include_deleted_repositories,
+        only_if_has_untriaged_findings=only_if_has_untriaged_findings,
     )
 
     total_repositories = repository_crud.get_repositories_count(
@@ -411,6 +413,7 @@ def get_all_repositories_with_findings_metadata(
         repository_filter=repository_filter,
         only_if_has_findings=only_if_has_findings,
         include_deleted=include_deleted_repositories,
+        only_if_has_untriaged_findings=only_if_has_untriaged_findings,
     )
     repository_list = []
     repo_ids = [repo.id_ for repo in repositories]
@@ -506,3 +509,60 @@ def get_scans_for_repository(
     total_scans = scan_crud.get_scans_count(db_connection, repository_id=repository_id)
 
     return PaginationModel[scan_schema.ScanRead](data=scans, total=total_scans, limit=limit, skip=skip)
+
+
+@router.patch(
+    "/{repository_id}/toggle-deleted",
+    summary="Toggle the deleted_at for a repository",
+    response_model=repository_schema.RepositoryRead,
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Toggle the deleted_at of repository <repository_id>"},
+        404: {"model": Model404, "description": "Repository <repository_id> not found"},
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
+async def toggle_deleted_at_for_repository(
+    request: Request, repository_id: int, db_connection: Session = Depends(get_db_connection)
+) -> repository_schema.RepositoryRead:
+    """
+        Toggle the deleted_at for a repository
+
+        Audit all associated findings as GONE (if not audited).
+
+    - **db_connection**: Session of the database connection
+    - **repository_id**: ID of the repository to toggle
+    - **return**: The output will contain the updated metadata of the repository
+    """
+    db_repository = repository_crud.get_repository(db_connection, repository_id=repository_id)
+    if db_repository is None:
+        raise HTTPException(status_code=404, detail="Repository not found")
+
+    if db_repository.deleted_at is None:
+        # we DELETE
+        repository_crud.soft_delete_repository(db_connection, repository_id=repository_id)
+        finding_ids = finding_crud.get_finding_for_repository(
+            db_connection, repository_id=repository_id, status=None, not_status=FindingStatus.NOT_ACCESSIBLE
+        )
+        audit_crud.create_audits(
+            db_connection=db_connection,
+            finding_ids=finding_ids,
+            auditor=request.user,
+            status=FindingStatus.NOT_ACCESSIBLE,
+            comment=AUDIT_AUTOMATED_COMMENT,
+        )
+    else:
+        # we UNdeleted
+        repository_crud.undelete_repository(db_connection, repository_id=repository_id)
+        finding_ids = finding_crud.get_finding_for_repository(
+            db_connection, repository_id=repository_id, status=FindingStatus.NOT_ACCESSIBLE
+        )
+        audit_crud.revert_last_audit(db_connection, finding_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE)
+
+    # Clear cache related to repository
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_REPOSITORY)
+    # Clear cache related to findings
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
+
+    return repository_crud.get_repository(db_connection, repository_id=repository_id)
