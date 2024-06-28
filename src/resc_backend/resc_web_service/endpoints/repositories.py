@@ -511,7 +511,7 @@ def get_scans_for_repository(
     return PaginationModel[scan_schema.ScanRead](data=scans, total=total_scans, limit=limit, skip=skip)
 
 
-@router.get(
+@router.patch(
     "/{repository_id}/toggle-deleted",
     summary="Toggle the deleted_at for a repository",
     response_model=repository_schema.RepositoryRead,
