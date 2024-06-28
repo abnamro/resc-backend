@@ -429,7 +429,9 @@ def soft_delete_repository(db_connection: Session, repository_id: int):
     :param repository_id:
         id of the repository to be deleted
     """
-    db_connection.execute(update(DBrepository).where(DBrepository.id_ == repository_id).values(delete_at=datetime.now(UTC)))
+    db_connection.execute(
+        update(DBrepository).where(DBrepository.id_ == repository_id).values(delete_at=datetime.now(UTC))
+    )
     db_connection.commit()
 
 
