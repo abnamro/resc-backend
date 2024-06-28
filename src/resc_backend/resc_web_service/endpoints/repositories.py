@@ -514,6 +514,7 @@ def get_scans_for_repository(
 @router.get(
     "/{repository_id}/toggle-deleted",
     summary="Toggle the deleted_at for a repository",
+    response_model=repository_schema.RepositoryRead,
     status_code=status.HTTP_200_OK,
     responses={
         200: {"description": "Toggle the deleted_at of repository <repository_id>"},
@@ -524,7 +525,7 @@ def get_scans_for_repository(
 )
 async def toggle_deleted_at_for_repository(
     request: Request, repository_id: int, db_connection: Session = Depends(get_db_connection)
-):
+) -> repository_schema.RepositoryRead:
     """
         Toggle the deleted_at for a repository
 
@@ -541,7 +542,9 @@ async def toggle_deleted_at_for_repository(
     if db_repository.deleted_at is None:
         # we DELETE
         repository_crud.soft_delete_repository(db_connection, repository_id=repository_id)
-        finding_ids = finding_crud.get_finding_for_repository(db_connection, repository_id=repository_id, status=None)
+        finding_ids = finding_crud.get_finding_for_repository(
+            db_connection, repository_id=repository_id, status=None, not_status=FindingStatus.NOT_ACCESSIBLE
+        )
         audit_crud.create_audits(
             db_connection=db_connection,
             finding_ids=finding_ids,
