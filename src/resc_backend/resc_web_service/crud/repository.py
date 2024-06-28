@@ -49,9 +49,51 @@ def _only_if_has_untriaged_findings_condition(db_connection: Session) -> Query:
     has_untriaged_sub_query = has_untriaged_sub_query.distinct()
 
 
+def _repository_id_only_if_has_findings(db_connection: Session) -> Query:
+    last_scan_sub_query = _get_max_base_scan(db_connection)
+
+    sub_query = db_connection.query(DBrepository.id_)
+    sub_query = sub_query.join(
+        last_scan_sub_query,
+        DBrepository.id_ == last_scan_sub_query.c.repository_id,
+    )
+    sub_query = sub_query.join(
+        DBscan,
+        DBrepository.id_ == DBscan.repository_id,
+    )
+    sub_query = sub_query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
+    sub_query = sub_query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
+    return sub_query.distinct()
+
+
+def _apply_filters(
+    db_connection: Session,
+    query: Query,
+    include_deleted: bool,
+    only_if_has_findings: bool,
+    only_if_has_untriaged_findings: bool,
+    vcs_providers: list[VCSProviders] | None,
+) -> Query:
+    if not include_deleted:
+        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
+
+    if only_if_has_findings:
+        sub_query = _repository_id_only_if_has_findings(db_connection=db_connection)
+        query = query.where(DBrepository.id_.in_(sub_query))
+
+    if only_if_has_untriaged_findings:
+        has_untriaged_sub_query = _only_if_has_untriaged_findings_condition(db_connection)
+        query = query.where(DBrepository.id_.in_(has_untriaged_sub_query))
+
+    if vcs_providers and vcs_providers is not None:
+        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
+
+    return query
+
+
 def get_repositories(
     db_connection: Session,
-    vcs_providers: list[VCSProviders] = None,
+    vcs_providers: list[VCSProviders] | None = None,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
     project_filter: str = "",
@@ -100,9 +142,6 @@ def get_repositories(
         func.coalesce(DBscan.timestamp, None).label("last_scan_timestamp"),
     )
 
-    if not include_deleted:
-        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
-
     query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
     query = query.join(
         sub_query,
@@ -115,32 +154,9 @@ def get_repositories(
         isouter=True,
     )
 
-    if only_if_has_findings:
-        last_scan_sub_query = _get_max_base_scan(db_connection)
-
-        sub_query = db_connection.query(DBrepository.id_)
-        sub_query = sub_query.join(
-            last_scan_sub_query,
-            DBrepository.id_ == last_scan_sub_query.c.repository_id,
-        )
-        sub_query = sub_query.join(
-            DBscan,
-            DBrepository.id_ == DBscan.repository_id,
-        )
-        sub_query = sub_query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
-        sub_query = sub_query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
-        sub_query = sub_query.distinct()
-
-        # Filter on repositories that are in the selection
-        query = query.where(DBrepository.id_.in_(sub_query))
-
-    if only_if_has_untriaged_findings:
-        has_untriaged_sub_query = _only_if_has_untriaged_findings_condition(db_connection)
-        # Filter on repositories that are in the selection
-        query = query.where(DBrepository.id_.in_(has_untriaged_sub_query))
-
-    if vcs_providers and vcs_providers is not None:
-        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
+    query = _apply_filters(
+        db_connection, query, include_deleted, only_if_has_findings, only_if_has_untriaged_findings, vcs_providers
+    )
 
     if project_filter:
         query = query.where(DBrepository.project_key == project_filter)
@@ -178,37 +194,11 @@ def get_repositories_count(
         count of repositories
     """
     query = db_connection.query(func.count(DBrepository.id_))
+    query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
 
-    if not include_deleted:
-        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
-
-    if only_if_has_findings:
-        last_scan_sub_query = _get_max_base_scan(db_connection)
-
-        sub_query = db_connection.query(DBrepository.id_)
-        sub_query = sub_query.join(
-            last_scan_sub_query,
-            DBrepository.id_ == last_scan_sub_query.c.repository_id,
-        )
-        sub_query = sub_query.join(
-            DBscan,
-            DBrepository.id_ == DBscan.repository_id,
-        )
-        sub_query = sub_query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
-        sub_query = sub_query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
-        sub_query = sub_query.distinct()
-
-        # Filter on repositories that are in the selection
-        query = query.where(DBrepository.id_.in_(sub_query))
-
-    if only_if_has_untriaged_findings:
-        has_untriaged_sub_query = _only_if_has_untriaged_findings_condition(db_connection)
-        # Filter on repositories that are in the selection
-        query = query.where(DBrepository.id_.in_(has_untriaged_sub_query))
-
-    if vcs_providers and vcs_providers is not None:
-        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
-        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
+    query = _apply_filters(
+        db_connection, query, include_deleted, only_if_has_findings, only_if_has_untriaged_findings, vcs_providers
+    )
 
     if project_filter:
         query = query.where(DBrepository.project_key == project_filter)
@@ -294,31 +284,11 @@ def get_distinct_projects(
         The output will contain a list of unique projects
     """
     query = db_connection.query(DBrepository.project_key)
+    query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
 
-    if not include_deleted:
-        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
-
-    if only_if_has_findings:
-        last_scan_sub_query = _get_max_base_scan(db_connection)
-        query = query.join(
-            last_scan_sub_query,
-            DBrepository.id_ == last_scan_sub_query.c.repository_id,
-        )
-        query = query.join(
-            DBscan,
-            DBrepository.id_ == DBscan.repository_id,
-        )
-        query = query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
-        query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
-
-    if only_if_has_untriaged_findings:
-        has_untriaged_sub_query = _only_if_has_untriaged_findings_condition(db_connection)
-        # Filter on repositories that are in the selection
-        query = query.where(DBrepository.id_.in_(has_untriaged_sub_query))
-
-    if vcs_providers and vcs_providers is not None:
-        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
-        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
+    query = _apply_filters(
+        db_connection, query, include_deleted, only_if_has_findings, only_if_has_untriaged_findings, vcs_providers
+    )
 
     if repository_filter:
         query = query.where(DBrepository.repository_name == repository_filter)
@@ -351,31 +321,11 @@ def get_distinct_repositories(
         The output will contain a list of unique repositories
     """
     query = db_connection.query(DBrepository.repository_name)
+    query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
 
-    if not include_deleted:
-        query = query.filter(DBrepository.deleted_at == None)  # noqa: E711
-
-    if only_if_has_findings:
-        last_scan_sub_query = _get_max_base_scan(db_connection)
-        query = query.join(
-            last_scan_sub_query,
-            DBrepository.id_ == last_scan_sub_query.c.repository_id,
-        )
-        query = query.join(
-            DBscan,
-            DBrepository.id_ == DBscan.repository_id,
-        )
-        query = query.where(DBscan.id_ >= last_scan_sub_query.c.latest_base_scan_id)
-        query = query.join(DBscanFinding, DBscan.id_ == DBscanFinding.scan_id)
-
-    if only_if_has_untriaged_findings:
-        has_untriaged_sub_query = _only_if_has_untriaged_findings_condition(db_connection)
-        # Filter on repositories that are in the selection
-        query = query.where(DBrepository.id_.in_(has_untriaged_sub_query))
-
-    if vcs_providers and vcs_providers is not None:
-        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
-        query = query.where(DBVcsInstance.provider_type.in_(vcs_providers))
+    query = _apply_filters(
+        db_connection, query, include_deleted, only_if_has_findings, only_if_has_untriaged_findings, vcs_providers
+    )
 
     if project_name:
         query = query.where(DBrepository.project_key == project_name)
