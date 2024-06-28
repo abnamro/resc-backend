@@ -556,7 +556,7 @@ async def toggle_deleted_at_for_repository(
         # we UNdeleted
         repository_crud.undelete_repository(db_connection, repository_id=repository_id)
         finding_ids = finding_crud.get_finding_for_repository(
-            db_connection, repository_id=repository_id, status=FindingStatus.NOT_ACCESSIBLE
+            db_connection, repository_id=repository_id, status=FindingStatus.NOT_ACCESSIBLE, not_status=None
         )
         audit_crud.revert_last_audit(db_connection, finding_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE)
 
