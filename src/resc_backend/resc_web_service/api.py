@@ -1,6 +1,7 @@
 # Standard Library
 import logging.config
 from contextlib import asynccontextmanager
+from os import path
 
 # Third Party
 from fastapi import Depends, FastAPI
@@ -120,7 +121,10 @@ async def lifespan(_: FastAPI):
     await app_shutdown()
 
 
-read_version = config("setup.cfg")["metadata"]["version"]
+if path.exists("setup.cfg"):
+    read_version = config("setup.cfg")["metadata"]["version"]
+else:
+    read_version = "3.0.0"
 
 app = FastAPI(
     title="Repository Scanner (RESC)",
