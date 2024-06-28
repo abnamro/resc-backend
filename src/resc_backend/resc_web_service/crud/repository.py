@@ -2,7 +2,7 @@
 from datetime import UTC, datetime
 
 # Third Party
-from sqlalchemy import func
+from sqlalchemy import func, update
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
@@ -46,7 +46,7 @@ def _only_if_has_untriaged_findings_condition(db_connection: Session) -> Query:
     has_untriaged_sub_query = has_untriaged_sub_query.where(
         (DBaudit.status == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED)  # noqa: E711
     )  # noqa: E711
-    has_untriaged_sub_query = has_untriaged_sub_query.distinct()
+    return has_untriaged_sub_query.distinct()
 
 
 def _repository_id_only_if_has_findings(db_connection: Session) -> Query:
@@ -429,7 +429,9 @@ def soft_delete_repository(db_connection: Session, repository_id: int):
     :param repository_id:
         id of the repository to be deleted
     """
-    db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).update(delete_at=datetime.now(UTC))
+    db_connection.execute(
+        update(DBrepository).where(DBrepository.id_ == repository_id).values(delete_at=datetime.now(UTC))
+    )
     db_connection.commit()
 
 
@@ -441,5 +443,5 @@ def undelete_repository(db_connection: Session, repository_id: int):
     :param repository_id:
         id of the repository to be undeleted
     """
-    db_connection.query(DBrepository).where(DBrepository.id_ == repository_id).update(delete_at=None)
+    db_connection.execute(update(DBrepository).where(DBrepository.id_ == repository_id).values(delete_at=None))
     db_connection.commit()
