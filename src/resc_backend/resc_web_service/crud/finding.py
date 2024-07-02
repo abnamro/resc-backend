@@ -359,7 +359,7 @@ def get_finding_for_repository(
     if not_status == FindingStatus.NOT_ANALYZED:
         query = query.where((DBaudit.status != FindingStatus.NOT_ANALYZED) & (DBaudit.status != None))  # noqa: E711
     elif not_status is not None:
-        query = query.where(DBaudit.status != not_status)
+        query = query.where((DBaudit.status != not_status) | (DBaudit.status == None))  # noqa: E711
 
     return db_connection.execute(query).scalars().all()
 
