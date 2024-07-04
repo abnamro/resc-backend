@@ -19,12 +19,14 @@ from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.configuration import (
     AUTHENTICATION_REQUIRED,
     CORS_ALLOWED_DOMAINS,
+    DEBUG_MODE,
     ENABLE_CORS,
     WEB_SERVICE_ENV_VARS,
 )
 from resc_backend.resc_web_service.dependencies import (
     add_security_headers,
     check_db_initialized,
+    log_request_middleware,
     requires_auth,
     requires_no_auth,
 )
@@ -157,6 +159,7 @@ app.include_router(vcs_instances.router, prefix=RWS_VERSION_PREFIX, dependencies
 app.include_router(metrics.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 
 # Apply the security headers to the app in the form of middleware
+app.middleware("http")(log_request_middleware)
 app.middleware("http")(add_security_headers)
 
 # Add exception handlers
@@ -167,6 +170,10 @@ def app_startup():
     CacheManager.initialize_cache(env_variables=env_variables)
     try:
         _ = Session(bind=engine)
+
+        if env_variables[DEBUG_MODE].lower() in ("yes", "y", "true", "t", "1"):
+            logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+
         check_db_initialized()
 
         logger.info("Database is connected, expected table(s) found")
