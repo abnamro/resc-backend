@@ -5,6 +5,12 @@ from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, StringConstraints
 
 
+class ActiveRepositories(BaseModel):
+    project_key: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    repository_ids: Annotated[set[str], Field(min_length=1)]
+    vcs_instance: Annotated[int, Field(gt=0)]
+
+
 class RepositoryBase(BaseModel):
     project_key: Annotated[str, StringConstraints(min_length=1, max_length=100)]
     repository_id: Annotated[str, StringConstraints(min_length=1, max_length=100)]

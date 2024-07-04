@@ -2,7 +2,7 @@
 from datetime import UTC, datetime
 
 # Third Party
-from sqlalchemy import func, update
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
@@ -215,6 +215,17 @@ def get_repository(db_connection: Session, repository_id: int):
     return repository
 
 
+def get_repository_string_ids_by_project_and_vcs_instance(
+    db_connection: Session, project_key: str, vcs_instance_id: int
+) -> list[str]:
+    query = select(DBrepository.repository_id)
+    query = query.where(
+        DBrepository.project_key == project_key,
+        DBrepository.vcs_instance == vcs_instance_id,
+    )
+    return db_connection.execute(query).scalars().all()
+
+
 def update_repository(
     db_connection: Session,
     repository_id: int,
@@ -421,27 +432,41 @@ def delete_repositories_by_vcs_instance_id(db_connection: Session, vcs_instance_
     db_connection.commit()
 
 
-def soft_delete_repository(db_connection: Session, repository_id: int):
+def soft_delete_repository(db_connection: Session, repository_ids: list[int]):
     """
         Soft delete a repository object
     :param db_connection:
         Session of the database connection
-    :param repository_id:
-        id of the repository to be deleted
+    :param repository_ids:
+        list of id of the repository to be deleted
     """
     db_connection.execute(
-        update(DBrepository).where(DBrepository.id_ == repository_id).values(deleted_at=datetime.now(UTC))
+        update(DBrepository).where(DBrepository.id_.in_(repository_ids)).values(deleted_at=datetime.now(UTC))
     )
     db_connection.commit()
 
 
-def undelete_repository(db_connection: Session, repository_id: int):
+def undelete_repository(db_connection: Session, repository_ids: list[int]):
     """
         Undelete a repository object
     :param db_connection:
         Session of the database connection
-    :param repository_id:
-        id of the repository to be undeleted
+    :param repository_ids:
+        list of id of the repository to be undeleted
     """
-    db_connection.execute(update(DBrepository).where(DBrepository.id_ == repository_id).values(deleted_at=None))
+    db_connection.execute(update(DBrepository).where(DBrepository.id_.in_(repository_ids)).values(deleted_at=None))
     db_connection.commit()
+
+
+def fetch_id_from_undeleted_repository_string_id(db_connection: Session, repository_string_ids: list[str]) -> list[int]:
+    """
+        Fetch the id of the undeleted repository from the string id
+    :param db_connection:
+        Session of the database connection
+    :param repository_string_ids:
+        list of string id of the repository
+    """
+    query = select(DBrepository.id_).where(DBrepository.repository_id.in_(repository_string_ids))
+    query = query.where(DBrepository.deleted_at.is_(None))
+    repository_ids = db_connection.execute(query).scalars().all()
+    return repository_ids

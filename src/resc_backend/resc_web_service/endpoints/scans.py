@@ -25,6 +25,7 @@ from resc_backend.db.model import DBfinding, DBscan, DBscanFinding
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import audit as audit_crud
 from resc_backend.resc_web_service.crud import finding as finding_crud
+from resc_backend.resc_web_service.crud import repository as repository_crud
 from resc_backend.resc_web_service.crud import rule as rule_crud
 from resc_backend.resc_web_service.crud import scan as scan_crud
 from resc_backend.resc_web_service.crud import scan_finding as scan_finding_crud
@@ -82,6 +83,7 @@ def get_all_scans(
     responses={
         201: {"description": "Create a new scan"},
         400: {"model": Model400, "description": "Error creating a new scan"},
+        400: {"model": Model404, "description": "Repository not found"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -98,6 +100,20 @@ def create_scan(scan: scan_schema.ScanCreate, db_connection: Session = Depends(g
     - **rule_pack**: rule pack version
     - **repository_id**: repository id
     """
+    # First we check that the repo actually exists.
+    repository = repository_crud.get_repository(db_connection=db_connection, repository_id=scan.repository_id)
+    if repository is None:
+        raise HTTPException(status_code=404, detail="Repository not found")
+    
+    # We check that the repo is NOT deleted.
+    # We just scanned it, therefore it exists!
+    if repository.deleted_at is not None:
+        repository_crud.undelete_repository(db_connection, repository.id_)
+        finding_ids = finding_crud.get_finding_for_repository(
+            db_connection, repository_ids=[repository.id_], status=FindingStatus.NOT_ACCESSIBLE, not_status=None
+        )
+        audit_crud.revert_last_audit(db_connection, finding_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE)
+
     # Determine the increment number if needed and not supplied
     if scan.scan_type == ScanType.INCREMENTAL and (not scan.increment_number or scan.increment_number <= 0):
         last_scan = scan_crud.get_latest_scan_for_repository(

@@ -13,7 +13,7 @@ from resc_backend.constants import (
     RWS_ROUTE_SCANS,
     RWS_VERSION_PREFIX,
 )
-from resc_backend.db.model import DBfinding, DBrule, DBscan
+from resc_backend.db.model import DBfinding, DBrepository, DBrule, DBscan
 from resc_backend.resc_web_service.api import app
 from resc_backend.resc_web_service.dependencies import requires_auth, requires_no_auth
 from resc_backend.resc_web_service.schema.finding import FindingRead
@@ -39,6 +39,20 @@ class TestScans(unittest.TestCase):
                 )
             )
             self.db_scans[i - 1].id_ = i
+
+        self.db_repo = []
+        for i in range(1, 6):
+            self.db_repo.append(
+                DBrepository(
+                    project_key="project_key",
+                    repository_id=str(i),
+                    repository_name=f"repo_{i}",
+                    repository_url=f"repo_url_{i}",
+                    vcs_instance=1,
+                    deleted_at=None
+                )
+            )
+            self.db_repo[i - 1].id_ = i
 
         self.db_rules = []
         for i in range(1, 6):
@@ -91,6 +105,7 @@ class TestScans(unittest.TestCase):
                     event_sent_on=datetime.now(UTC),
                 )
             )
+        self.repository_id = 1
 
     @staticmethod
     def create_json_body(scan):
@@ -167,8 +182,10 @@ class TestScans(unittest.TestCase):
         delete_scan.assert_not_called()
 
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
-    def test_post_scan(self, create_scan):
+    @patch("resc_backend.resc_web_service.crud.repository.get_repository")
+    def test_post_scan(self, get_repository, create_scan):
         db_scan = self.db_scans[0]
+        get_repository.return_value = self.db_repo[0]
         create_scan.return_value = db_scan
         response = self.client.post(
             f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}",
@@ -176,12 +193,28 @@ class TestScans(unittest.TestCase):
         )
         assert response.status_code == 201, response.text
         self.assert_scan(response.json(), db_scan)
+        get_repository.assert_called_once_with(db_connection=ANY, repository_id=db_scan.repository_id)
         create_scan.assert_called_once_with(db_connection=ANY, scan=self.cast_db_scan_to_scan_create(db_scan))
 
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
-    @patch("resc_backend.resc_web_service.crud.scan.get_latest_scan_for_repository")
-    def test_post_increment_scan(self, get_latest_scan_for_repository, create_scan):
+    @patch("resc_backend.resc_web_service.crud.repository.get_repository")
+    def test_post_scan_404_no_repo(self, get_repository, create_scan):
         db_scan = self.db_scans[0]
+        get_repository.return_value = None
+        response = self.client.post(
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}",
+            json=self.create_json_body(db_scan),
+        )
+        assert response.status_code == 404, response.text
+        get_repository.assert_called_once_with(db_connection=ANY, repository_id=db_scan.repository_id)
+        create_scan.assert_not_called()
+
+    @patch("resc_backend.resc_web_service.crud.scan.create_scan")
+    @patch("resc_backend.resc_web_service.crud.scan.get_latest_scan_for_repository")
+    @patch("resc_backend.resc_web_service.crud.repository.get_repository")
+    def test_post_scan(self, get_repository, get_latest_scan_for_repository, create_scan):
+        db_scan = self.db_scans[0]
+        get_repository.return_value = self.db_repo[0]
         db_scan.scan_type = ScanType.INCREMENTAL
         create_scan.return_value = db_scan
         get_latest_scan_for_repository.return_value = self.db_scans[1]

@@ -39,6 +39,7 @@ def get_latest_scan_for_repository(db_connection: Session, repository_id: int) -
     :return: scan
         scan object having the most recent timestamp for a given repository object
     """
+    # TODO: refactor me to use is_latest intead of timestamps play?
     subquery = db_connection.query(func.max(DBscan.timestamp).label("max_time"))
     subquery = subquery.where(DBscan.repository_id == repository_id)
     subquery = subquery.subquery()

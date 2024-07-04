@@ -19,8 +19,10 @@ from resc_backend.constants import (
     RWS_ROUTE_DISTINCT_REPOSITORIES,
     RWS_ROUTE_FINDINGS_METADATA,
     RWS_ROUTE_LAST_SCAN,
+    RWS_ROUTE_MARK_AS_ACTIVE,
     RWS_ROUTE_REPOSITORIES,
     RWS_ROUTE_SCANS,
+    RWS_ROUTE_TOGGLE_DELETED,
 )
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.crud import audit as audit_crud
@@ -512,7 +514,7 @@ def get_scans_for_repository(
 
 
 @router.patch(
-    "/{repository_id}/toggle-deleted",
+    "/{repository_id}/" f"{RWS_ROUTE_TOGGLE_DELETED}",
     summary="Toggle the deleted_at for a repository",
     response_model=repository_schema.RepositoryRead,
     status_code=status.HTTP_200_OK,
@@ -541,9 +543,9 @@ async def toggle_deleted_at_for_repository(
 
     if db_repository.deleted_at is None:
         # we DELETE
-        repository_crud.soft_delete_repository(db_connection, repository_id=repository_id)
+        repository_crud.soft_delete_repository(db_connection, repository_ids=[repository_id])
         finding_ids = finding_crud.get_finding_for_repository(
-            db_connection, repository_id=repository_id, status=None, not_status=FindingStatus.NOT_ACCESSIBLE
+            db_connection, repository_ids=[repository_id], status=None, not_status=FindingStatus.NOT_ACCESSIBLE
         )
         audit_crud.create_audits(
             db_connection=db_connection,
@@ -556,7 +558,7 @@ async def toggle_deleted_at_for_repository(
         # we UNdeleted
         repository_crud.undelete_repository(db_connection, repository_id=repository_id)
         finding_ids = finding_crud.get_finding_for_repository(
-            db_connection, repository_id=repository_id, status=FindingStatus.NOT_ACCESSIBLE, not_status=None
+            db_connection, repository_ids=[repository_id], status=FindingStatus.NOT_ACCESSIBLE, not_status=None
         )
         audit_crud.revert_last_audit(db_connection, finding_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE)
 
@@ -566,3 +568,40 @@ async def toggle_deleted_at_for_repository(
     await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
 
     return repository_crud.get_repository(db_connection, repository_id=repository_id)
+
+
+@router.post(
+    f"{RWS_ROUTE_MARK_AS_ACTIVE}",
+    summary="Mark the repositories as deleted",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Mark the repositories as deleted"},
+        404: {"model": Model404, "description": "Some repositories are not found"},
+        500: {"description": ERROR_MESSAGE_500},
+        503: {"description": ERROR_MESSAGE_503},
+    },
+)
+async def get_active_repositories_mark_rest_as_deleted(
+    active_repositories: repository_schema.ActiveRepositories,
+    db_connection: Session = Depends(get_db_connection),
+) -> None:
+    # step 1: retrieve all the repositories for a VCS - Project combination
+    repositories_db: list[str] = repository_crud.get_repository_string_ids_by_project_and_vcs_instance(
+        db_connection, project_key=active_repositories.project_key, vcs_provider=active_repositories.vcs_instance
+    )
+
+    # step 2: substract the list provided to the current on in the DB
+    list_repository_id_to_mark_as_deleted: set[str] = set(repositories_db) - active_repositories.repository_ids
+
+    deleted_repository_ids: list[int] = repository_crud.fetch_id_from_undeleted_repository_string_id(
+        db_connection=db_connection, repository_ids=list_repository_id_to_mark_as_deleted
+    )
+
+    # step 3: mark all result as deleted
+    repository_crud.soft_delete_repository(db_connection, repository_ids=deleted_repository_ids)
+    finding_ids = finding_crud.get_finding_for_repository(
+        db_connection, repository_ids=deleted_repository_ids, status=None, not_status=FindingStatus.NOT_ACCESSIBLE
+    )
+    audit_crud.create_automated_audits(
+        db_connection=db_connection, finding_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE
+    )

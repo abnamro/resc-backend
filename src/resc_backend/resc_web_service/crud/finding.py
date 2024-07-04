@@ -323,7 +323,7 @@ def get_untriaged_finding_outdated_for_current_scan(db_connection: Session, scan
 
 
 def get_finding_for_repository(
-    db_connection: Session, repository_id: int, status: FindingStatus | None, not_status: FindingStatus | None
+    db_connection: Session, repository_ids: list[int], status: FindingStatus | None, not_status: FindingStatus | None
 ) -> list[int]:
     """
     Retrieve the findings associated to a repository.
@@ -339,7 +339,7 @@ def get_finding_for_repository(
     """
 
     query = select(DBfinding.id_)
-    query = query.where(DBfinding.repository_id == repository_id)
+    query = query.where(DBfinding.repository_id.in_(repository_ids))
 
     # Set up the join for filtering
     if status is not None or not_status is not None:
