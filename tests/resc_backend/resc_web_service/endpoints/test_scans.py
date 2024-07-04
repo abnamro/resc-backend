@@ -49,7 +49,7 @@ class TestScans(unittest.TestCase):
                     repository_name=f"repo_{i}",
                     repository_url=f"repo_url_{i}",
                     vcs_instance=1,
-                    deleted_at=None
+                    deleted_at=None,
                 )
             )
             self.db_repo[i - 1].id_ = i
@@ -212,7 +212,7 @@ class TestScans(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
     @patch("resc_backend.resc_web_service.crud.scan.get_latest_scan_for_repository")
     @patch("resc_backend.resc_web_service.crud.repository.get_repository")
-    def test_post_scan(self, get_repository, get_latest_scan_for_repository, create_scan):
+    def test_post_increment_scan(self, get_repository, get_latest_scan_for_repository, create_scan):
         db_scan = self.db_scans[0]
         get_repository.return_value = self.db_repo[0]
         db_scan.scan_type = ScanType.INCREMENTAL

@@ -83,7 +83,7 @@ def get_all_scans(
     responses={
         201: {"description": "Create a new scan"},
         400: {"model": Model400, "description": "Error creating a new scan"},
-        400: {"model": Model404, "description": "Repository not found"},
+        404: {"model": Model404, "description": "Repository not found"},
         500: {"description": ERROR_MESSAGE_500},
         503: {"description": ERROR_MESSAGE_503},
     },
@@ -104,7 +104,7 @@ def create_scan(scan: scan_schema.ScanCreate, db_connection: Session = Depends(g
     repository = repository_crud.get_repository(db_connection=db_connection, repository_id=scan.repository_id)
     if repository is None:
         raise HTTPException(status_code=404, detail="Repository not found")
-    
+
     # We check that the repo is NOT deleted.
     # We just scanned it, therefore it exists!
     if repository.deleted_at is not None:
