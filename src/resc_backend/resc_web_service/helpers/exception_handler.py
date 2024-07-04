@@ -13,6 +13,8 @@ from sqlalchemy.exc import OperationalError
 # First Party
 from resc_backend.constants import ERROR_MESSAGE_500, ERROR_MESSAGE_503
 
+logger = logging.getLogger("resc.exceptions")
+
 
 def add_exception_handlers(app: FastAPI):
     @app.exception_handler(RequestValidationError)
@@ -58,10 +60,9 @@ def log_error(request: Request, exc: Exception, response_status: str):
     :param response_status:
         Response status from the endpoint
     """
-    logging.error(f"{request.method} {request.url} {response_status}")
     if hasattr(exc, "body"):
-        logging.error(f"request body: {exc.body}")
-    logging.error(f"error: {exc}")
+        logger.error(f"request body: {exc.body}")
+    logger.error(f"error: {exc}")
 
 
 def log_warning(request: Request, exc: Exception, response_status: str):
@@ -75,7 +76,6 @@ def log_warning(request: Request, exc: Exception, response_status: str):
         Response status from the endpoint
     """
     exc_str = f"{exc}".replace("\n", " ").replace("   ", " ")
-    logging.warning(f"{request.method} {request.url} {response_status}")
     if hasattr(exc, "body"):
-        logging.warning(f"request body: {exc.body}")
-    logging.warning(f"warning: {exc_str}")
+        logger.warning(f"request body: {exc.body}")
+    logger.warning(f"warning: {exc_str}")
