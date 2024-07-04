@@ -18,6 +18,8 @@ RESC_REDIS_SERVICE_HOST = "RESC_REDIS_SERVICE_HOST"
 RESC_REDIS_SERVICE_PORT = "RESC_REDIS_SERVICE_PORT"
 REDIS_PASSWORD = "REDIS_PASSWORD"
 
+DEBUG_MODE = "DEBUG_MODE"
+
 WEB_SERVICE_ENV_VARS = [
     EnvironmentVariable(
         ENABLE_CORS,
@@ -42,6 +44,12 @@ WEB_SERVICE_ENV_VARS = [
         "Set to true to enable the redis cache, its expected to be running separately from this instance",
         required=False,
         default="False",
+    ),
+    EnvironmentVariable(
+        DEBUG_MODE,
+        "Set to true/1 to enable debug mode",
+        required=False,
+        default="0",
     ),
 ]
 

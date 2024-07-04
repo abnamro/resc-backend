@@ -1,6 +1,8 @@
 # Standard Library
+import http
 import logging
 import ssl
+import time
 import urllib.error
 
 # Third Party
@@ -39,6 +41,8 @@ from resc_backend.resc_web_service.configuration import (
 
 security = HTTPBearer()
 logger = logging.getLogger(__name__)
+request_logger = logging.getLogger("resc.request")
+request_logger.setLevel(logging.getLevelName(logging.INFO))
 
 
 async def requires_auth(request: Request, credentials: HTTPBasicCredentials = Depends(security)):
@@ -204,3 +208,22 @@ def check_db_initialized():
     except Exception as ex:
         logger.error(f"Database is NOT connected or initialized | {ex} | Retrying...")
         raise
+
+
+async def log_request_middleware(request: Request, call_next):
+    url = f"{request.url.path}?{request.query_params}" if request.query_params else request.url.path
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = (time.time() - start_time) * 1000
+    formatted_process_time = f"{process_time:.2f}"
+    host = getattr(getattr(request, "client", None), "host", None)
+    port = getattr(getattr(request, "client", None), "port", None)
+    try:
+        status_phrase = http.HTTPStatus(response.status_code).phrase
+    except ValueError:
+        status_phrase = ""
+    request_logger.info(
+        f"{host}:{port} - "
+        f'"{request.method} {url}" {response.status_code} {status_phrase} {formatted_process_time}ms'
+    )
+    return response
