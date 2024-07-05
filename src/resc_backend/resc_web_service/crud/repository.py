@@ -215,13 +215,15 @@ def get_repository(db_connection: Session, repository_id: int):
     return repository
 
 
-def get_repository_string_ids_by_project_and_vcs_instance(
-    db_connection: Session, project_key: str, vcs_instance_id: int
-) -> list[str]:
-    query = select(DBrepository.repository_id)
+def get_inactive_repository_ids_by_project_and_vcs_instance_not_repository_id(
+    db_connection: Session, project_key: str, vcs_instance_name: str, not_in_repository_id: list[str]
+) -> list[int]:
+    query = select(DBrepository.id_)
+    query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
     query = query.where(
         DBrepository.project_key == project_key,
-        DBrepository.vcs_instance == vcs_instance_id,
+        DBVcsInstance.name == vcs_instance_name,
+        DBrepository.id_.notin_(not_in_repository_id),
     )
     return db_connection.execute(query).scalars().all()
 
@@ -458,15 +460,15 @@ def undelete_repository(db_connection: Session, repository_ids: list[int]):
     db_connection.commit()
 
 
-def fetch_id_from_undeleted_repository_string_id(db_connection: Session, repository_string_ids: list[str]) -> list[int]:
+def fetch_id_from_undeleted_repository_string_id(db_connection: Session, repository_ids: list[int]) -> list[int]:
     """
         Fetch the id of the undeleted repository from the string id
     :param db_connection:
         Session of the database connection
-    :param repository_string_ids:
-        list of string id of the repository
+    :param repository_ids:
+        list of id of the repository
     """
-    query = select(DBrepository.id_).where(DBrepository.repository_id.in_(repository_string_ids))
+    query = select(DBrepository.id_).where(DBrepository.id_.in_(repository_ids))
     query = query.where(DBrepository.deleted_at.is_(None))
     repository_ids = db_connection.execute(query).scalars().all()
     return repository_ids

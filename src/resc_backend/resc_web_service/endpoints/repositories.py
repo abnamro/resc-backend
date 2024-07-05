@@ -572,7 +572,7 @@ async def toggle_deleted_at_for_repository(
 
 @router.post(
     f"{RWS_ROUTE_MARK_AS_ACTIVE}",
-    summary="Mark the repositories as deleted",
+    summary="Mark the repositories as deleted: The list provided is the list of still active repositories.",
     status_code=status.HTTP_200_OK,
     responses={
         200: {"description": "Mark the repositories as deleted"},
@@ -585,16 +585,22 @@ async def get_active_repositories_mark_rest_as_deleted(
     active_repositories: repository_schema.ActiveRepositories,
     db_connection: Session = Depends(get_db_connection),
 ) -> None:
-    # step 1: retrieve all the repositories for a VCS - Project combination
-    repositories_db: list[str] = repository_crud.get_repository_string_ids_by_project_and_vcs_instance(
-        db_connection, project_key=active_repositories.project_key, vcs_provider=active_repositories.vcs_instance
+    # step 0: extract the repository ids
+    repository_ids: list[str] = [x.id for x in active_repositories.repositories]
+
+    # step 1: retrieve all the inactive repositories for a VCS - Project combination
+    deleted_repositories_id: list[int] = (
+        repository_crud.get_inactive_repository_ids_by_project_and_vcs_instance_not_repository_id(
+            db_connection,
+            project_key=active_repositories.project_key,
+            vcs_provider=active_repositories.vcs_instance_name,
+            not_in_repository_id=repository_ids,
+        )
     )
 
-    # step 2: substract the list provided to the current on in the DB
-    list_repository_id_to_mark_as_deleted: set[str] = set(repositories_db) - active_repositories.repository_ids
-
+    # step 2: Filter the ones that are already marked as deleted.
     deleted_repository_ids: list[int] = repository_crud.fetch_id_from_undeleted_repository_string_id(
-        db_connection=db_connection, repository_ids=list_repository_id_to_mark_as_deleted
+        db_connection=db_connection, repository_ids=deleted_repositories_id
     )
 
     # step 3: mark all result as deleted
