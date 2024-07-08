@@ -108,6 +108,7 @@ def create_scan(scan: scan_schema.ScanCreate, db_connection: Session = Depends(g
     # We check that the repo is NOT deleted.
     # We just scanned it, therefore it exists!
     if repository.deleted_at is not None:
+        logger.warning(f"Repository {repository.id_} was marked as deleted, undeleting it.")
         repository_crud.undelete_repository(db_connection, repository.id_)
         finding_ids = finding_crud.get_finding_for_repository(
             db_connection, repository_ids=[repository.id_], status=FindingStatus.NOT_ACCESSIBLE, not_status=None

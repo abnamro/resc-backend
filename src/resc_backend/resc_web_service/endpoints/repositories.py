@@ -1,4 +1,5 @@
 # Standard Library
+import logging
 
 # Third Party
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
@@ -42,7 +43,7 @@ from resc_backend.resc_web_service.schema.pagination_model import PaginationMode
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
 router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
-
+logger = logging.getLogger(__name__)
 
 @router.get(
     "",
@@ -602,6 +603,13 @@ async def get_active_repositories_mark_rest_as_deleted(
     deleted_repository_ids: list[int] = repository_crud.fetch_id_from_undeleted_repository_string_id(
         db_connection=db_connection, repository_ids=deleted_repositories_id
     )
+
+    # Early return if we don't need to do anything.
+    if len(deleted_repository_ids) == 0:
+        return
+    
+    for repository_id in deleted_repository_ids:
+        logger.warning(f"Marking repository {repository_id} as deleted")
 
     # step 3: mark all result as deleted
     repository_crud.soft_delete_repository(db_connection, repository_ids=deleted_repository_ids)
