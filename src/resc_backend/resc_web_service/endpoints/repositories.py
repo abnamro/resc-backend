@@ -590,12 +590,16 @@ async def get_active_repositories_mark_rest_as_deleted(
     # step 0: extract the repository ids
     active_repository_ids: list[str] = [x.id for x in active_repositories.repositories]
 
+    logger.info(f"Number of active repositories: {len(active_repository_ids)}")
+    logger.info(f"Active repositories: {", ".join(active_repository_ids)}")
     # step 1: retrieve all the repository id string for a VCS - Project combination which are still active
     db_active_repository_ids: list[str] = repository_crud.get_active_repository_ids_by_project_and_vcs_instance(
         db_connection,
         project_key=active_repositories.project_key,
         vcs_instance_name=active_repositories.vcs_instance_name,
     )
+    logger.info(f"Number of DB active repositories: {len(db_active_repository_ids)}")
+    logger.info(f"Active repositories: {", ".join(db_active_repository_ids)}")
 
     # step 2: Substract the active ones.
     deleted_repositories_str_id: list[str] = list(set(db_active_repository_ids) - set(active_repository_ids))
@@ -604,14 +608,18 @@ async def get_active_repositories_mark_rest_as_deleted(
 
     # Early return if we don't need to do anything.
     if len(deleted_repositories_str_id) == 0:
+        logger.info("No repository to mark as deleted")
         return
 
+    logger.info(f"Number of repositories to mark as deleted: {len(deleted_repositories_str_id)}")
     # Step 3: Retrieve the ids of the repositories
     deleted_repository_ids: list[int] = repository_crud.fetch_id_from_undeleted_repository_string_id(
         db_connection=db_connection,
         vcs_instance_name=active_repositories.vcs_instance_name,
         repository_ids=deleted_repositories_str_id,
     )
+
+    logger.info(f"Real number of repositories to mark as deleted: {len(deleted_repository_ids)}")
 
     for repository_id in deleted_repository_ids:
         logger.warning(f"Marking repository {repository_id} as deleted")
