@@ -770,7 +770,6 @@ class TestRepositories(unittest.TestCase):
         finding.assert_called_once_with(ANY, repository_ids=[1], status=None, not_status=FindingStatus.NOT_ACCESSIBLE)
         audit.assert_called_once_with(db_connection=ANY, finding_ids=[999], status=FindingStatus.NOT_ACCESSIBLE)
 
-
     @patch(
         "resc_backend.resc_web_service.crud.repository.get_inactive_repository_ids_by_project_and_vcs_instance_not_repository_id"
     )
@@ -805,4 +804,3 @@ class TestRepositories(unittest.TestCase):
         soft_delete.assert_not_called()
         finding.assert_not_called()
         audit.assert_not_called()
-        

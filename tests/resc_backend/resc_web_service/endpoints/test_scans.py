@@ -217,7 +217,9 @@ class TestScans(unittest.TestCase):
     @patch("resc_backend.resc_web_service.crud.repository.undelete_repository")
     @patch("resc_backend.resc_web_service.crud.finding.get_finding_for_repository")
     @patch("resc_backend.resc_web_service.crud.audit.revert_last_audit")
-    def test_post_scan(self, revert_last_audit, get_finding_for_repository, undelete_repository, get_repository, create_scan):
+    def test_post_scan_with_deleted_repository(
+        self, revert_last_audit, get_finding_for_repository, undelete_repository, get_repository, create_scan
+    ):
         db_scan = self.db_scans[0]
         get_repository.return_value = self.db_repo[2]
         create_scan.return_value = db_scan
@@ -230,11 +232,11 @@ class TestScans(unittest.TestCase):
         self.assert_scan(response.json(), db_scan)
         get_repository.assert_called_once_with(db_connection=ANY, repository_id=db_scan.repository_id)
         undelete_repository.assert_called_once_with(ANY, self.db_repo[2].id_)
-        get_finding_for_repository.assert_called_once_with(ANY, repository_ids=[self.db_repo[2].id_], status=FindingStatus.NOT_ACCESSIBLE, not_status=None)
+        get_finding_for_repository.assert_called_once_with(
+            ANY, repository_ids=[self.db_repo[2].id_], status=FindingStatus.NOT_ACCESSIBLE, not_status=None
+        )
         revert_last_audit.assert_called_once_with(ANY, finding_ids=[], status=FindingStatus.NOT_ACCESSIBLE)
         create_scan.assert_called_once_with(db_connection=ANY, scan=self.cast_db_scan_to_scan_create(db_scan))
-
-
 
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
     @patch("resc_backend.resc_web_service.crud.scan.get_latest_scan_for_repository")
