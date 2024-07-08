@@ -598,7 +598,6 @@ async def get_active_repositories_mark_rest_as_deleted(
         vcs_instance_name=active_repositories.vcs_instance_name,
     )
     logger.info(f"Number of DB active repositories: {len(db_active_repository_ids)}")
-    logger.info(f"Active repositories: {", ".join(db_active_repository_ids)}")
 
     # step 2: Substract the active ones.
     deleted_repositories_str_id: list[str] = list(set(db_active_repository_ids) - set(active_repository_ids))
