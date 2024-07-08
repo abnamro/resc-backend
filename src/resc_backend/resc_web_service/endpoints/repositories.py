@@ -620,3 +620,4 @@ async def get_active_repositories_mark_rest_as_deleted(
     audit_crud.create_automated_audits(
         db_connection=db_connection, finding_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE
     )
+

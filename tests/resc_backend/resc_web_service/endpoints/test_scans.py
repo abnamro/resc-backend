@@ -17,6 +17,7 @@ from resc_backend.db.model import DBfinding, DBrepository, DBrule, DBscan
 from resc_backend.resc_web_service.api import app
 from resc_backend.resc_web_service.dependencies import requires_auth, requires_no_auth
 from resc_backend.resc_web_service.schema.finding import FindingRead
+from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.scan import ScanCreate
 from resc_backend.resc_web_service.schema.scan_type import ScanType
 
@@ -53,6 +54,8 @@ class TestScans(unittest.TestCase):
                 )
             )
             self.db_repo[i - 1].id_ = i
+
+        self.db_repo[2].deleted_at = datetime.now(UTC)
 
         self.db_rules = []
         for i in range(1, 6):
@@ -208,6 +211,30 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 404, response.text
         get_repository.assert_called_once_with(db_connection=ANY, repository_id=db_scan.repository_id)
         create_scan.assert_not_called()
+
+    @patch("resc_backend.resc_web_service.crud.scan.create_scan")
+    @patch("resc_backend.resc_web_service.crud.repository.get_repository")
+    @patch("resc_backend.resc_web_service.crud.repository.undelete_repository")
+    @patch("resc_backend.resc_web_service.crud.finding.get_finding_for_repository")
+    @patch("resc_backend.resc_web_service.crud.audit.revert_last_audit")
+    def test_post_scan(self, revert_last_audit, get_finding_for_repository, undelete_repository, get_repository, create_scan):
+        db_scan = self.db_scans[0]
+        get_repository.return_value = self.db_repo[2]
+        create_scan.return_value = db_scan
+        get_finding_for_repository.return_value = []
+        response = self.client.post(
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}",
+            json=self.create_json_body(db_scan),
+        )
+        assert response.status_code == 201, response.text
+        self.assert_scan(response.json(), db_scan)
+        get_repository.assert_called_once_with(db_connection=ANY, repository_id=db_scan.repository_id)
+        undelete_repository.assert_called_once_with(ANY, self.db_repo[2].id_)
+        get_finding_for_repository.assert_called_once_with(ANY, repository_ids=[self.db_repo[2].id_], status=FindingStatus.NOT_ACCESSIBLE, not_status=None)
+        revert_last_audit.assert_called_once_with(ANY, finding_ids=[], status=FindingStatus.NOT_ACCESSIBLE)
+        create_scan.assert_called_once_with(db_connection=ANY, scan=self.cast_db_scan_to_scan_create(db_scan))
+
+
 
     @patch("resc_backend.resc_web_service.crud.scan.create_scan")
     @patch("resc_backend.resc_web_service.crud.scan.get_latest_scan_for_repository")
