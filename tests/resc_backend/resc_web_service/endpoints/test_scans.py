@@ -231,7 +231,7 @@ class TestScans(unittest.TestCase):
         assert response.status_code == 201, response.text
         self.assert_scan(response.json(), db_scan)
         get_repository.assert_called_once_with(db_connection=ANY, repository_id=db_scan.repository_id)
-        undelete_repository.assert_called_once_with(ANY, self.db_repo[2].id_)
+        undelete_repository.assert_called_once_with(ANY, repository_ids=[self.db_repo[2].id_])
         get_finding_for_repository.assert_called_once_with(
             ANY, repository_ids=[self.db_repo[2].id_], status=FindingStatus.NOT_ACCESSIBLE, not_status=None
         )

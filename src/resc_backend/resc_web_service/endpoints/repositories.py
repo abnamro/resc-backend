@@ -558,7 +558,7 @@ async def toggle_deleted_at_for_repository(
         )
     else:
         # we UNdeleted
-        repository_crud.undelete_repository(db_connection, repository_id=repository_id)
+        repository_crud.undelete_repository(db_connection, repository_ids=[repository_id])
         finding_ids = finding_crud.get_finding_for_repository(
             db_connection, repository_ids=[repository_id], status=FindingStatus.NOT_ACCESSIBLE, not_status=None
         )
