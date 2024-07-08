@@ -624,3 +624,8 @@ async def get_active_repositories_mark_rest_as_deleted(
     audit_crud.create_automated_audits(
         db_connection=db_connection, findings_ids=finding_ids, status=FindingStatus.NOT_ACCESSIBLE
     )
+
+    # Clear cache related to repository
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_REPOSITORY)
+    # Clear cache related to findings
+    await CacheManager.clear_cache_by_namespace(namespace=CACHE_NAMESPACE_FINDING)
