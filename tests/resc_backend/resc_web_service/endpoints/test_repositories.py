@@ -763,7 +763,7 @@ class TestRepositories(unittest.TestCase):
         )
         assert response.status_code == 200
         get_inactive_repository_ids.assert_called_once_with(
-            ANY, project_key="project", vcs_provider="vcs", not_in_repository_id=["1", "2", "3"]
+            ANY, project_key="project", vcs_instance_name="vcs", not_in_repository_id=["1", "2", "3"]
         )
         fetch_id.assert_called_once_with(db_connection=ANY, repository_ids=[1, 2])
         soft_delete.assert_called_once_with(ANY, repository_ids=[1])
@@ -798,7 +798,7 @@ class TestRepositories(unittest.TestCase):
         )
         assert response.status_code == 200
         get_inactive_repository_ids.assert_called_once_with(
-            ANY, project_key="project", vcs_provider="vcs", not_in_repository_id=["1", "2", "3"]
+            ANY, project_key="project", vcs_instance_name="vcs", not_in_repository_id=["1", "2", "3"]
         )
         fetch_id.assert_called_once_with(db_connection=ANY, repository_ids=[1, 2])
         soft_delete.assert_not_called()

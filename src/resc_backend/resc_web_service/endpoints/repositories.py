@@ -595,7 +595,7 @@ async def get_active_repositories_mark_rest_as_deleted(
         repository_crud.get_inactive_repository_ids_by_project_and_vcs_instance_not_repository_id(
             db_connection,
             project_key=active_repositories.project_key,
-            vcs_provider=active_repositories.vcs_instance_name,
+            vcs_instance_name=active_repositories.vcs_instance_name,
             not_in_repository_id=repository_ids,
         )
     )
