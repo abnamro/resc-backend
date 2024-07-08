@@ -471,8 +471,11 @@ def get_active_repository_ids_by_project_and_vcs_instance(
     sql_query = str(compiled_query)
     logger.info(f"Active repositories: {sql_query}")
     return db_connection.execute(query).scalars().all()
+
+
 # [INFO] [resc_backend.resc_web_service.endpoints.repositories] [2024-07-08 19:46:36,711] Active repositories: 1046, 1050, 1048, 1044, 1045, 1049, 1047
 # [INFO] [resc_backend.resc_web_service.crud.repository] [2024-07-08 19:46:36,711] Fetching active repository ids for project STPL and vcs instance ACCEPTANCE-BITBUCKET
+
 
 def fetch_id_from_undeleted_repository_string_id(
     db_connection: Session, vcs_instance_name: str, repository_ids: list[str]
