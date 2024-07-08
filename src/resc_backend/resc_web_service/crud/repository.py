@@ -1,5 +1,6 @@
 # Standard Library
 from datetime import UTC, datetime
+import logging
 
 # Third Party
 from itertools import islice
@@ -28,6 +29,8 @@ from resc_backend.resc_web_service.schema import repository as repository_schema
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.scan_type import ScanType
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
+
+logger = logging.getLogger(__name__)
 
 
 def _get_max_base_scan(db_connection: Session) -> Query:
@@ -456,13 +459,12 @@ def undelete_repository(db_connection: Session, repository_ids: list[int]):
 def get_active_repository_ids_by_project_and_vcs_instance(
     db_connection: Session, project_key: str, vcs_instance_name: str
 ) -> list[str]:
+    logger.info(f"Fetching active repository ids for project {project_key} and vcs instance {vcs_instance_name}")
     query = select(DBrepository.repository_id)
     query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
-    query = query.where(
-        DBrepository.project_key == project_key,
-        DBVcsInstance.name == vcs_instance_name,
-        DBrepository.deleted_at == None,  # noqa: E711
-    )
+    query = query.where(DBrepository.project_key == project_key)
+    query = query.where(DBVcsInstance.name == vcs_instance_name)
+    query = query.where(DBrepository.deleted_at == None)  # noqa: E711
     return db_connection.execute(query).scalars().all()
 
 
@@ -481,10 +483,8 @@ def fetch_id_from_undeleted_repository_string_id(
     while chunk := list(islice(iterator, 1000)):
         query = select(DBrepository.id_)
         query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
-        query = query.where(
-            DBrepository.repository_id.in_(chunk),
-            DBVcsInstance.name == vcs_instance_name,
-            DBrepository.deleted_at.is_(None),
-        )
+        query = query.where(DBrepository.repository_id.in_(chunk))
+        query = query.where(DBVcsInstance.name == vcs_instance_name)
+        query = query.where(DBrepository.deleted_at == None)  # noqa: E711
         repository_ids.extend(db_connection.execute(query).scalars().all())
     return repository_ids
