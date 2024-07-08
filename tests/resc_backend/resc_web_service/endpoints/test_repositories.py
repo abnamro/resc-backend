@@ -734,15 +734,13 @@ class TestRepositories(unittest.TestCase):
         assert data["data"][0]["id_"] == self.db_scans[0].id_
         assert data["data"][1]["id_"] == self.db_scans[1].id_
 
-    @patch(
-        "resc_backend.resc_web_service.crud.repository.get_inactive_repository_ids_by_project_and_vcs_instance_not_repository_id"
-    )
+    @patch("resc_backend.resc_web_service.crud.repository.get_active_repository_ids_by_project_and_vcs_instance")
     @patch("resc_backend.resc_web_service.crud.repository.fetch_id_from_undeleted_repository_string_id")
     @patch("resc_backend.resc_web_service.crud.repository.soft_delete_repository")
     @patch("resc_backend.resc_web_service.crud.finding.get_finding_for_repository")
     @patch("resc_backend.resc_web_service.crud.audit.create_automated_audits")
     def test_get_active_repositories_mark_rest_as_deleted(
-        self, audit, finding, soft_delete, fetch_id, get_inactive_repository_ids
+        self, audit, finding, soft_delete, fetch_id, get_active_repository_ids
     ):
         json_input = ActiveRepositories(
             project_key="project",
@@ -753,8 +751,8 @@ class TestRepositories(unittest.TestCase):
             ],
             vcs_instance_name="vcs",
         )
-        get_inactive_repository_ids.return_value = [1, 2]
-        fetch_id.return_value = [1]
+        get_active_repository_ids.return_value = ["1", "2", "3", "4", "5"]
+        fetch_id.return_value = [4]
         finding.return_value = [999]
 
         response = self.client.post(
@@ -762,23 +760,19 @@ class TestRepositories(unittest.TestCase):
             json=json.loads(json_input.model_dump_json()),
         )
         assert response.status_code == 200
-        get_inactive_repository_ids.assert_called_once_with(
-            ANY, project_key="project", vcs_instance_name="vcs", not_in_repository_id=["1", "2", "3"]
-        )
-        fetch_id.assert_called_once_with(db_connection=ANY, repository_ids=[1, 2])
-        soft_delete.assert_called_once_with(ANY, repository_ids=[1])
-        finding.assert_called_once_with(ANY, repository_ids=[1], status=None, not_status=FindingStatus.NOT_ACCESSIBLE)
+        get_active_repository_ids.assert_called_once_with(ANY, project_key="project", vcs_instance_name="vcs")
+        fetch_id.assert_called_once_with(db_connection=ANY, vcs_instance_name="vcs", repository_ids=["4", "5"])
+        soft_delete.assert_called_once_with(ANY, repository_ids=[4])
+        finding.assert_called_once_with(ANY, repository_ids=[4], status=None, not_status=FindingStatus.NOT_ACCESSIBLE)
         audit.assert_called_once_with(db_connection=ANY, findings_ids=[999], status=FindingStatus.NOT_ACCESSIBLE)
 
-    @patch(
-        "resc_backend.resc_web_service.crud.repository.get_inactive_repository_ids_by_project_and_vcs_instance_not_repository_id"
-    )
+    @patch("resc_backend.resc_web_service.crud.repository.get_active_repository_ids_by_project_and_vcs_instance")
     @patch("resc_backend.resc_web_service.crud.repository.fetch_id_from_undeleted_repository_string_id")
     @patch("resc_backend.resc_web_service.crud.repository.soft_delete_repository")
     @patch("resc_backend.resc_web_service.crud.finding.get_finding_for_repository")
     @patch("resc_backend.resc_web_service.crud.audit.create_automated_audits")
     def test_get_active_repositories_mark_rest_as_deleted_with_404(
-        self, audit, finding, soft_delete, fetch_id, get_inactive_repository_ids
+        self, audit, finding, soft_delete, fetch_id, get_active_repository_ids
     ):
         json_input = ActiveRepositories(
             project_key="project",
@@ -789,7 +783,7 @@ class TestRepositories(unittest.TestCase):
             ],
             vcs_instance_name="vcs",
         )
-        get_inactive_repository_ids.return_value = [1, 2]
+        get_active_repository_ids.return_value = ["1", "2"]
         fetch_id.return_value = []
 
         response = self.client.post(
@@ -797,10 +791,8 @@ class TestRepositories(unittest.TestCase):
             json=json.loads(json_input.model_dump_json()),
         )
         assert response.status_code == 200
-        get_inactive_repository_ids.assert_called_once_with(
-            ANY, project_key="project", vcs_instance_name="vcs", not_in_repository_id=["1", "2", "3"]
-        )
-        fetch_id.assert_called_once_with(db_connection=ANY, repository_ids=[1, 2])
+        get_active_repository_ids.assert_called_once_with(ANY, project_key="project", vcs_instance_name="vcs")
+        fetch_id.assert_not_called()
         soft_delete.assert_not_called()
         finding.assert_not_called()
         audit.assert_not_called()

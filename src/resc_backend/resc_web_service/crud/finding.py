@@ -1,6 +1,7 @@
 # Standard Library
 import logging
 from datetime import UTC, datetime, timedelta
+from itertools import islice
 
 # Third Party
 from sqlalchemy import Column, extract, func, select, union
@@ -338,30 +339,34 @@ def get_finding_for_repository(
         list[int]: List of finding ids
     """
 
-    query = select(DBfinding.id_)
-    query = query.where(DBfinding.repository_id.in_(repository_ids))
+    iterator = iter(repository_ids)
+    db_audits = []
+    while chunk := list(islice(iterator, 1000)):
+        query = select(DBfinding.id_)
+        query = query.where(DBfinding.repository_id.in_(chunk))
 
-    # Set up the join for filtering
-    if status is not None or not_status is not None:
-        query = query.join(
-            DBaudit,
-            (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
-            isouter=True,
-        )
+        # Set up the join for filtering
+        if status is not None or not_status is not None:
+            query = query.join(
+                DBaudit,
+                (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
+                isouter=True,
+            )
 
-    # filter by status
-    if status == FindingStatus.NOT_ANALYZED:
-        query = query.where((DBaudit.status == FindingStatus.NOT_ANALYZED) | (DBaudit.status == None))  # noqa: E711
-    elif status is not None:
-        query = query.where(DBaudit.status == status)
+        # filter by status
+        if status == FindingStatus.NOT_ANALYZED:
+            query = query.where((DBaudit.status == FindingStatus.NOT_ANALYZED) | (DBaudit.status == None))  # noqa: E711
+        elif status is not None:
+            query = query.where(DBaudit.status == status)
 
-    # filter by status negation.
-    if not_status == FindingStatus.NOT_ANALYZED:
-        query = query.where((DBaudit.status != FindingStatus.NOT_ANALYZED) & (DBaudit.status != None))  # noqa: E711
-    elif not_status is not None:
-        query = query.where((DBaudit.status != not_status) | (DBaudit.status == None))  # noqa: E711
+        # filter by status negation.
+        if not_status == FindingStatus.NOT_ANALYZED:
+            query = query.where((DBaudit.status != FindingStatus.NOT_ANALYZED) & (DBaudit.status != None))  # noqa: E711
+        elif not_status is not None:
+            query = query.where((DBaudit.status != not_status) | (DBaudit.status == None))  # noqa: E711
+        db_audits.extend(db_connection.execute(query).scalars().all())
 
-    return db_connection.execute(query).scalars().all()
+    return db_audits
 
 
 def get_total_findings_count(db_connection: Session, findings_filter: FindingsFilter = None) -> int:

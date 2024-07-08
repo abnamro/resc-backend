@@ -588,26 +588,30 @@ async def get_active_repositories_mark_rest_as_deleted(
     db_connection: Session = Depends(get_db_connection),
 ) -> None:
     # step 0: extract the repository ids
-    repository_ids: list[str] = [x.id for x in active_repositories.repositories]
+    active_repository_ids: list[str] = [x.id for x in active_repositories.repositories]
 
-    # step 1: retrieve all the inactive repositories for a VCS - Project combination
-    deleted_repositories_id: list[int] = (
-        repository_crud.get_inactive_repository_ids_by_project_and_vcs_instance_not_repository_id(
-            db_connection,
-            project_key=active_repositories.project_key,
-            vcs_instance_name=active_repositories.vcs_instance_name,
-            not_in_repository_id=repository_ids,
-        )
+    # step 1: retrieve all the repository id string for a VCS - Project combination which are still active
+    db_active_repository_ids: list[str] = repository_crud.get_active_repository_ids_by_project_and_vcs_instance(
+        db_connection,
+        project_key=active_repositories.project_key,
+        vcs_instance_name=active_repositories.vcs_instance_name,
     )
 
-    # step 2: Filter the ones that are already marked as deleted.
-    deleted_repository_ids: list[int] = repository_crud.fetch_id_from_undeleted_repository_string_id(
-        db_connection=db_connection, repository_ids=deleted_repositories_id
-    )
+    # step 2: Substract the active ones.
+    deleted_repositories_str_id: list[str] = list(set(db_active_repository_ids) - set(active_repository_ids))
+    # We sort the list to ensure that the tests are non random (shrodinger test)
+    deleted_repositories_str_id.sort()
 
     # Early return if we don't need to do anything.
-    if len(deleted_repository_ids) == 0:
+    if len(deleted_repositories_str_id) == 0:
         return
+
+    # Step 3: Retrieve the ids of the repositories
+    deleted_repository_ids: list[int] = repository_crud.fetch_id_from_undeleted_repository_string_id(
+        db_connection=db_connection,
+        vcs_instance_name=active_repositories.vcs_instance_name,
+        repository_ids=deleted_repositories_str_id,
+    )
 
     for repository_id in deleted_repository_ids:
         logger.warning(f"Marking repository {repository_id} as deleted")
