@@ -45,6 +45,7 @@ from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 router = APIRouter(prefix=f"{RWS_ROUTE_REPOSITORIES}", tags=[REPOSITORIES_TAG])
 logger = logging.getLogger(__name__)
 
+
 @router.get(
     "",
     response_model=PaginationModel[repository_schema.RepositoryRead],
@@ -607,7 +608,7 @@ async def get_active_repositories_mark_rest_as_deleted(
     # Early return if we don't need to do anything.
     if len(deleted_repository_ids) == 0:
         return
-    
+
     for repository_id in deleted_repository_ids:
         logger.warning(f"Marking repository {repository_id} as deleted")
 
