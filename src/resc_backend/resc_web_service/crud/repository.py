@@ -1,6 +1,6 @@
 # Standard Library
-from datetime import UTC, datetime
 import logging
+from datetime import UTC, datetime
 
 # Third Party
 from itertools import islice
