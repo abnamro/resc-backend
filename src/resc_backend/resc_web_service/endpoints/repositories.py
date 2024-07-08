@@ -516,7 +516,7 @@ def get_scans_for_repository(
 
 
 @router.patch(
-    "/{repository_id}/" f"{RWS_ROUTE_TOGGLE_DELETED}",
+    "/{repository_id}" f"{RWS_ROUTE_TOGGLE_DELETED}",
     summary="Toggle the deleted_at for a repository",
     response_model=repository_schema.RepositoryRead,
     status_code=status.HTTP_200_OK,
@@ -591,7 +591,6 @@ async def get_active_repositories_mark_rest_as_deleted(
     active_repository_ids: list[str] = [x.id for x in active_repositories.repositories]
 
     logger.info(f"Number of active repositories: {len(active_repository_ids)}")
-    logger.info(f"Active repositories: {", ".join(active_repository_ids)}")
     # step 1: retrieve all the repository id string for a VCS - Project combination which are still active
     db_active_repository_ids: list[str] = repository_crud.get_active_repository_ids_by_project_and_vcs_instance(
         db_connection,

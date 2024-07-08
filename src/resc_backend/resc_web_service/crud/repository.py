@@ -464,17 +464,8 @@ def get_active_repository_ids_by_project_and_vcs_instance(
     query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
     query = query.where(DBrepository.project_key == project_key)
     query = query.where(DBVcsInstance.name == vcs_instance_name)
-    query = query.where(DBrepository.deleted_at == None)  # noqa: E711
-
-    # Assuming `query` is your SQLAlchemy query object
-    compiled_query = query.statement.compile(compile_kwargs={"literal_binds": True})
-    sql_query = str(compiled_query)
-    logger.info(f"Active repositories: {sql_query}")
+    query = query.where(DBrepository.deleted_at.is_(None))
     return db_connection.execute(query).scalars().all()
-
-
-# [INFO] [resc_backend.resc_web_service.endpoints.repositories] [2024-07-08 19:46:36,711] Active repositories: 1046, 1050, 1048, 1044, 1045, 1049, 1047
-# [INFO] [resc_backend.resc_web_service.crud.repository] [2024-07-08 19:46:36,711] Fetching active repository ids for project STPL and vcs instance ACCEPTANCE-BITBUCKET
 
 
 def fetch_id_from_undeleted_repository_string_id(
@@ -494,6 +485,6 @@ def fetch_id_from_undeleted_repository_string_id(
         query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
         query = query.where(DBrepository.repository_id.in_(chunk))
         query = query.where(DBVcsInstance.name == vcs_instance_name)
-        query = query.where(DBrepository.deleted_at == None)  # noqa: E711
+        query = query.where(DBrepository.deleted_at.is_(None))
         repository_ids.extend(db_connection.execute(query).scalars().all())
     return repository_ids
