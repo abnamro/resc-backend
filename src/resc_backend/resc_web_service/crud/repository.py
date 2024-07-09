@@ -459,7 +459,7 @@ def undelete_repository(db_connection: Session, repository_ids: list[int]):
 def get_active_repository_ids_by_project_and_vcs_instance(
     db_connection: Session, project_key: str, vcs_instance_name: str
 ) -> list[str]:
-    logger.info(f"Fetching active repository ids for project {project_key} and vcs instance {vcs_instance_name}")
+    logger.debug(f"Fetching active repository ids for project {project_key} and vcs instance {vcs_instance_name}")
     query = select(DBrepository.repository_id)
     query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
     query = query.where(DBrepository.project_key == project_key)
