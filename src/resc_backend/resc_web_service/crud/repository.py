@@ -1,8 +1,11 @@
 # Standard Library
+import logging
 from datetime import UTC, datetime
 
 # Third Party
-from sqlalchemy import func, update
+from itertools import islice
+
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
@@ -26,6 +29,8 @@ from resc_backend.resc_web_service.schema import repository as repository_schema
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.scan_type import ScanType
 from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
+
+logger = logging.getLogger(__name__)
 
 
 def _get_max_base_scan(db_connection: Session) -> Query:
@@ -346,7 +351,7 @@ def get_findings_metadata_by_repository_id(db_connection: Session, repository_id
     :return: findings_metadata
         findings_metadata containing the count for each status
     """
-    query = db_connection.query(DBrepository.id_, DBaudit.status, func.count(DBscanFinding.finding_id))
+    query: Query = db_connection.query(DBrepository.id_, DBaudit.status, func.count(DBscanFinding.finding_id))
 
     last_scan_sub_query = _get_max_base_scan(db_connection)
     query = query.join(
@@ -421,27 +426,65 @@ def delete_repositories_by_vcs_instance_id(db_connection: Session, vcs_instance_
     db_connection.commit()
 
 
-def soft_delete_repository(db_connection: Session, repository_id: int):
+def soft_delete_repository(db_connection: Session, repository_ids: list[int]):
     """
         Soft delete a repository object
     :param db_connection:
         Session of the database connection
-    :param repository_id:
-        id of the repository to be deleted
+    :param repository_ids:
+        list of id of the repository to be deleted
     """
-    db_connection.execute(
-        update(DBrepository).where(DBrepository.id_ == repository_id).values(deleted_at=datetime.now(UTC))
-    )
+    iterator = iter(repository_ids)
+    while chunk := list(islice(iterator, 1000)):
+        db_connection.execute(
+            update(DBrepository).where(DBrepository.id_.in_(chunk)).values(deleted_at=datetime.now(UTC))
+        )
     db_connection.commit()
 
 
-def undelete_repository(db_connection: Session, repository_id: int):
+def undelete_repository(db_connection: Session, repository_ids: list[int]):
     """
         Undelete a repository object
     :param db_connection:
         Session of the database connection
-    :param repository_id:
-        id of the repository to be undeleted
+    :param repository_ids:
+        list of id of the repository to be undeleted
     """
-    db_connection.execute(update(DBrepository).where(DBrepository.id_ == repository_id).values(deleted_at=None))
+    iterator = iter(repository_ids)
+    while chunk := list(islice(iterator, 1000)):
+        db_connection.execute(update(DBrepository).where(DBrepository.id_.in_(chunk)).values(deleted_at=None))
     db_connection.commit()
+
+
+def get_active_repository_ids_by_project_and_vcs_instance(
+    db_connection: Session, project_key: str, vcs_instance_name: str
+) -> list[str]:
+    logger.debug(f"Fetching active repository ids for project {project_key} and vcs instance {vcs_instance_name}")
+    query = select(DBrepository.repository_id)
+    query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
+    query = query.where(DBrepository.project_key == project_key)
+    query = query.where(DBVcsInstance.name == vcs_instance_name)
+    query = query.where(DBrepository.deleted_at.is_(None))
+    return db_connection.execute(query).scalars().all()
+
+
+def fetch_id_from_undeleted_repository_string_id(
+    db_connection: Session, vcs_instance_name: str, repository_ids: list[str]
+) -> list[int]:
+    """
+        Fetch the id of the undeleted repository from the string id
+    :param db_connection:
+        Session of the database connection
+    :param repository_ids:
+        list of id of the repository
+    """
+    iterator = iter(repository_ids)
+    repository_ids = []
+    while chunk := list(islice(iterator, 1000)):
+        query = select(DBrepository.id_)
+        query = query.join(DBVcsInstance, DBVcsInstance.id_ == DBrepository.vcs_instance)
+        query = query.where(DBrepository.repository_id.in_(chunk))
+        query = query.where(DBVcsInstance.name == vcs_instance_name)
+        query = query.where(DBrepository.deleted_at.is_(None))
+        repository_ids.extend(db_connection.execute(query).scalars().all())
+    return repository_ids

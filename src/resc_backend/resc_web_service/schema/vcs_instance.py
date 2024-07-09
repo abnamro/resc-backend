@@ -15,8 +15,8 @@ class VCSInstanceBase(BaseModel):
     hostname: Annotated[str, StringConstraints(max_length=200)]
     port: Annotated[int, Field(gt=-0, lt=65536)]
     scheme: Annotated[str, StringConstraints(max_length=20)]
-    exceptions: Annotated[list[str], Field(min_items=None, max_length=500)] | None = None
-    scope: Annotated[list[str], Field(min_items=None, max_length=500)] | None = None
+    exceptions: Annotated[list[str], Field(min_length=None, max_length=500)] | None = None
+    scope: Annotated[list[str], Field(min_length=None, max_length=500)] | None = None
     organization: Annotated[str, StringConstraints(max_length=200)] | None = None
 
     @field_validator("scheme", mode="before")

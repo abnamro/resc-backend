@@ -47,6 +47,8 @@ RWS_ROUTE_HEALTH = "/health"
 RWS_ROUTE_TAGS = "/tags"
 RWS_ROUTE_VERSIONS = "/versions"
 RWS_ROUTE_MARK_AS_OUTDATED = "/mark-as-outdated"
+RWS_ROUTE_MARK_AS_ACTIVE = "/active"
+RWS_ROUTE_TOGGLE_DELETED = "/toggle-deleted"
 
 REPOSITORIES_TAG = "resc-repositories"
 SCANS_TAG = "resc-scans"
