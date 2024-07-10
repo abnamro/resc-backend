@@ -34,6 +34,7 @@ class Query(BaseModel):
     status_code: Code
     response_time: Annotated[int, Field(ge=300)] = 300
     tests: str | None = None
+    prerequest: str | None = None
     form_raw: str | None = None
     form_data: list[dict[str, str]] | None = None
 

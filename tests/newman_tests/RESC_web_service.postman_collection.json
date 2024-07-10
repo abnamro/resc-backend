@@ -404,7 +404,12 @@
 							],
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\"version\": \"3.0.0\"}"
@@ -449,7 +454,12 @@
 							],
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\"version\": \"1.0.0\"}"
@@ -494,7 +504,12 @@
 							],
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\"version\": \"0.0.0\"}"
@@ -1589,6 +1604,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -1642,6 +1661,10 @@
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -2218,6 +2241,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -2271,6 +2298,10 @@
 							"request": {
 								"method": "PUT",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -2334,6 +2365,10 @@
 							"request": {
 								"method": "PUT",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -2499,6 +2534,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -2549,6 +2588,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -2595,6 +2638,10 @@
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -3324,6 +3371,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -3377,6 +3428,10 @@
 							"request": {
 								"method": "PUT",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -3436,6 +3491,10 @@
 							"request": {
 								"method": "PUT",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -4825,11 +4884,25 @@
 											"});"
 										]
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"const now = new Date().toISOString();",
+											"pm.environment.set('currentdate', now);"
+										]
+									}
 								}
 							],
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -4886,6 +4959,10 @@
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -5257,6 +5334,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -5310,6 +5391,10 @@
 							"request": {
 								"method": "PUT",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -5376,6 +5461,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -5421,6 +5510,7 @@
 											"    pm.expect(responseJson[\"total\"]).to.eql(0);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -5481,6 +5571,7 @@
 											"    pm.expect(responseJson[\"total\"]).to.eql(0);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -5601,6 +5692,7 @@
 											"    pm.expect(responseJson[\"total\"]).to.eql(0);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -5665,6 +5757,7 @@
 											"    pm.expect(responseJson[\"total\"]).to.eql(0);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -5730,6 +5823,7 @@
 											"    pm.expect(responseJson[\"total\"]).to.eql(0);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -5795,6 +5889,7 @@
 											"    pm.expect(responseJson[\"total\"]).to.eql(0);",
 											"    pm.expect(responseJson[\"limit\"]).to.eql(100);",
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -5870,6 +5965,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -5926,6 +6025,10 @@
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -6637,6 +6740,7 @@
 											"    pm.expect(responseJson.length).to.eql(1);",
 											"    pm.expect(responseJson).to.eql([\"private-key\"] );",
 											"    pm.expect(responseJson).to.include(\"private-key\");",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -6684,6 +6788,7 @@
 											"pm.test(\"Response body matches\", function() {",
 											"    pm.expect(responseJson).to.be.an(\"array\");",
 											"    pm.expect(responseJson.length).to.eql(0);",
+											"});",
 											"",
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
@@ -6938,6 +7043,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -6985,6 +7094,10 @@
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -8217,6 +8330,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -8265,6 +8382,10 @@
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -8319,6 +8440,10 @@
 							"request": {
 								"method": "POST",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -8480,6 +8605,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -8534,6 +8663,10 @@
 							"request": {
 								"method": "PATCH",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -8594,6 +8727,10 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									}
 								],
 								"body": {
@@ -8647,6 +8784,10 @@
 							"request": {
 								"method": "PATCH",
 								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
 									{
 										"key": "Content-Type",
 										"value": "application/json"
@@ -9561,6 +9702,18 @@
 											"});"
 										]
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"let today = new Date();",
+											"today.setDate(today.getDate() + 1);",
+											"end_date_time = today.toISOString().split('T')[0]+'T00:00:00';",
+											"pm.environment.set('end_date_time', end_date_time);"
+										]
+									}
 								}
 							],
 							"request": {
@@ -9641,6 +9794,18 @@
 											"pm.test(\"Response time is less than 300ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(300);",
 											"});"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"let today = new Date();",
+											"today.setDate(today.getDate() + 1);",
+											"end_date_time = today.toISOString().split('T')[0]+'T00:00:00';",
+											"pm.environment.set('end_date_time', end_date_time);"
 										]
 									}
 								}

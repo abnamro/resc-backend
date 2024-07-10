@@ -28,13 +28,25 @@ def map_query_in_out(input_query: InputQuery) -> OutputQuery:
     exec_script.extend(test_response_code)
     exec_script.extend(actual_tests)
     exec_script.extend(test_response_time)
-    test_event = Event(
-        script=Script(exec=exec_script)  ## Split the test here.
-    )
+    events = [
+        Event(
+            script=Script(exec=exec_script)  ## Split the test here.
+        )
+    ]
 
+    if input_query.prerequest:
+        events.append(
+            Event(
+                listen="prerequest",
+                script=Script(exec=input_query.prerequest.split("\n")),
+            )
+        )
+
+    header = [QueryString.of_dict(input_query.header)] if input_query.header else []
     body = None
     if input_query.form_raw:
         body = Body(mode=FormType.raw, raw=input_query.form_raw)
+        header.append(QueryString(key="Content-Type", value="application/json"))
     elif input_query.form_data:
         body = Body(mode=FormType.formdata, formdata=input_query.form_data)
 
@@ -48,7 +60,6 @@ def map_query_in_out(input_query: InputQuery) -> OutputQuery:
     variables: list[QueryString] | None = (
         [QueryString.of_dict(variable) for variable in input_query.variables] if input_query.variables else None
     )
-    header = [QueryString.of_dict(input_query.header)] if input_query.header else []
 
     request = Request(
         method=input_query.method,
@@ -64,7 +75,7 @@ def map_query_in_out(input_query: InputQuery) -> OutputQuery:
 
     return OutputQuery(
         name=input_query.name,
-        event=[test_event],
+        event=events,
         request=request,
     )
 
@@ -72,12 +83,16 @@ def map_query_in_out(input_query: InputQuery) -> OutputQuery:
 def map_query_out_in(output_query: OutputQuery) -> InputQuery:
     print(f"\t\t{output_query.name}")
     request: Request = output_query.request
-    script: list[str] = output_query.event[0].script.exec
-    # print(f"\t\t\t{len(script)}")
-    # print(f"\t\t\t{len(script) - 9}")
-    # Drop first 5 lines,
-    # Drop last 4 linues,
-    script = script[5:-4]
+
+    # get script
+    test_script: list[str] | None = None
+    prerequest_script: list[str] | None = None
+    for event in output_query.event:
+        if event.listen == "test":
+            test_script = event.script.exec
+            test_script = test_script[5:-4]
+        if event.listen == "prerequest" and event.script.exec != [""]:
+            prerequest_script = event.script.exec
 
     form = output_query.request.body
     formdata = None
@@ -112,7 +127,8 @@ def map_query_out_in(output_query: OutputQuery) -> InputQuery:
         variables=[variable.to_dict() for variable in request.url.variable] if request.url.variable else None,
         status_code=status_code.group(),
         response_time=response_time.group(),
-        tests="\n".join(script),
+        tests="\n".join(test_script) if test_script else None,
+        prerequest="\n".join(prerequest_script) if prerequest_script else None,
         form_data=formdata,
         form_raw=formraw,
     )

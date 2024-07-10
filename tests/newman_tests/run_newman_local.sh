@@ -70,5 +70,5 @@ function onExit {
 }
 trap onExit EXIT;
 
-newman run --color on ./tests/newman_tests/RESC_web_service.postman_collection.json  --verbose --env-var "baseUrl=http://0.0.0.0:8000" # --bail
+newman run --color on ./tests/newman_tests/RESC_web_service.postman_collection.json  --verbose --env-var "baseUrl=http://0.0.0.0:8000" --bail
 

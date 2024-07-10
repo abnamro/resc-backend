@@ -283,7 +283,6 @@ item:
             request: resc/v1/rule-packs?rule_pack_version=1.0.0
             status_code: 200
             response_time: 10000
-            tests: ""
           - name: Get rule packs tags with no filter
             method: GET
             request: resc/v1/rule-packs/tags
@@ -1405,7 +1404,6 @@ item:
               - repository_id: 999
             status_code: 404
             response_time: 300
-            tests: ""
           - name: Get latest scan for a repository with invalid ID
             method: GET
             request: resc/v1/repositories/:repository_id/last-scan
@@ -1509,6 +1507,9 @@ item:
                   pm.expect(responseJson["rule_pack"]).to.eql("1.0.0");
                   pm.expect(responseJson["repository_id"]).to.eql(pm.environment.get("repository_id"));
               });
+            prerequest: |-
+              const now = new Date().toISOString();
+              pm.environment.set('currentdate', now);
             form_raw: |-
               {
                 "scan_type": "BASE",
@@ -1771,6 +1772,7 @@ item:
                   pm.expect(responseJson["total"]).to.eql(0);
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
+              });
           - name: Get scan findings associated with a non existent scan ID
             method: GET
             request: resc/v1/scans/:scan_id/findings?skip=0&limit=100
@@ -1785,6 +1787,7 @@ item:
                   pm.expect(responseJson["total"]).to.eql(0);
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
+              });
           - name: Get scan findings associated with an invalid scan id
             method: GET
             request: resc/v1/scans/:scan_id/findings?skip=0&limit=100
@@ -1813,6 +1816,7 @@ item:
                   pm.expect(responseJson["total"]).to.eql(0);
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
+              });
           - name: Get scan findings associated with a scan ID with non existent rule filter
             method: GET
             request: resc/v1/scans/:scan_id/findings?skip=0&limit=100&rule=notexistent
@@ -1827,6 +1831,7 @@ item:
                   pm.expect(responseJson["total"]).to.eql(0);
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
+              });
           - name: Get scan findings associated with a scan ID with status filter
             method: GET
             request: resc/v1/scans/:scan_id/findings?skip=0&limit=100&status=NOT_ANALYZED
@@ -1842,6 +1847,7 @@ item:
                   pm.expect(responseJson["total"]).to.eql(0);
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
+              });
           - name: Get scan findings associated with a scan ID with rule and status filter
             method: GET
             request: resc/v1/scans/:scan_id/findings?skip=0&limit=100&rule=rule1&status=NOT_ANALYZED
@@ -1857,6 +1863,7 @@ item:
                   pm.expect(responseJson["total"]).to.eql(0);
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
+              });
           - name: Create scan findings
             method: POST
             header:
@@ -1866,7 +1873,6 @@ item:
               - scan_id: "{{scan_id}}"
             status_code: 201
             response_time: 300
-            tests: ""
             form_raw: |-
               [
                 {
@@ -2100,6 +2106,7 @@ item:
                   pm.expect(responseJson.length).to.eql(1);
                   pm.expect(responseJson).to.eql(["private-key"] );
                   pm.expect(responseJson).to.include("private-key");
+              });
           - name: Get unique rules from scans where scan id doesn't exist
             method: GET
             request: resc/v1/scans/detected-rules/?scan_id=999
@@ -2109,6 +2116,7 @@ item:
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
                   pm.expect(responseJson.length).to.eql(0);
+              });
           - name: Get unique rules from scans for invalid scan id
             method: GET
             request: resc/v1/scans/detected-rules/?scan_id=invalid
@@ -2127,7 +2135,6 @@ item:
               - repository_id: "{{repository_id}}"
             status_code: 200
             response_time: 300
-            tests: ""
           - name: Delete a scan which doesn't exist
             method: DELETE
             request: resc/v1/scans/:scan_id
@@ -3208,6 +3215,11 @@ item:
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
               });
+            prerequest: |-
+              let today = new Date();
+              today.setDate(today.getDate() + 1);
+              end_date_time = today.toISOString().split('T')[0]+'T00:00:00';
+              pm.environment.set('end_date_time', end_date_time);
           - name: Get all detailed findings with all filters
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_names=["private-key"]%26finding_statuses=["NOT_ANALYZED"]%26vcs_providers=["AZURE_DEVOPS"]%26project_name=test-project%26repository_name=test-repository%26start_date_time=2020-04-13T00:00:00%26end_date_time={{end_date_time}}%26rule_pack_versions=["1.0.0"]
@@ -3246,6 +3258,11 @@ item:
                   pm.expect(responseJson["limit"]).to.eql(100);
                   pm.expect(responseJson["skip"]).to.eql(0);
               });
+            prerequest: |-
+              let today = new Date();
+              today.setDate(today.getDate() + 1);
+              end_date_time = today.toISOString().split('T')[0]+'T00:00:00';
+              pm.environment.set('end_date_time', end_date_time);
           - name: Get detailed finding by its ID
             method: GET
             request: resc/v1/detailed-findings/:finding_id

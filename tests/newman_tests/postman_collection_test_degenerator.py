@@ -1,4 +1,5 @@
 import json
+import os
 
 import yaml
 from src.input_models import TestSuite as InputTestSuite
@@ -26,5 +27,7 @@ def do_the_thing(intput_file_name: str, output_file_name: str, testing: bool = F
 
 
 if __name__ == "__main__":
-    # do_the_thing("RESC_web_service.postman_collection_bck.json", "RESC_web_service.postman_collection_.yaml")
-    do_the_thing("RESC_web_service.postman_collection_bck.json", "RESC_web_service.postman_collection.yaml", True)
+    path = os.path.dirname(os.path.realpath(__file__))
+    do_the_thing(
+        f"{path}/RESC_web_service.postman_collection_bck.json", f"{path}/RESC_web_service.postman_collection.yaml", True
+    )
