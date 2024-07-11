@@ -46,7 +46,11 @@ def map_query_in_out(input_query: InputQuery) -> OutputQuery:
     body = None
     if input_query.form_raw:
         body = Body(mode=FormType.raw, raw=input_query.form_raw)
-        header.append(QueryString(key="Content-Type", value="application/json"))
+        if len(header) == 0:
+            header.append(QueryString(key="Content-Type", value="application/json"))
+        else:
+            if header[0].key != "Content-Type":
+                header.append(QueryString(key="Content-Type", value="application/json"))
     elif input_query.form_data:
         body = Body(mode=FormType.formdata, formdata=input_query.form_data)
 
@@ -116,8 +120,11 @@ def map_query_out_in(output_query: OutputQuery) -> InputQuery:
         path = path + "?" + "&".join([query.to_str() for query in request.url.query])
 
     header: str | None = None
-    if len(request.header) > 0:
-        header = request.header[0].to_dict()
+    if request.header:
+        if formraw and request.header[0].key == 'Content-Type':
+            header = None
+        else:
+            header = request.header[0].to_dict()
 
     return InputQuery(
         name=output_query.name,

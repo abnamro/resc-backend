@@ -382,8 +382,6 @@ item:
         item:
           - name: Create a vcs instance
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/vcs-instances
             status_code: 201
             response_time: 300
@@ -417,8 +415,6 @@ item:
               }
           - name: Create a vcs instance with invalid body
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/vcs-instances
             status_code: 422
             response_time: 300
@@ -632,8 +628,6 @@ item:
               });
           - name: Update a vcs instance
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/vcs-instances/:vcs_instance_id
             variables:
               - vcs_instance_id: "{{vcs_instance_id}}"
@@ -668,8 +662,6 @@ item:
               }
           - name: Update a vcs instance with non existent id
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/vcs-instances/:vcs_instance_id
             variables:
               - vcs_instance_id: 999
@@ -695,8 +687,6 @@ item:
               }
           - name: Update a vcs instance with invalid body
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/vcs-instances/:vcs_instance_id
             variables:
               - vcs_instance_id: "{{vcs_instance_id}}"
@@ -758,8 +748,6 @@ item:
         item:
           - name: Create a repository
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/repositories
             status_code: 201
             response_time: 300
@@ -784,8 +772,6 @@ item:
               }
           - name: Create a repository with invalid body
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/repositories
             status_code: 422
             response_time: 300
@@ -805,8 +791,6 @@ item:
               }
           - name: Create a repository with non existent vcs instance ID
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/repositories
             status_code: 500
             response_time: 300
@@ -1036,8 +1020,6 @@ item:
               });
           - name: Update a repository
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/repositories/:repository_id
             variables:
               - repository_id: "{{repository_id}}"
@@ -1063,8 +1045,6 @@ item:
               }
           - name: Update a repository with non existent ID
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/repositories/:repository_id
             variables:
               - repository_id: 999
@@ -1085,8 +1065,6 @@ item:
               }
           - name: Update a repository with invalid body
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/repositories/:repository_id
             variables:
               - repository_id: "{{repository_id}}"
@@ -1488,8 +1466,6 @@ item:
         item:
           - name: Create a scan
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/scans
             status_code: 201
             response_time: 300
@@ -1519,8 +1495,6 @@ item:
               }
           - name: Create a scan with invalid body
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/scans
             status_code: 422
             response_time: 300
@@ -1674,8 +1648,6 @@ item:
               });
           - name: Update a scan
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/scans/:scan_id
             variables:
               - scan_id: "{{scan_id}}"
@@ -1704,8 +1676,6 @@ item:
               }
           - name: Update a scan with non existent ID
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/scans/:scan_id
             variables:
               - scan_id: 999
@@ -1727,8 +1697,6 @@ item:
               }
           - name: Update a scan with invalid body
             method: PUT
-            header:
-              Content-Type: application/json
             request: resc/v1/scans/:scan_id
             variables:
               - scan_id: 999
@@ -1864,8 +1832,6 @@ item:
               });
           - name: Create scan findings
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/scans/:scan_id/findings
             variables:
               - scan_id: "{{scan_id}}"
@@ -1893,8 +1859,6 @@ item:
               ]
           - name: Create scan findings with invalid body
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/scans/:scan_id/findings
             variables:
               - scan_id: "{{scan_id}}"
@@ -2162,8 +2126,6 @@ item:
         item:
           - name: Create finding
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/findings
             status_code: 201
             response_time: 300
@@ -2191,8 +2153,6 @@ item:
               ]
           - name: Create finding with invalid body
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/findings
             status_code: 422
             response_time: 300
@@ -2654,8 +2614,6 @@ item:
               });
           - name: Audit single/multiple findings
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/findings/audit/
             status_code: 201
             response_time: 300
@@ -2674,8 +2632,6 @@ item:
               }
           - name: Audit single/multiple findings with non existent finding id
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/findings/audit/
             status_code: 404
             response_time: 300
@@ -2694,8 +2650,6 @@ item:
               }
           - name: Audit single/multiple findings with invalid body
             method: POST
-            header:
-              Content-Type: application/json
             request: resc/v1/findings/audit/
             status_code: 422
             response_time: 300
@@ -2742,8 +2696,6 @@ item:
               });
           - name: Partially update a finding
             method: PATCH
-            header:
-              Content-Type: application/json
             request: resc/v1/findings/:finding_id
             variables:
               - finding_id: "{{finding_id}}"
@@ -2772,8 +2724,6 @@ item:
               }
           - name: Partially update a finding with invalid body
             method: PATCH
-            header:
-              Content-Type: application/json
             request: resc/v1/findings/:finding_id
             variables:
               - finding_id: "{{finding_id}}"
@@ -2791,8 +2741,6 @@ item:
               }
           - name: Partially update a finding with invalid ID
             method: PATCH
-            header:
-              Content-Type: application/json
             request: resc/v1/findings/:finding_id
             variables:
               - finding_id: str
@@ -2810,8 +2758,6 @@ item:
               }
           - name: Partially update a finding with non existent ID
             method: PATCH
-            header:
-              Content-Type: application/json
             request: resc/v1/findings/:finding_id
             variables:
               - finding_id: 999
