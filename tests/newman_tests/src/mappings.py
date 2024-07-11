@@ -121,7 +121,7 @@ def map_query_out_in(output_query: OutputQuery) -> InputQuery:
 
     header: str | None = None
     if request.header:
-        if formraw and request.header[0].key == 'Content-Type':
+        if formraw and request.header[0].key == "Content-Type":
             header = None
         else:
             header = request.header[0].to_dict()
