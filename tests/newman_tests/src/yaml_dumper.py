@@ -3,12 +3,13 @@ INDENT = "  "
 BAR = "- "
 
 
-def _fix_key(key:str) -> str:
-    if key == 'schema_':
-        return 'schema'
-    if key == 'postman_id':
-        return '_postman_id'
+def _fix_key(key: str) -> str:
+    if key == "schema_":
+        return "schema"
+    if key == "postman_id":
+        return "_postman_id"
     return key
+
 
 def _dump_dict(input_dict: dict[str, str | dict], key="") -> list[str]:
     rets = []
