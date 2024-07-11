@@ -51,7 +51,6 @@ class Body(BaseModel):
 
 
 class Url(BaseModel):
-    # raw: str
     host: list[str] = ["{{baseUrl}}"]
     path: list[str]
     query: list[QueryString] | None = None

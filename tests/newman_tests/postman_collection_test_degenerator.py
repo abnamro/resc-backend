@@ -29,5 +29,5 @@ def do_the_thing(intput_file_name: str, output_file_name: str, testing: bool = F
 if __name__ == "__main__":
     path = os.path.dirname(os.path.realpath(__file__))
     do_the_thing(
-        f"{path}/RESC_web_service.postman_collection_bck.json", f"{path}/RESC_web_service.postman_collection.yaml", True
+        f"{path}/RESC_web_service.postman_collection.json", f"{path}/RESC_web_service.postman_collection.yaml", True
     )

@@ -50,10 +50,8 @@ class Domain(BaseModel):
 
 
 class Info(BaseModel):
-    postman_id: Annotated[str, Field(alias="_postman_id", serialization_alias="_postman_id")]
     name: str
     description: str
-    schema_: Annotated[str, Field(alias="schema", serialization_alias="schema")]
 
 
 class Variable(BaseModel):

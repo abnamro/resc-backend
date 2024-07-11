@@ -11,7 +11,6 @@ def do_the_thing(intput_file_name: str, output_file_name: str):
     with open(intput_file_name) as file:
         simplified_tests = yaml.safe_load(file)
 
-    # print(simplified_tests)
     validated_tests = InputTestSuite(**simplified_tests)
 
     full_tests = OutputTestSuite(info=validated_tests.info, variable=validated_tests.variable, item=[])
