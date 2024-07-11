@@ -7,6 +7,12 @@ from src.mappings import map_domain_in_out
 from src.output_models import TestSuite as OutputTestSuite
 
 
+def fix_postman(data: str) -> str:
+    data = data.replace("schema_", "schema")
+    data = data.replace("postman_id", "_postman_id")
+    return data
+
+
 def do_the_thing(intput_file_name: str, output_file_name: str):
     with open(intput_file_name) as file:
         simplified_tests = yaml.safe_load(file)
@@ -18,7 +24,7 @@ def do_the_thing(intput_file_name: str, output_file_name: str):
         full_tests.item.append(map_domain_in_out(item))
 
     with open(output_file_name, "w") as file:
-        file.write(json.dumps(full_tests.model_dump(exclude_none=True), indent="\t"))
+        file.write(fix_postman(json.dumps(full_tests.model_dump(exclude_none=True), indent="\t")))
 
 
 if __name__ == "__main__":
