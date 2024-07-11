@@ -579,7 +579,7 @@ def get_findings_count_by_status(
     :return: findings_count
         count of findings
     """
-    query:Query = db_connection.query(func.count(distinct(DBfinding.id_)).label("status_count"), DBaudit.status)
+    query: Query = db_connection.query(func.count(distinct(DBfinding.id_)).label("status_count"), DBaudit.status)
     query = query.join(
         DBaudit,
         (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
