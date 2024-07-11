@@ -3,6 +3,13 @@ INDENT = "  "
 BAR = "- "
 
 
+def _fix_key(key:str) -> str:
+    if key == 'schema_':
+        return 'schema'
+    if key == 'postman_id':
+        return '_postman_id'
+    return key
+
 def _dump_dict(input_dict: dict[str, str | dict], key="") -> list[str]:
     rets = []
     for key_ in input_dict.keys():
@@ -42,6 +49,7 @@ def _dump_array(inputs: list, key: str) -> list[str]:
 
 
 def _dump_string(input_val: str, key: str) -> list[str]:
+    key = _fix_key(key)
     if EOL not in input_val:
         if len(input_val) == 0:
             return [f'{key}: ""']

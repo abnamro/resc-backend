@@ -1,7 +1,9 @@
 {
 	"info": {
+		"postman_id": "346abcc7-3f6d-4d60-8a15-afef6ed2070f",
 		"name": "Repository Scanner (RESC)",
-		"description": "RESC API helps you to perform several operations upon findings obtained from multiple source code repositories."
+		"description": "RESC API helps you to perform several operations upon findings obtained from multiple source code repositories.",
+		"schema_": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
