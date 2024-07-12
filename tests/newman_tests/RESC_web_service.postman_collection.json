@@ -8000,7 +8000,7 @@
 											"    pm.expect(responseJson).to.be.an(\"object\");",
 											"    pm.expect(responseJson[\"data\"]).to.be.an(\"array\");",
 											"    pm.expect(responseJson[\"data\"].length).to.eql(2);",
-											"    pm.expect(responseJson[\"data\"][0][\"finding_count\"]).to.eql(6);",
+											"    pm.expect(responseJson[\"data\"][0][\"finding_count\"]).to.eql(7);",
 											"    pm.expect(responseJson[\"data\"][1][\"date_lable\"]).to.include(\"W\"+weekNumber);",
 											"    pm.expect(responseJson[\"data\"][1][\"finding_count\"]).to.eql(1);",
 											"",
