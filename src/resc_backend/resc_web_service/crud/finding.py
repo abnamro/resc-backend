@@ -4,7 +4,7 @@ from datetime import UTC, datetime, timedelta
 from itertools import islice
 
 # Third Party
-from sqlalchemy import Column, distinct, extract, func, select, union
+from sqlalchemy import Column, extract, func, select, union
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
@@ -379,7 +379,7 @@ def get_total_findings_count(db_connection: Session, findings_filter: FindingsFi
         count of findings
     """
 
-    query = db_connection.query(func.count(distinct(DBfinding.id_)))
+    query = db_connection.query(func.count(DBfinding.id_))
 
     if findings_filter:
         if findings_filter.finding_statuses:
@@ -579,7 +579,7 @@ def get_findings_count_by_status(
     :return: findings_count
         count of findings
     """
-    query: Query = db_connection.query(func.count(distinct(DBfinding.id_)).label("status_count"), DBaudit.status)
+    query = db_connection.query(func.count(DBfinding.id_).label("status_count"), DBaudit.status)
     query = query.join(
         DBaudit,
         (DBaudit.finding_id == DBfinding.id_) & (DBaudit.is_latest == True),  # noqa: E712
@@ -627,7 +627,7 @@ def get_rule_findings_count_by_status(
     :return: findings_count
         per rulename and status the count of findings
     """
-    query = db_connection.query(DBfinding.rule_name, DBaudit.status, func.count(distinct(DBfinding.id_)))
+    query = db_connection.query(DBfinding.rule_name, DBaudit.status, func.count(DBfinding.id_))
 
     if not include_deleted_repositories:
         query = query.join(DBrepository, DBrepository.id_ == DBfinding.repository_id)
@@ -697,8 +697,8 @@ def get_rule_findings_count_by_status(
 def get_findings_count_by_time(
     db_connection: Session,
     date_type: DateFilter,
-    start_date_time: datetime | None = None,
-    end_date_time: datetime | None = None,
+    start_date_time: datetime = None,
+    end_date_time: datetime = None,
     skip: int = 0,
     limit: int = DEFAULT_RECORDS_PER_PAGE_LIMIT,
 ):
@@ -721,20 +721,20 @@ def get_findings_count_by_time(
         query = db_connection.query(
             extract("year", DBscan.timestamp),
             extract("month", DBscan.timestamp),
-            func.count(distinct(DBscanFinding.finding_id)),
+            func.count(DBscanFinding.finding_id),
         )
     elif date_type == DateFilter.WEEK:
         query = db_connection.query(
             extract("year", DBscan.timestamp),
             extract("week", DBscan.timestamp),
-            func.count(distinct(DBscanFinding.finding_id)),
+            func.count(DBscanFinding.finding_id),
         )
     elif date_type == DateFilter.DAY:
         query = db_connection.query(
             extract("year", DBscan.timestamp),
             extract("month", DBscan.timestamp),
             extract("day", DBscan.timestamp),
-            func.count(distinct(DBscanFinding.finding_id)),
+            func.count(DBscanFinding.finding_id),
         )
 
     query: Query = query.join(DBscanFinding, DBscanFinding.scan_id == DBscan.id_)
@@ -778,8 +778,8 @@ def get_findings_count_by_time(
 def get_findings_count_by_time_total(
     db_connection: Session,
     date_type: DateFilter,
-    start_date_time: datetime | None = None,
-    end_date_time: datetime | None = None,
+    start_date_time: datetime = None,
+    end_date_time: datetime = None,
 ):
     """
         Retrieve total count on date_type
@@ -970,7 +970,7 @@ def get_finding_audit_status_count_over_time(db_connection: Session, status: Fin
             literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
             literal_column(str(last_nth_week_date_time.isocalendar()[1])).label("week"),
             DBVcsInstance.provider_type.label("provider_type"),
-            func.count(distinct(DBaudit.id_)).label("finding_count"),
+            func.count(DBaudit.id_).label("finding_count"),
         )
         query = query.join(max_audit_subquery, max_audit_subquery.c.audit_id == DBaudit.id_)
         query = query.join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
@@ -1011,7 +1011,7 @@ def get_finding_count_by_vcs_provider_over_time(db_connection: Session, weeks: i
             literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
             literal_column(str(last_nth_week_date_time.isocalendar()[1])).label("week"),
             DBVcsInstance.provider_type.label("provider_type"),
-            func.count(distinct(DBfinding.id_)).label("finding_count"),
+            func.count(DBfinding.id_).label("finding_count"),
         )
         query = query.join(DBscanFinding, DBfinding.id_ == DBscanFinding.finding_id)
         query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
@@ -1054,7 +1054,7 @@ def get_untriaged_finding_count_by_vcs_provider_over_time(db_connection: Session
             literal_column(str(last_nth_week_date_time.isocalendar()[0])).label("year"),
             literal_column(str(last_nth_week_date_time.isocalendar()[1])).label("week"),
             DBVcsInstance.provider_type.label("provider_type"),
-            func.count(distinct(DBfinding.id_)).label("finding_count"),
+            func.count(DBfinding.id_).label("finding_count"),
         )
         query = query.join(DBscanFinding, DBfinding.id_ == DBscanFinding.finding_id)
         query = query.join(DBscan, DBscan.id_ == DBscanFinding.scan_id)
@@ -1125,7 +1125,6 @@ def get_untriaged_finding_for_old_rulepacks(db_connection: Session, version: str
     )
     query = query.where((DBaudit.status == None) | (DBaudit.status == FindingStatus.NOT_ANALYZED))  # noqa: E711
     query = query.where(DBfinding.id_.not_in(do_not_touch_finding_query))
-    query = query.distinct()
     # We limit to 100 000 because otherwise it crashes because too many data
     query = query.limit(100_000)
 

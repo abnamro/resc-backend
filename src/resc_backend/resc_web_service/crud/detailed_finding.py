@@ -1,7 +1,7 @@
 # Standard Library
 
 # Third Party
-from sqlalchemy import distinct, func
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
@@ -259,7 +259,7 @@ def get_detailed_findings_count(db_connection: Session, findings_filter: Finding
         count of findings
     """
 
-    query = db_connection.query(func.count(distinct(DBfinding.id_)))
+    query = db_connection.query(func.count(DBfinding.id_))
     # Prepare the joins, then we do the filtering.
     # There are no benefits in doing filtering on Where rather than On as we are doing Inner joins.
     # Source: https://stackoverflow.com/questions/2509987/which-sql-query-is-faster-filter-on-join-criteria-or-where-clause
