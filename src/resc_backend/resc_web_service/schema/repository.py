@@ -12,7 +12,7 @@ class SimpleRepository(BaseModel):
 
 class ActiveRepositories(BaseModel):
     project_key: Annotated[str, StringConstraints(min_length=1, max_length=100)]
-    repositories: Annotated[list[SimpleRepository], Field(min_length=1)]
+    repositories: Annotated[list[SimpleRepository], Field(min_length=0)]
     vcs_instance_name: Annotated[str, StringConstraints(max_length=200)]
 
 
