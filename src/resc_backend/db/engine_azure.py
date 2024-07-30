@@ -4,11 +4,13 @@ import os
 import struct
 
 # Third Party
+import pyodbc
 from azure.identity import DefaultAzureCredential
 from sqlalchemy import create_engine, event
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 logger = logging.getLogger(__name__)
+pyodbc.pooling = False
 
 
 def create_azure_engine(connection_string: str, echo_queries: bool, pool_size: int, max_overflow: int):
@@ -42,6 +44,9 @@ def create_azure_engine(connection_string: str, echo_queries: bool, pool_size: i
         echo=echo_queries,
         pool_size=pool_size,
         max_overflow=max_overflow,
+        pool_pre_ping=True,
+        connect_args={"check_same_thread": False},
+        pool_recycle=1500,
     )
 
     @event.listens_for(engine, "do_connect")
