@@ -37,6 +37,7 @@ from resc_backend.resc_web_service.configuration import (
     SSO_JWT_CLAIM_VALUE_AUTHORIZATION,
     SSO_JWT_REQUIRED_CLAIMS,
     SSO_JWT_SIGN_ALGORITHM,
+    SSO_JWT_CLAIM_AUDIENCE,
 )
 
 security = HTTPBearer()
@@ -69,6 +70,7 @@ async def requires_auth(request: Request, credentials: HTTPBasicCredentials = De
         claims = jwt.decode(
             access_token,
             signing_key.key,
+            audience=env_variables[SSO_JWT_CLAIM_AUDIENCE],
             algorithms=algorithm,
             issuer=issuer,
             options=jwt_options,
