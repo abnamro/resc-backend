@@ -3,17 +3,17 @@ import os
 from unittest.mock import patch
 
 # Third Party
-from fastapi import Request
-from fastapi.security import HTTPAuthorizationCredentials
 import jwt
 import pytest
+from fastapi import Request
+from fastapi.security import HTTPAuthorizationCredentials
 from tenacity import RetryError, stop_after_attempt
 
 # First Party
 from resc_backend.resc_web_service.dependencies import (
     check_db_initialized,
-    user_is_authorized,
     requires_auth,
+    user_is_authorized,
 )
 
 
