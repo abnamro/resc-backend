@@ -76,6 +76,12 @@ CONDITIONAL_SSO_ENV_VARS = [
         required=True,
     ),
     EnvironmentVariable(
+        SSO_JWT_CLAIM_AUDIENCE,
+        "JWT audience claim for the authorization check. Used to validate if provided audience match the client id",
+        required=False,
+        default=None,
+    ),
+    EnvironmentVariable(
         SSO_JWT_CLAIM_KEY_USER_ID,
         "JWT claim key used for the user id",
         required=True,
@@ -91,13 +97,6 @@ CONDITIONAL_SSO_ENV_VARS = [
         "Used as string contains check on the key from SSO_JWT_CLAIM_KEY_AUTHORIZATION",
         required=True,
     ),
-    EnvironmentVariable(
-      SSO_JWT_CLAIM_AUDIENCE,
-      "JWT audience claim for the authorization check. "
-      "Used to validate if provided audience match the client id",
-      required=False,
-      default=None
-    )
 ]
 
 CONDITIONAL_REDIS_ENV_VARS = [

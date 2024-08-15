@@ -24,14 +24,14 @@ from resc_backend.resc_web_service.dependencies import (
 async def test_jwt_validation_with_audience(_verify_signature, _get_signing_key):
     # Environment variables
     env_variables = {
-        "SSO_ACCESS_TOKEN_ISSUER_URL": 'https://fake-sso-url.com',
-        "SSO_ACCESS_TOKEN_JWKS_URL": 'https://fake-sso-url/ext/employeeoidc/jwks',
-        "SSO_JWT_CLAIM_KEY_AUTHORIZATION": 'roles',
-        "SSO_JWT_CLAIM_VALUE_AUTHORIZATION": 'OPERATOR',
-        "SSO_JWT_CLAIM_KEY_USER_ID": 'username',
-        "SSO_JWT_REQUIRED_CLAIMS": 'roles',
-        "SSO_JWT_SIGN_ALGORITHM": 'none',
-        "SSO_JWT_CLAIM_AUDIENCE": 'fake-audience',
+        "SSO_ACCESS_TOKEN_ISSUER_URL": "https://fake-sso-url.com",
+        "SSO_ACCESS_TOKEN_JWKS_URL": "https://fake-sso-url/ext/employeeoidc/jwks",
+        "SSO_JWT_CLAIM_AUDIENCE": "fake-audience",
+        "SSO_JWT_CLAIM_KEY_AUTHORIZATION": "roles",
+        "SSO_JWT_CLAIM_VALUE_AUTHORIZATION": "OPERATOR",
+        "SSO_JWT_CLAIM_KEY_USER_ID": "username",
+        "SSO_JWT_REQUIRED_CLAIMS": "roles",
+        "SSO_JWT_SIGN_ALGORITHM": "none",
     }
     # Access token
     payload = {"aud": "fake-audience", "iss": "https://fake-sso-url.com", "roles": "OPERATOR", "username": "fake-user"}
@@ -39,6 +39,7 @@ async def test_jwt_validation_with_audience(_verify_signature, _get_signing_key)
     # Function parameters
     request = Request({"user": "fake-user", "type": "http"})
     credentials = HTTPAuthorizationCredentials(scheme="Bearer", credentials=access_token)
+
     with patch.dict(os.environ, env_variables):
         await requires_auth(request, credentials)
 
@@ -50,13 +51,13 @@ async def test_jwt_validation_with_audience(_verify_signature, _get_signing_key)
 async def test_jwt_validation_without_audience(_verify_signature, _get_signing_key):
     # Environment variables
     env_variables = {
-        "SSO_ACCESS_TOKEN_ISSUER_URL": 'https://fake-sso-url.com',
-        "SSO_ACCESS_TOKEN_JWKS_URL": 'https://fake-sso-url/ext/employeeoidc/jwks',
-        "SSO_JWT_CLAIM_KEY_AUTHORIZATION": 'roles',
-        "SSO_JWT_CLAIM_VALUE_AUTHORIZATION": 'OPERATOR',
-        "SSO_JWT_CLAIM_KEY_USER_ID": 'username',
-        "SSO_JWT_REQUIRED_CLAIMS": 'roles',
-        "SSO_JWT_SIGN_ALGORITHM": 'none',
+        "SSO_ACCESS_TOKEN_ISSUER_URL": "https://fake-sso-url.com",
+        "SSO_ACCESS_TOKEN_JWKS_URL": "https://fake-sso-url/ext/employeeoidc/jwks",
+        "SSO_JWT_CLAIM_KEY_AUTHORIZATION": "roles",
+        "SSO_JWT_CLAIM_VALUE_AUTHORIZATION": "OPERATOR",
+        "SSO_JWT_CLAIM_KEY_USER_ID": "username",
+        "SSO_JWT_REQUIRED_CLAIMS": "roles",
+        "SSO_JWT_SIGN_ALGORITHM": "none",
     }
     # Access token
     payload = {"iss": "https://fake-sso-url.com", "roles": "OPERATOR", "username": "fake-user"}
@@ -64,6 +65,7 @@ async def test_jwt_validation_without_audience(_verify_signature, _get_signing_k
     # Function parameters
     request = Request({"user": "fake-user", "type": "http"})
     credentials = HTTPAuthorizationCredentials(scheme="Bearer", credentials=access_token)
+
     with patch.dict(os.environ, env_variables):
         await requires_auth(request, credentials)
 
