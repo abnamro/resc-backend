@@ -9,7 +9,7 @@ import urllib.error
 import jwt
 import sqlalchemy.orm
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import HTTPBasicCredentials, HTTPBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWKClient
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -46,7 +46,7 @@ request_logger = logging.getLogger("resc.request")
 request_logger.setLevel(logging.getLevelName(logging.INFO))
 
 
-async def requires_auth(request: Request, credentials: HTTPBasicCredentials = Depends(security)):
+async def requires_auth(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """
     Function that is used to validate the JWT access token
     """
