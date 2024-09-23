@@ -9,6 +9,7 @@ SSO_ACCESS_TOKEN_ISSUER_URL = "SSO_ACCESS_TOKEN_ISSUER_URL"
 SSO_ACCESS_TOKEN_JWKS_URL = "SSO_ACCESS_TOKEN_JWKS_URL"
 SSO_JWT_SIGN_ALGORITHM = "SSO_JWT_SIGN_ALGORITHM"
 SSO_JWT_REQUIRED_CLAIMS = "SSO_JWT_REQUIRED_CLAIMS"
+SSO_JWT_CLAIM_AUDIENCE = "SSO_JWT_CLAIM_AUDIENCE"
 SSO_JWT_CLAIM_KEY_USER_ID = "SSO_JWT_CLAIM_KEY_USER_ID"
 SSO_JWT_CLAIM_KEY_AUTHORIZATION = "SSO_JWT_CLAIM_KEY_AUTHORIZATION"
 SSO_JWT_CLAIM_VALUE_AUTHORIZATION = "SSO_JWT_CLAIM_VALUE_AUTHORIZATION"
@@ -73,6 +74,12 @@ CONDITIONAL_SSO_ENV_VARS = [
         SSO_JWT_REQUIRED_CLAIMS,
         "Comma separated list of claims that need to be in the JWT",
         required=True,
+    ),
+    EnvironmentVariable(
+        SSO_JWT_CLAIM_AUDIENCE,
+        "JWT audience claim for the authorization check. Used to validate if provided audience match the client id",
+        required=False,
+        default=None,
     ),
     EnvironmentVariable(
         SSO_JWT_CLAIM_KEY_USER_ID,

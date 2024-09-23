@@ -9,7 +9,7 @@ import urllib.error
 import jwt
 import sqlalchemy.orm
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import HTTPBasicCredentials, HTTPBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWKClient
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -32,6 +32,7 @@ from resc_backend.resc_web_service.configuration import (
     CONDITIONAL_SSO_ENV_VARS,
     SSO_ACCESS_TOKEN_ISSUER_URL,
     SSO_ACCESS_TOKEN_JWKS_URL,
+    SSO_JWT_CLAIM_AUDIENCE,
     SSO_JWT_CLAIM_KEY_AUTHORIZATION,
     SSO_JWT_CLAIM_KEY_USER_ID,
     SSO_JWT_CLAIM_VALUE_AUTHORIZATION,
@@ -45,7 +46,7 @@ request_logger = logging.getLogger("resc.request")
 request_logger.setLevel(logging.getLevelName(logging.INFO))
 
 
-async def requires_auth(request: Request, credentials: HTTPBasicCredentials = Depends(security)):
+async def requires_auth(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
     """
     Function that is used to validate the JWT access token
     """
@@ -69,6 +70,7 @@ async def requires_auth(request: Request, credentials: HTTPBasicCredentials = De
         claims = jwt.decode(
             access_token,
             signing_key.key,
+            audience=env_variables[SSO_JWT_CLAIM_AUDIENCE],
             algorithms=algorithm,
             issuer=issuer,
             options=jwt_options,
