@@ -194,7 +194,7 @@ async def upload_rule_pack_toml_file(
     if rule_pack_from_db:
         raise HTTPException(
             status_code=409,
-            detail=f"Unable to process rules. Rule pack version " f"{version} already exists",
+            detail=f"Unable to process rules. Rule pack version {version} already exists",
         )
 
     # Insert in to RULE_ALLOW_LIST for storing global allow list
@@ -506,7 +506,7 @@ async def mark_rule_pack_as_outdated(
 
 
 @router.get(
-    "/{rule_pack_version}" f"{RWS_ROUTE_RULES}",
+    f"/{{rule_pack_version}}{RWS_ROUTE_RULES}",
     response_model=RuleRead,
     summary="Get unique rule from rule pack",
     status_code=status.HTTP_200_OK,

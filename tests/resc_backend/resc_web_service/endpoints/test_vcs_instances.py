@@ -308,7 +308,7 @@ class TestVCSInstances(unittest.TestCase):
         vcs_instance_id = 1
         get_vcs_instance.return_value = self.db_vcs_instances[vcs_instance_id]
         clear_cache_by_namespace.return_value = None
-        response = self.client.delete(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_VCS}/{vcs_instance_id}")
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}/{vcs_instance_id}")
         assert response.status_code == 200, response.text
         get_vcs_instance.assert_called_once_with(ANY, vcs_instance_id=vcs_instance_id)
         delete_vcs_instance.assert_called_once_with(ANY, vcs_instance_id=vcs_instance_id, delete_related=True)
@@ -319,7 +319,7 @@ class TestVCSInstances(unittest.TestCase):
     def test_delete_vcs_instance_invalid(self, delete_vcs_instance, get_vcs_instance):
         vcs_instance_id = 999
         get_vcs_instance.return_value = None
-        response = self.client.delete(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_VCS}/{vcs_instance_id}")
+        response = self.client.delete(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_VCS}/{vcs_instance_id}")
         assert response.status_code == 404, response.text
         data = response.json()
         assert data["detail"] == "VCS instance not found"
