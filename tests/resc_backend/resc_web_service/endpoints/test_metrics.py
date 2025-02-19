@@ -172,7 +172,7 @@ class TestFindings(unittest.TestCase):
         get_audit_count_by_auditor_over_time.return_value = {}
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_METRICS}" f"{RWS_ROUTE_AUDIT_COUNT_BY_AUDITOR_OVER_TIME}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_METRICS}{RWS_ROUTE_AUDIT_COUNT_BY_AUDITOR_OVER_TIME}"
             )
 
             assert response.status_code == 200, response.text
@@ -188,7 +188,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_METRICS}" f"{RWS_ROUTE_AUDIT_COUNT_BY_AUDITOR_OVER_TIME}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_METRICS}{RWS_ROUTE_AUDIT_COUNT_BY_AUDITOR_OVER_TIME}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()

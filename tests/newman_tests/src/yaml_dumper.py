@@ -56,7 +56,7 @@ def _dump_string(input_val: str, key: str) -> list[str]:
             return [f'{key}: ""']
 
         if input_val.startswith("{"):
-            return [f"{key}: \"{input_val.replace('"', "\\\"")}\""]
+            return [f'{key}: "{input_val.replace('"', '\\"')}"']
         return [f"{key}: {input_val}"]
 
     ret = [f"{key}: |-"]

@@ -439,7 +439,7 @@ class TestFindings(unittest.TestCase):
         get_total_findings_count.return_value = count
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             assert response.status_code == 200, response.text
             assert response.text == str(count)
@@ -449,7 +449,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -461,7 +461,7 @@ class TestFindings(unittest.TestCase):
         get_total_findings_count.return_value = count
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             assert response.status_code == 200, response.text
             assert response.text == str(count)
@@ -469,7 +469,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{rule_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -482,7 +482,7 @@ class TestFindings(unittest.TestCase):
         get_findings_count.return_value = 0
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             assert response.status_code == 200, response.text
@@ -497,7 +497,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             self.assert_cache(cached_response)
@@ -511,7 +511,7 @@ class TestFindings(unittest.TestCase):
         get_findings_count.return_value = len(self.enriched_findings[:2])
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             assert response.status_code == 200, response.text
@@ -528,7 +528,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             self.assert_cache(cached_response)
@@ -542,7 +542,7 @@ class TestFindings(unittest.TestCase):
         get_findings_count.return_value = len(self.enriched_findings[:1])
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             assert response.status_code == 200, response.text
@@ -558,7 +558,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": 5},
             )
             self.assert_cache(cached_response)
@@ -569,7 +569,7 @@ class TestFindings(unittest.TestCase):
         rule_name = "rule_name"
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": -1, "limit": 5},
             )
             assert response.status_code == 422, response.text
@@ -580,7 +580,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": -1, "limit": 5},
             )
             self.assert_cache(cached_response)
@@ -591,7 +591,7 @@ class TestFindings(unittest.TestCase):
         rule_name = "rule_name"
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": -1},
             )
             assert response.status_code == 422, response.text
@@ -602,7 +602,7 @@ class TestFindings(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_BY_RULE}/{rule_name}",
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_BY_RULE}/{rule_name}",
                 params={"skip": 0, "limit": -1},
             )
             self.assert_cache(cached_response)
@@ -654,7 +654,7 @@ class TestFindings(unittest.TestCase):
 
     def test_get_supported_statuses(self):
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_SUPPORTED_STATUSES}/")
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_SUPPORTED_STATUSES}/")
             assert response.status_code == 200, response.text
             data = response.json()
             assert data[0] == "NOT_ANALYZED"
@@ -666,7 +666,7 @@ class TestFindings(unittest.TestCase):
             assert len(data) == 6
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_SUPPORTED_STATUSES}/")
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_SUPPORTED_STATUSES}/")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
@@ -676,7 +676,7 @@ class TestFindings(unittest.TestCase):
         get_findings_count_by_time_total.return_value = 2
         get_findings_count_by_time.return_value = [(2021, 10, 100), (2022, 12, 200)]
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.MONTH.value}"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.MONTH.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -695,7 +695,7 @@ class TestFindings(unittest.TestCase):
         get_findings_count_by_time_total.return_value = 2
         get_findings_count_by_time.return_value = [(2021, 40, 100), (2022, 42, 200)]
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.WEEK.value}"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.WEEK.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -717,7 +717,7 @@ class TestFindings(unittest.TestCase):
             (2022, 12, 2, 200),
         ]
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}" f"{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.DAY.value}"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_FINDINGS}{RWS_ROUTE_COUNT_BY_TIME}/{DateFilter.DAY.value}"
         )
         assert response.status_code == 200, response.text
         data = response.json()

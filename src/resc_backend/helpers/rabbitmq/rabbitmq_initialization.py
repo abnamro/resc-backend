@@ -83,7 +83,7 @@ def create_user(rabbitmq_api_base_url: str, username: str, password: str, role: 
         logger.info(f"User: {username} with role: {role} already exists.")
         return True
     logger.error(
-        f"Failed while creating user: '{username}' " f"with role: '{role}' " f", HTTP status: '{response.status_code}'"
+        f"Failed while creating user: '{username}' with role: '{role}' , HTTP status: '{response.status_code}'"
     )
     return False
 
@@ -225,9 +225,9 @@ def create_queue_user_and_set_permission(rabbitmq_api_base_url: str):
             rabbitmq_api_base_url=rabbitmq_api_base_url,
             v_host=rabbitmq_vhost,
             username=queue_user,
-            configure_resources_regex=f"^({PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|.*celery.*)$",
-            read_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|.*celery.*$",
-            write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|amq.default|.*celery.*$",
+            configure_resources_regex=f"^({PROJECT_QUEUE}|{REPOSITORY_QUEUE}|.*celery.*)$",
+            read_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}|.*celery.*$",
+            write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}|amq.default|.*celery.*$",
         )
         set_topic_permissions(
             rabbitmq_api_base_url=rabbitmq_api_base_url,

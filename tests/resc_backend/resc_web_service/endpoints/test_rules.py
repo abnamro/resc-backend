@@ -117,7 +117,7 @@ class TestRules(unittest.TestCase):
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -127,7 +127,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?findingstatus={FindingStatus.NOT_ANALYZED.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -163,7 +163,7 @@ class TestRules(unittest.TestCase):
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -173,7 +173,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?vcs_provider={VCSProviders.BITBUCKET.value}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -209,7 +209,7 @@ class TestRules(unittest.TestCase):
         project_name = "Test_Project"
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?project_name={project_name}")
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?project_name={project_name}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_rules)
@@ -217,9 +217,7 @@ class TestRules(unittest.TestCase):
             assert data[1] == self.db_rules[1].rule_name
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?project_name={project_name}"
-            )
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?project_name={project_name}")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
@@ -228,9 +226,7 @@ class TestRules(unittest.TestCase):
         repository_name = "Test_Repository"
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?repositoryname={repository_name}"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?repositoryname={repository_name}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_rules)
@@ -239,7 +235,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?repositoryname={repository_name}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?repositoryname={repository_name}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -249,9 +245,7 @@ class TestRules(unittest.TestCase):
         start_date_time = "1991-07-01T00:00:00"
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
-            response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?start_date_time={start_date_time}"
-            )
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?start_date_time={start_date_time}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_rules)
@@ -260,7 +254,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?start_date_time={start_date_time}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?start_date_time={start_date_time}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -270,7 +264,7 @@ class TestRules(unittest.TestCase):
         end_date_time = "1991-07-01T00:00:00"
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?end_date_time={end_date_time}")
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?end_date_time={end_date_time}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_rules)
@@ -279,7 +273,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?end_date_time={end_date_time}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?end_date_time={end_date_time}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -290,7 +284,7 @@ class TestRules(unittest.TestCase):
         get_distinct_rule_names_from_findings.return_value = [self.db_rules[0].rule_name]
         with self.client as client:
             response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?rule_pack_version={rule_pack_version}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?rule_pack_version={rule_pack_version}"
             )
             assert response.status_code == 200, response.text
             data = response.json()
@@ -299,7 +293,7 @@ class TestRules(unittest.TestCase):
 
             # Make the second request to retrieve response from cache
             cached_response = client.get(
-                f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}?rule_pack_version={rule_pack_version}"
+                f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}?rule_pack_version={rule_pack_version}"
             )
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
@@ -346,7 +340,7 @@ class TestRules(unittest.TestCase):
     def test_get_distinct_rule_names_from_findings_when_no_filter_selected(self, get_distinct_rule_names_from_findings):
         get_distinct_rule_names_from_findings.return_value = [x.rule_name for x in self.db_rules]
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}")
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == len(self.db_rules)
@@ -354,7 +348,7 @@ class TestRules(unittest.TestCase):
             assert data[1] == self.db_rules[1].rule_name
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_DETECTED_RULES}")
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_DETECTED_RULES}")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 
@@ -373,7 +367,7 @@ class TestRules(unittest.TestCase):
         }
         get_rule_findings_count_by_status.return_value = rule_statuses
         with self.client as client:
-            response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULES}{RWS_ROUTE_FINDING_STATUS_COUNT}")
+            response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_RULES}{RWS_ROUTE_FINDING_STATUS_COUNT}")
             assert response.status_code == 200, response.text
             data = response.json()
             assert len(data) == 1
@@ -384,7 +378,7 @@ class TestRules(unittest.TestCase):
                 assert data[0]["finding_statuses_count"][status]["count"] == 2
 
             # Make the second request to retrieve response from cache
-            cached_response = client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_RULES}{RWS_ROUTE_FINDING_STATUS_COUNT}")
+            cached_response = client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_RULES}{RWS_ROUTE_FINDING_STATUS_COUNT}")
             self.assert_cache(cached_response)
             assert response.json() == cached_response.json()
 

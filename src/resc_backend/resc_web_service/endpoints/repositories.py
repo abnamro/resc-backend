@@ -316,7 +316,7 @@ def get_distinct_repositories(
 
 
 @router.get(
-    "/{repository_id}" f"{RWS_ROUTE_FINDINGS_METADATA}",
+    f"/{{repository_id}}{RWS_ROUTE_FINDINGS_METADATA}",
     response_model=FindingCountModel[repository_schema.RepositoryRead],
     summary="Get findings metadata for a repository",
     status_code=status.HTTP_200_OK,
@@ -451,7 +451,7 @@ def get_all_repositories_with_findings_metadata(
 
 
 @router.get(
-    "/{repository_id}" f"{RWS_ROUTE_LAST_SCAN}",
+    f"/{{repository_id}}{RWS_ROUTE_LAST_SCAN}",
     response_model=scan_schema.ScanRead,
     summary="Get latest scan for repository",
     status_code=status.HTTP_200_OK,
@@ -481,7 +481,7 @@ def get_last_scan_for_repository(
 
 
 @router.get(
-    "/{repository_id}" f"{RWS_ROUTE_SCANS}",
+    f"/{{repository_id}}{RWS_ROUTE_SCANS}",
     summary="Get scans for repository",
     response_model=PaginationModel[scan_schema.ScanRead],
     status_code=status.HTTP_200_OK,
@@ -516,7 +516,7 @@ def get_scans_for_repository(
 
 
 @router.patch(
-    "/{repository_id}" f"{RWS_ROUTE_TOGGLE_DELETED}",
+    f"/{{repository_id}}{RWS_ROUTE_TOGGLE_DELETED}",
     summary="Toggle the deleted_at for a repository",
     response_model=repository_schema.RepositoryRead,
     status_code=status.HTTP_200_OK,

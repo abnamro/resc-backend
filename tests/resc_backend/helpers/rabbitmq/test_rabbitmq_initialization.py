@@ -160,8 +160,8 @@ def test_create_queue_user_and_set_permission(
         rabbitmq_api_base_url="dummy-rabbitmq-api-base-url",
         v_host="vhost",
         username="fake_rabbituser",
-        configure_resources_regex=f"^({PROJECT_QUEUE}" f"|{REPOSITORY_QUEUE}" f"|.*celery.*)$",
-        read_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|.*celery.*$",
-        write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}" f"|amq.default|.*celery.*$",
+        configure_resources_regex=f"^({PROJECT_QUEUE}|{REPOSITORY_QUEUE}|.*celery.*)$",
+        read_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}|.*celery.*$",
+        write_resources_regex=f"^{PROJECT_QUEUE}|{REPOSITORY_QUEUE}|amq.default|.*celery.*$",
     )
     assert mock_set_topic_permissions.call_count == 2
