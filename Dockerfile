@@ -57,7 +57,7 @@ WORKDIR /resc_backend
 RUN uv venv --python 3.12 \
     && uv add -r requirements.txt \
     && uv add pyodbc==5.1.0 \
-    && uv build .
+    && uv pip install -e .
 
 USER root
 

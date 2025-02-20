@@ -131,7 +131,7 @@ jobs:
       - id: getversion
         name: Get package version
         run: | 
-          backend_version=$(uv pip show resc-backend)
+          backend_version=$(uv pip show resc-backend | grep Version | awk '{ print $2 }')
           echo "backend_version=$backend_version" >> $GITHUB_OUTPUT
 
   dockerize:
