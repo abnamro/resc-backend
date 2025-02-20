@@ -16,6 +16,11 @@ coverage.xml
 *.log
 .git
 .mypy_cache
+.ruff_cache
 .pytest_cache
 .hypothesis
 *.md
+
+Dockerfile
+.dockerignore
+rootfs/.gitkeep

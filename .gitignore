@@ -13,6 +13,9 @@ venv
 self_signed_cert_generation/client
 self_signed_cert_generation/server
 self_signed_cert_generation/testca
+*.old
+rootfs/*
+!rootfs/.gitkeep
 
 # Mac
 .DS_Store

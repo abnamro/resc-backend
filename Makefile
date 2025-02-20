@@ -9,10 +9,8 @@ test:
 db: cleandb create_db env init_db
 
 env:
-	@pip install virtualenv
-	@if ! test -f "venv"; then python -m virtualenv venv ;fi
-	@export PIP_CONFIG_FILE="./pip.conf" && pip install -e .
-	@pip install pyodbc==4.0.32
+	uv venv
+	uv install pyodbc==5.1.0
 
 create_db:
 	@docker pull mcr.microsoft.com/mssql/server:2019-CU12-ubuntu-20.04
