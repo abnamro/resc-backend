@@ -45,7 +45,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install uv
+    - name: Install uv with Python ${{ matrix.python-version }}
       uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ matrix.python-version }}
@@ -58,9 +58,9 @@ jobs:
 
     - name: Test with pytest
       run: |
-        coverage run -m pytest
-        coverage report -m
-        coverage xml --data-file=.coverage          
+        uv run coverage run -m pytest
+        uv run coverage report -m
+        uv run coverage xml --data-file=.coverage          
 
     # This step will only execute if PR is created internally.
     - name: SonarCloud Scan
@@ -115,30 +115,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - name: Install uv with Python ${{ matrix.python-version }}
+        uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Building python package
         run: |
-          python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pip
-          pip install build wheel
-          python setup.py sdist bdist_wheel
+          uv build
 
-      - name: Publish python package to PyPI
+      - name: Publish
         if: ${{ needs.python-basic-validation.outputs.branch_name == 'main' }}
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.__PYPI_TOKEN__ }}
-          packages_dir: ./dist
-          skip_existing: true
+        run: uv publish -t ${{ secrets.PYPI_TOKEN }}
 
       - id: getversion
         name: Get package version
         run: | 
-          backend_version=$(python ./setup.py --version)
+          backend_version=$(uv pip show resc-backend)
           echo "backend_version=$backend_version" >> $GITHUB_OUTPUT
 
   dockerize:

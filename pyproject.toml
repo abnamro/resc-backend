@@ -1,3 +1,24 @@
+[project]
+name = "resc-backend"
+version = "3.5.8"
+description = "Repository Scanner - Backend"
+readme = "README.md"
+license = { file = "LICENSE.md" }
+requires-python = ">=3.12"
+authors = [
+    {"email"="resc@nl.abnamro.com"}
+]
+dependencies = []
+
+[project.urls]
+"Source"="https://github.com/abnamro/resc-backend"
+
+[project.scripts]
+resc_initialize_rabbitmq_users = "resc_backend.bin.rabbitmq_bootup:bootstrap_rabbitmq_users"
+
+[tool.uv]
+package = true
+
 [tool.ruff]
 # easier on the lines
 line-length = 120

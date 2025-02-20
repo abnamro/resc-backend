@@ -38,7 +38,9 @@ RUN sh /uv-installer.sh \
     && apk add g++ unixodbc-dev \
     && mkdir /resc_backend
 
-COPY ./ /resc_backend
+COPY alembic.ini db.env requirements.txt pyproject.toml /resc_backend/
+COPY alembic /resc_backend/alembic
+COPY src /resc_backend/src
 
 RUN addgroup -g $GID $RUN_AS_GROUP \
     && adduser -D -u $UID -G $RUN_AS_GROUP $RUN_AS_USER \
@@ -52,13 +54,13 @@ WORKDIR /resc_backend
 
 # Install python for alpine when #6890 is resolved.
 # RUN uv python install 3.12
-RUN uv venv --python 3.12
-RUN uv pip install --no-cache-dir --upgrade pyodbc==5.1.0 -e /resc_backend
+RUN uv venv --python 3.12 \
+    && uv add -r requirements.txt \
+    && uv add pyodbc==5.1.0 \
+    && uv build .
 
 USER root
 
 RUN apk --purge del gnupg .build-deps
 
 USER $RUN_AS_USER
-
-WORKDIR /resc_backend
