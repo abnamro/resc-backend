@@ -1,9 +1,9 @@
-ARG REGISTRY=""
+ARG SOURCE_REGISTRY=""
 ARG TAG=""
 
-FROM ${REGISTRY}python:3.12.9-alpine3.21
+FROM ${SOURCE_REGISTRY}python:3.12.9-alpine3.21
 # Switch to full alpine when https://github.com/astral-sh/uv/issues/6890 is resolved
-# FROM ${REGISTRY}alpine:3.21
+# FROM ${SOURCE_REGISTRY}alpine:3.21
 
 ARG NAME="resc_backend"
 ARG DESCRIPTION="Repository Scanner Backend"
