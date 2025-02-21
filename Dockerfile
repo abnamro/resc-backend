@@ -38,7 +38,7 @@ RUN sh /uv-installer.sh \
     && apk add g++ unixodbc-dev \
     && mkdir /resc_backend
 
-COPY alembic.ini db.env requirements.txt pyproject.toml /resc_backend/
+COPY alembic.ini db.env requirements.txt pyproject.toml LICENSE.md MANIFEST.in SECURITY.md /resc_backend/
 COPY alembic /resc_backend/alembic
 COPY src /resc_backend/src
 COPY test_data /resc_backend/test_data
