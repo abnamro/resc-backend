@@ -41,6 +41,7 @@ RUN sh /uv-installer.sh \
 COPY alembic.ini db.env requirements.txt pyproject.toml /resc_backend/
 COPY alembic /resc_backend/alembic
 COPY src /resc_backend/src
+COPY test_data /resc_backend/test_data
 
 RUN addgroup -g $GID $RUN_AS_GROUP \
     && adduser -D -u $UID -G $RUN_AS_GROUP $RUN_AS_USER \
