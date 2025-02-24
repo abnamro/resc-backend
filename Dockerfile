@@ -56,10 +56,11 @@ WORKDIR /resc_backend
 
 # Install python for alpine when #6890 is resolved.
 # RUN uv python install 3.12
-RUN uv venv --python 3.12 \
-    && uv add -r requirements.txt \
-    && uv add pyodbc==5.1.0 \
-    && uv pip install -e .
+# RUN uv venv --python 3.12 \
+#     && uv add -r requirements.txt \
+#     && uv add pyodbc==5.1.0 \
+#     && uv pip install -e .
+RUN pip install --no-cache-dir --upgrade pyodbc==5.1.0 -e /resc_backend
 
 USER root
 
