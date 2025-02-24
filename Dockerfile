@@ -21,7 +21,8 @@ RUN if [ -e init.sh ] ; then chmod +x /init.sh ; sh /init.sh; fi
 ENV UV_INSTALL_DIR='/usr/bin'
 
 # Back to Normal operations
-RUN sh /uv-installer.sh \
+# RUN sh /uv-installer.sh \
+RUN apk upgrade \
     && apk upgrade \
     && apk add --no-cache curl git nginx build-base linux-headers \
     && apk add --no-cache --virtual .build-deps pcre-dev gcc musl-dev python3-dev libffi-dev unixodbc-dev openssl-dev \
