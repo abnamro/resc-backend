@@ -28,11 +28,9 @@ select = [
     # isort
     "I",
     ]
-ignore = ["ANN101","ANN102"]
 
 [tool.ruff.lint.per-file-ignores]
 "alembic/*" = [
     "I",
     "E501"
     ] # Line too long (143 > 120)
-"tests/*" = ["ANN"]
