@@ -52,8 +52,6 @@ USER $RUN_AS_USER
 
 ENV PATH=$PATH:/home/apiuser/.local/bin
 
-WORKDIR /resc_backend
-
 # Install python for alpine when #6890 is resolved.
 # RUN uv python install 3.12
 # RUN uv venv --python 3.12 \
@@ -67,3 +65,5 @@ USER root
 RUN apk --purge del gnupg .build-deps
 
 USER $RUN_AS_USER
+
+WORKDIR /resc_backend
