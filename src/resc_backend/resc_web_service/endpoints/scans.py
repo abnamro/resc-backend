@@ -266,7 +266,6 @@ async def create_scan_findings(
     db_scan: DBscan = scan_crud.get_scan(db_connection, scan_id=scan_id)
     if db_scan is None:
         raise HTTPException(status_code=404, detail="Scan not found")
-    # return db_scan
 
     # 1. Fetch rules with scan_as_dir
     rules_scan_as_dir: list[str] = rule_crud.get_scan_as_dir_rules_by_scan_id(
