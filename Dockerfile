@@ -13,9 +13,10 @@ ARG RUN_AS_GROUP="apiuser"
 ARG UID=10001
 ARG GID=10002
 
-# Initialize AAB inner layer
+# Initialize Corporate configurations
 # TODO add any files under rootfs that are needed for proxy settings
 COPY rootfs/ /
+
 RUN if [ -e init.sh ] ; then chmod +x /init.sh ; sh /init.sh; fi
 
 ENV UV_INSTALL_DIR='/usr/bin'

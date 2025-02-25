@@ -19,6 +19,7 @@ self_signed_cert_generation/testca
 *.old
 rootfs/*
 !rootfs/.gitkeep
+!rootfs/README.md
 
 # Mac
 .DS_Store
