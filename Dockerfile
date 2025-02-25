@@ -1,7 +1,7 @@
 ARG SOURCE_REGISTRY=""
 ARG TAG=""
 
-FROM ${SOURCE_REGISTRY}python:3.12.9-alpine3.21
+FROM ${SOURCE_REGISTRY}python:3.12-alpine3.20
 # Switch to full alpine when https://github.com/astral-sh/uv/issues/6890 is resolved
 # FROM ${SOURCE_REGISTRY}alpine:3.21
 
