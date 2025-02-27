@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS [dbo].[alembic_version];
 DROP TABLE IF EXISTS [dbo].[audit];
 DROP TABLE IF EXISTS [dbo].[scan_finding];
 DROP TABLE IF EXISTS [dbo].[scan];
-DROP TABLE IF EXISTS [dbo].[rule_tag] ;
+DROP TABLE IF EXISTS [dbo].[rule_tag];
 DROP TABLE IF EXISTS [dbo].[tag];
 DROP TABLE IF EXISTS [dbo].[rules];
 DROP TABLE IF EXISTS [dbo].[rule_pack];
