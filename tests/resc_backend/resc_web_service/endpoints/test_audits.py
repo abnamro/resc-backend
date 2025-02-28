@@ -3,7 +3,6 @@ import unittest
 from collections.abc import Generator
 from datetime import UTC, datetime
 from unittest.mock import ANY, patch
-from urllib.parse import quote, urlencode
 
 # Third Party
 import pytest
@@ -21,10 +20,8 @@ from resc_backend.constants import (
 from resc_backend.resc_web_service.api import app
 from resc_backend.resc_web_service.cache_manager import CacheManager
 from resc_backend.resc_web_service.dependencies import requires_auth, requires_no_auth
-from resc_backend.resc_web_service.filters import FindingsFilter
 from resc_backend.resc_web_service.schema.audit import AuditFinding
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
-from resc_backend.resc_web_service.schema.vcs_provider import VCSProviders
 
 
 @pytest.fixture(autouse=True)
@@ -38,6 +35,7 @@ def _init_cache() -> Generator[ANY, ANY, None]:
     )
     yield
     FastAPICache.reset()
+
 
 class TestDetailedFindings(unittest.TestCase):
     def setUp(self):

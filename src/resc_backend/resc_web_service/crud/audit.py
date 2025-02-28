@@ -15,14 +15,11 @@ from resc_backend.constants import (
     DEFAULT_RECORDS_PER_PAGE_LIMIT,
     MAX_RECORDS_PER_PAGE_LIMIT,
 )
-from resc_backend.db.model import DBaudit
-from resc_backend.db.model import DBfinding
-from resc_backend.db.model import DBrepository
-from resc_backend.db.model import DBVcsInstance
+from resc_backend.db.model import DBaudit, DBfinding, DBrepository, DBVcsInstance
+from resc_backend.resc_web_service.schema.audit import AuditFinding
 from resc_backend.resc_web_service.schema.auditor_metric import AuditorMetric
 from resc_backend.resc_web_service.schema.finding_status import FindingStatus
 from resc_backend.resc_web_service.schema.time_period import TimePeriod
-from resc_backend.resc_web_service.schema.audit import AuditFinding
 
 logger = logging.getLogger(__name__)
 
@@ -367,7 +364,16 @@ def revert_last_audit(db_connection: Session, finding_ids: list[int], status: Fi
     fix_last_audit(db_connection, finding_ids)
 
 
-def get_audits(db_connection: Session, skip: int, limit: int, auditor: str | None, fromDate: datetime | None, toDate: datetime | None, status: list[FindingStatus] | None, isLatest: bool | None):
+def get_audits(
+    db_connection: Session,
+    skip: int,
+    limit: int,
+    auditor: str | None,
+    from_date: datetime | None,
+    to_date: datetime | None,
+    status: list[FindingStatus] | None,
+    is_latest: bool | None,
+):
     """
     Fetch the recent audits given some conditions
 
@@ -375,11 +381,11 @@ def get_audits(db_connection: Session, skip: int, limit: int, auditor: str | Non
         db_connection (Session): Database session
         skip (int): skip in the data query
         limit (int): limit in the data query
-        auditor (str | None) : optional restriction on the auditor 
-        fromDate (datetime | None): optional restriciton on the dates
-        toDate (datetime | None): optional restriciton on the dates
+        auditor (str | None) : optional restriction on the auditor
+        from_date (datetime | None): optional restriciton on the dates
+        to_date (datetime | None): optional restriciton on the dates
         status (list[FindingStatus] | None): optional restrictions on the statuses
-        isLatest (bool | None): only consider latest.
+        is_latest (bool | None): only consider latest.
     """
 
     limit_val = MAX_RECORDS_PER_PAGE_LIMIT if limit > MAX_RECORDS_PER_PAGE_LIMIT else limit
@@ -414,13 +420,13 @@ def get_audits(db_connection: Session, skip: int, limit: int, auditor: str | Non
     query = query.join(DBVcsInstance, DBrepository.vcs_instance == DBVcsInstance.id_)
     if auditor:
         query = query.where(DBaudit.auditor == auditor)
-    if fromDate:
-        query = query.where(DBaudit.timestamp > fromDate)    
-    if toDate:
-        query = query.where(DBaudit.timestamp < toDate)
+    if from_date:
+        query = query.where(DBaudit.timestamp > from_date)
+    if to_date:
+        query = query.where(DBaudit.timestamp < to_date)
     if status and len(status) > 0:
         query = query.where(DBaudit.status.in_(status))
-    if isLatest:
+    if is_latest:
         query = query.where(DBaudit.is_latest == True)  # noqa: E712
 
     query = query.order_by(DBaudit.timestamp.desc())
@@ -429,30 +435,38 @@ def get_audits(db_connection: Session, skip: int, limit: int, auditor: str | Non
 
     return findings
 
-def get_total_audits_count(db_connection: Session, auditor: str | None, fromDate: datetime | None, toDate: datetime | None, status: list[FindingStatus] | None, isLatest: bool | None):
+
+def get_total_audits_count(
+    db_connection: Session,
+    auditor: str | None,
+    from_date: datetime | None,
+    to_date: datetime | None,
+    status: list[FindingStatus] | None,
+    is_latest: bool | None,
+):
     """
     Get the totall count of the recent audits given some conditions
 
     Args:
         db_connection (Session): Database session
-        auditor (str | None) : optional restriction on the auditor 
-        fromDate (datetime | None): optional restriciton on the dates
-        toDate (datetime | None): optional restriciton on the dates
+        auditor (str | None) : optional restriction on the auditor
+        from_date (datetime | None): optional restriciton on the dates
+        to_date (datetime | None): optional restriciton on the dates
         status (list[FindingStatus] | None): optional restrictions on the statuses
-        isLatest (bool | None): only consider latest.
+        is_latest (bool | None): only consider latest.
     """
     query = select(func.count(DBaudit.id_)).join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
     if auditor:
         query = query.where(DBaudit.auditor == auditor)
-    if fromDate:
-        query = query.where(DBaudit.timestamp > fromDate)    
-    if toDate:
-        query = query.where(DBaudit.timestamp < toDate)
+    if from_date:
+        query = query.where(DBaudit.timestamp > from_date)
+    if to_date:
+        query = query.where(DBaudit.timestamp < to_date)
     if status and len(status) > 0:
         query = query.where(DBaudit.status.in_(status))
-    if isLatest:
+    if is_latest:
         query = query.where(DBaudit.is_latest == True)  # noqa: E712
-    
+
     # .where(DBaudit.finding_id == finding_id)
     total_count = db_connection.execute(query).scalars().one()
     return total_count

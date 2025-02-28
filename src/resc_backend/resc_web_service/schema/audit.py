@@ -27,6 +27,7 @@ class AuditRead(BaseModel):
     timestamp: datetime.datetime
     model_config = ConfigDict(from_attributes=True)
 
+
 class AuditFinding(BaseModel):
     audit_id: Annotated[int, Field(gt=0)]
     status: FindingStatus
@@ -145,7 +146,5 @@ class AuditFinding(BaseModel):
             raise NotImplementedError(f"Unsupported VCSProvider: {values['vcs_provider']}")
 
         return values
-
-
 
     model_config = ConfigDict(from_attributes=True)

@@ -31,8 +31,8 @@ from resc_backend.resc_web_service.dependencies import (
     requires_no_auth,
 )
 from resc_backend.resc_web_service.endpoints import (
-    common,
     audits,
+    common,
     detailed_findings,
     findings,
     health,

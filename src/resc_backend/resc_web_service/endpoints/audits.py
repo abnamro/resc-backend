@@ -2,7 +2,7 @@
 from datetime import datetime
 
 # Third Party
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, Query, status
 from fastapi_cache.decorator import cache
 from sqlalchemy.orm import Session
 
@@ -41,10 +41,10 @@ def get_all_audits(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=DEFAULT_RECORDS_PER_PAGE_LIMIT, ge=1),
     auditor: str | None = Query(None),
-    fromDate: datetime | None = Query(None),
-    toDate: datetime | None = Query(None), 
+    from_date: datetime | None = Query(None),
+    to_date: datetime | None = Query(None),
     status: list[FindingStatus] | None = Query(None),
-    isLatest: bool | None = Query(None),
+    is_latest: bool | None = Query(None),
     db_connection: Session = Depends(get_db_connection),
 ) -> PaginationModel[AuditFinding]:
     """
@@ -54,17 +54,27 @@ def get_all_audits(
     - **skip**: Integer amount of records to skip to support pagination
     - **limit**: Integer amount of records to return, to support pagination
     - **auditor**: String to filter which auditor to audit.
-    - **fromDate**: DateTime to filter from which we look at (oldest)
-    - **toDate**: DateTime to filter to which we look at (youngest)
+    - **from_date**: DateTime to filter from which we look at (oldest)
+    - **to_date**: DateTime to filter to which we look at (youngest)
     - **status**: Finding status to filter on
-    - **isLatest**: Whether to only consider latest audits.
+    - **is_latest**: Whether to only consider latest audits.
     - **return**: [AuditFinding]
         The output will contain a PaginationModel containing the list of AuditFinding type objects,
         or an empty list if no audits was found
     """
-    audits = audit_crud.get_audits(db_connection, skip=skip, limit=limit, auditor=auditor, fromDate=fromDate, toDate=toDate, status=status, isLatest=isLatest)
+    audits = audit_crud.get_audits(
+        db_connection,
+        skip=skip,
+        limit=limit,
+        auditor=auditor,
+        from_date=from_date,
+        to_date=to_date,
+        status=status,
+        is_latest=is_latest,
+    )
 
-    total_audits = audit_crud.get_total_audits_count(db_connection, auditor=auditor, fromDate=fromDate, toDate=toDate, status=status, isLatest=isLatest)
+    total_audits = audit_crud.get_total_audits_count(
+        db_connection, auditor=auditor, from_date=from_date, to_date=to_date, status=status, is_latest=is_latest
+    )
 
     return PaginationModel[AuditFinding](data=audits, total=total_audits, limit=limit, skip=skip)
-
