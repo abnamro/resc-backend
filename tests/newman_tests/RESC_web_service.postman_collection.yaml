@@ -25,7 +25,7 @@ item:
             method: GET
             request: resc/v1/supported-vcs-providers
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -39,7 +39,7 @@ item:
             method: GET
             request: resc/v1/auth-check
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -67,7 +67,7 @@ item:
             method: POST
             request: resc/v1/rule-packs?version=1.0
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -83,7 +83,7 @@ item:
             method: POST
             request: resc/v1/rule-packs?version=1.0.0
             status_code: 500
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -98,7 +98,7 @@ item:
             method: POST
             request: resc/v1/rule-packs?version=1.0.0
             status_code: 500
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -113,7 +113,7 @@ item:
             method: POST
             request: resc/v1/rule-packs/mark-as-outdated
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -124,7 +124,7 @@ item:
             method: POST
             request: resc/v1/rule-packs/mark-as-outdated
             status_code: 403
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -135,7 +135,7 @@ item:
             method: POST
             request: resc/v1/rule-packs/mark-as-outdated
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -146,7 +146,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -166,7 +166,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?skip=invalid&limit=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -180,7 +180,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?version=1.0.0&skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -195,7 +195,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?version=1.0&skip=0&limit=100
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -206,7 +206,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?active=true&skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -221,7 +221,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?active=invalid&skip=0&limit=100
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -232,7 +232,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?version=1.0.0&active=true&skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -247,7 +247,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/versions?version=1.0.9&skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -261,7 +261,7 @@ item:
             method: GET
             request: resc/v1/rule-packs?rule_pack_version=1.0.9
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -271,7 +271,7 @@ item:
             method: GET
             request: resc/v1/rule-packs?rule_pack_version=1.0
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -287,7 +287,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/tags
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -298,7 +298,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/tags?version=0.0.0
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -309,7 +309,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/tags?version=1.0.0&version=1.0.1
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -320,7 +320,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/tags?version=1.0.1
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -330,7 +330,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/tags?version=invalid
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -340,7 +340,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/1.0.0/rules?rule_name=non-existent-rule
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -350,7 +350,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/1.0.0/rules
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -361,7 +361,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/wrong-rule-pack/rules?rule_name=non-existent-rule
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -371,7 +371,7 @@ item:
             method: GET
             request: resc/v1/rule-packs/1.0.0/rules?rule_name=github-oauth
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -386,7 +386,7 @@ item:
             method: POST
             request: resc/v1/vcs-instances
             status_code: 201
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -419,7 +419,7 @@ item:
             method: POST
             request: resc/v1/vcs-instances
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -453,7 +453,7 @@ item:
             variables:
               - vcs_instance_id: "{{vcs_instance_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -474,7 +474,7 @@ item:
             variables:
               - vcs_instance_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -484,7 +484,7 @@ item:
             method: GET
             request: resc/v1/vcs-instances?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -528,7 +528,7 @@ item:
             method: GET
             request: resc/v1/vcs-instances?skip=0&limit=100&vcs_provider_type=AZURE_DEVOPS
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -563,7 +563,7 @@ item:
             method: GET
             request: resc/v1/vcs-instances?skip=0&limit=100&vcs_provider_type=notexists
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -574,7 +574,7 @@ item:
             method: GET
             request: resc/v1/vcs-instances?skip=0&limit=100&vcs_instance_name=AzureDevOps
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -596,7 +596,7 @@ item:
             method: GET
             request: resc/v1/vcs-instances?skip=0&limit=100&vcs_instance_name=notexists
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -610,7 +610,7 @@ item:
             method: GET
             request: resc/v1/vcs-instances?skip=0&limit=100&vcs_provider_type=AZURE_DEVOPS&vcs_instance_name=AzureDevOps
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -634,7 +634,7 @@ item:
             variables:
               - vcs_instance_id: "{{vcs_instance_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -668,7 +668,7 @@ item:
             variables:
               - vcs_instance_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -693,7 +693,7 @@ item:
             variables:
               - vcs_instance_id: "{{vcs_instance_id}}"
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -727,7 +727,7 @@ item:
             variables:
               - vcs_instance_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -739,7 +739,7 @@ item:
             variables:
               - vcs_instance_id: one
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -752,7 +752,7 @@ item:
             method: POST
             request: resc/v1/repositories
             status_code: 201
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -776,7 +776,7 @@ item:
             method: POST
             request: resc/v1/repositories
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -795,7 +795,7 @@ item:
             method: POST
             request: resc/v1/repositories
             status_code: 500
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -815,7 +815,7 @@ item:
             variables:
               - repository_id: "{{repository_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -832,7 +832,7 @@ item:
             variables:
               - repository_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -844,7 +844,7 @@ item:
             variables:
               - repository_id: one
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -855,7 +855,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -896,7 +896,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100&project_filter=test-project
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -914,7 +914,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100&project_filter=test-project
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -929,7 +929,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100&repository_filter=test-repository
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -947,7 +947,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100&repository_filter=notexists
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -960,7 +960,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100&vcs_provider=AZURE_DEVOPS
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -995,7 +995,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100&vcs_provider=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1006,7 +1006,7 @@ item:
             method: GET
             request: resc/v1/repositories?skip=0&limit=100&vcs_provider=AZURE_DEVOPS&project_filter=test-project&repository_filter=test-repository
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1026,7 +1026,7 @@ item:
             variables:
               - repository_id: "{{repository_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1051,7 +1051,7 @@ item:
             variables:
               - repository_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1071,7 +1071,7 @@ item:
             variables:
               - repository_id: "{{repository_id}}"
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1092,7 +1092,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1107,7 +1107,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?only_if_has_findings=true
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1120,7 +1120,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1135,7 +1135,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?repository_filter=test-repository&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1147,7 +1147,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?repository_filter=nonexistent&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array").that.is.empty;;
@@ -1156,7 +1156,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1170,7 +1170,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?vcs_provider=invalid&only_if_has_findings=false
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1181,7 +1181,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-projects/?vcs_provider=AZURE_DEVOPS&repository_filter=test-repository&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1193,7 +1193,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-repositories/?only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1208,7 +1208,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-repositories/?only_if_has_findings=true
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1219,7 +1219,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1233,7 +1233,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-repositories/?vcs_provider=invalid&only_if_has_findings=false
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1244,7 +1244,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-repositories/?project_name=test-project&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1256,7 +1256,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-repositories/?project_name=nonexistent&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array").that.is.empty;;
@@ -1265,7 +1265,7 @@ item:
             method: GET
             request: resc/v1/repositories/distinct-repositories/?vcs_provider=AZURE_DEVOPS&project_name=test-project&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -1279,7 +1279,7 @@ item:
             variables:
               - repository_id: "{{repository_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1301,7 +1301,7 @@ item:
             method: GET
             request: resc/v1/repositories/findings-metadata/?skip=0&limit=100&only_if_has_findings=false
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1381,14 +1381,14 @@ item:
             variables:
               - repository_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
           - name: Get latest scan for a repository with invalid ID
             method: GET
             request: resc/v1/repositories/:repository_id/last-scan
             variables:
               - repository_id: invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1401,7 +1401,7 @@ item:
             variables:
               - repository_id: "{{repository_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1417,7 +1417,7 @@ item:
             variables:
               - repository_id: 999
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1432,7 +1432,7 @@ item:
             variables:
               - repository_id: invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1445,7 +1445,7 @@ item:
             variables:
               - repository_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1457,7 +1457,7 @@ item:
             variables:
               - repository_id: one
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1470,7 +1470,7 @@ item:
             method: POST
             request: resc/v1/scans
             status_code: 201
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1499,7 +1499,7 @@ item:
             method: POST
             request: resc/v1/scans
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1527,7 +1527,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1545,7 +1545,7 @@ item:
             variables:
               - scan_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1557,7 +1557,7 @@ item:
             variables:
               - scan_id: invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1568,7 +1568,7 @@ item:
             method: GET
             request: resc/v1/scans?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1638,7 +1638,7 @@ item:
             method: GET
             request: resc/v1/scans?skip=invalid&limit=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1654,7 +1654,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1682,7 +1682,7 @@ item:
             variables:
               - scan_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1703,7 +1703,7 @@ item:
             variables:
               - scan_id: 999
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1731,7 +1731,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1747,7 +1747,7 @@ item:
             variables:
               - scan_id: 999
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1762,7 +1762,7 @@ item:
             variables:
               - scan_id: invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1775,7 +1775,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1791,7 +1791,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1806,7 +1806,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1822,7 +1822,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1838,7 +1838,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 201
-            response_time: 300
+            response_time: 600
             form_raw: |-
               [
                 {
@@ -1865,7 +1865,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1895,7 +1895,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1919,7 +1919,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id=999&skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1933,7 +1933,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id=invalid&skip=0&limit=100
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1944,7 +1944,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=private-key
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1968,7 +1968,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id=999&skip=0&limit=100&rule=private-key
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1981,7 +1981,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=notexists
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -1994,7 +1994,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&status=NOT_ANALYZED
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2018,7 +2018,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&status=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2029,7 +2029,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=private-key&status=NOT_ANALYZED
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2052,7 +2052,7 @@ item:
             method: GET
             request: resc/v1/scans/findings/?scan_id={{scan_id}}&skip=0&limit=100&rule=invalid&status=invalis
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2063,7 +2063,7 @@ item:
             method: GET
             request: resc/v1/scans/detected-rules/?scan_id={{scan_id}}
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -2075,7 +2075,7 @@ item:
             method: GET
             request: resc/v1/scans/detected-rules/?scan_id=999
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -2085,7 +2085,7 @@ item:
             method: GET
             request: resc/v1/scans/detected-rules/?scan_id=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2098,14 +2098,14 @@ item:
             variables:
               - repository_id: "{{repository_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
           - name: Delete a scan which doesn't exist
             method: DELETE
             request: resc/v1/scans/:scan_id
             variables:
               - scan_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2117,7 +2117,7 @@ item:
             variables:
               - scan_id: one
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2130,7 +2130,7 @@ item:
             method: POST
             request: resc/v1/findings
             status_code: 201
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.response.to.have.body("1");
@@ -2157,7 +2157,7 @@ item:
             method: POST
             request: resc/v1/findings
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2185,7 +2185,7 @@ item:
             method: GET
             request: resc/v1/findings?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2253,7 +2253,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_pack_versions%3D%5B%220.0.0%22%5D
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2292,7 +2292,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_pack_versions%3D%5B%221.0.0%22%5D
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2352,7 +2352,7 @@ item:
             method: GET
             request: resc/v1/findings?skip=invalid&limit=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2368,7 +2368,7 @@ item:
             variables:
               - finding_id: "{{finding_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2391,7 +2391,7 @@ item:
             variables:
               - finding_id: invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2404,7 +2404,7 @@ item:
             variables:
               - finding_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2414,7 +2414,7 @@ item:
             method: GET
             request: resc/v1/findings/by-rule/GitHub%20Personal%20Access%20Token?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2440,7 +2440,7 @@ item:
             method: GET
             request: resc/v1/findings/by-rule/GitHub%20Personal%20Access%20Token?skip=invalid&limit=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2451,7 +2451,7 @@ item:
             method: GET
             request: resc/v1/findings/by-rule/notexists?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2463,7 +2463,7 @@ item:
             method: GET
             request: resc/v1/findings/total-count-by-rule/GitHub%20Personal%20Access%20Token
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(pm.response.text()).to.include(1);
@@ -2472,7 +2472,7 @@ item:
             method: GET
             request: resc/v1/findings/total-count-by-rule/notexists
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(pm.response.text()).to.include(0);
@@ -2481,7 +2481,7 @@ item:
             method: GET
             request: resc/v1/findings/supported-statuses/
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -2498,7 +2498,7 @@ item:
             method: GET
             request: resc/v1/findings/count-by-time/month?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2518,7 +2518,7 @@ item:
             method: GET
             request: resc/v1/findings/count-by-time/month?skip=invalid&limit=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2531,7 +2531,7 @@ item:
             method: GET
             request: resc/v1/findings/count-by-time/week?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               currentDate = new Date();
               var newYear = new Date(currentDate.getFullYear(),0,1);
@@ -2569,7 +2569,7 @@ item:
             method: GET
             request: resc/v1/findings/count-by-time/week?skip=invalid&limit=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2582,7 +2582,7 @@ item:
             method: GET
             request: resc/v1/findings/count-by-time/day?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2605,7 +2605,7 @@ item:
             method: GET
             request: resc/v1/findings/count-by-time/day?skip=invalid&limit=invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2618,7 +2618,7 @@ item:
             method: POST
             request: resc/v1/findings/audit/
             status_code: 201
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.response.to.have.body("1");
@@ -2636,7 +2636,7 @@ item:
             method: POST
             request: resc/v1/findings/audit/
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2654,7 +2654,7 @@ item:
             method: POST
             request: resc/v1/findings/audit/
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2677,7 +2677,7 @@ item:
             variables:
               - finding_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2689,7 +2689,7 @@ item:
             variables:
               - finding_id: one
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2702,7 +2702,7 @@ item:
             variables:
               - finding_id: "{{finding_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");     
@@ -2730,7 +2730,7 @@ item:
             variables:
               - finding_id: "{{finding_id}}"
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2747,7 +2747,7 @@ item:
             variables:
               - finding_id: str
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2764,7 +2764,7 @@ item:
             variables:
               - finding_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2780,7 +2780,7 @@ item:
             variables:
               - finding_id: "{{finding_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   let today = new Date().toISOString().slice(0, 10)
@@ -2800,7 +2800,7 @@ item:
             variables:
               - finding_id: 999
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2815,7 +2815,7 @@ item:
             variables:
               - finding_id: invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2826,7 +2826,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2861,7 +2861,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_names=["private-key"]
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2899,7 +2899,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=finding_statuses=["NOT_ANALYZED"]
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2937,7 +2937,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_pack_versions=["1.0.0"]
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -2975,7 +2975,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=vcs_providers=["AZURE_DEVOPS"]
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3013,7 +3013,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=project_name=test-project
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3051,7 +3051,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=repository_name=test-repository
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3089,7 +3089,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=start_date_time=2020-04-13T00:00:00
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3126,7 +3126,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=start_date_time=2020-04-13T00:00:00%26end_date_time={{end_date_time}}
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3170,7 +3170,7 @@ item:
             method: GET
             request: resc/v1/detailed-findings?skip=0&limit=100&query_string=rule_names=["private-key"]%26finding_statuses=["NOT_ANALYZED"]%26vcs_providers=["AZURE_DEVOPS"]%26project_name=test-project%26repository_name=test-repository%26start_date_time=2020-04-13T00:00:00%26end_date_time={{end_date_time}}%26rule_pack_versions=["1.0.0"]
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3215,7 +3215,7 @@ item:
             variables:
               - finding_id: 1
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3249,7 +3249,7 @@ item:
             variables:
               - finding_id: 999
             status_code: 404
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3261,7 +3261,7 @@ item:
             variables:
               - finding_id: invalid
             status_code: 422
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3274,7 +3274,7 @@ item:
             method: GET
             request: resc/v1/detected-rules
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -3285,7 +3285,7 @@ item:
             method: GET
             request: resc/v1/detected-rules?rule_pack_version=1.0.0
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -3296,7 +3296,7 @@ item:
             method: GET
             request: resc/v1/rules/finding-status-count
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -3363,7 +3363,7 @@ item:
             method: GET
             request: resc/v1/rules/finding-status-count?rule_pack_version=1.0.0
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -3430,7 +3430,7 @@ item:
             method: GET
             request: resc/v1/rules/finding-status-count?rule_pack_version=1.0.0&rule_tag=Warn
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -3497,7 +3497,7 @@ item:
             method: GET
             request: resc/v1/rules/finding-status-count?rule_pack_version=1.0.0&rule_pack_version=1.0.1
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -3564,7 +3564,7 @@ item:
             method: GET
             request: resc/v1/rules/finding-status-count?rule_pack_version=invalid
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("array");
@@ -3675,7 +3675,7 @@ item:
             variables:
               - finding_id: "{{finding_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3692,7 +3692,7 @@ item:
             variables:
               - scan_id: "{{scan_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3713,7 +3713,7 @@ item:
             variables:
               - repository_id: "{{repository_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");
@@ -3730,7 +3730,7 @@ item:
             variables:
               - vcs_instance_id: "{{vcs_instance_id}}"
             status_code: 200
-            response_time: 300
+            response_time: 600
             tests: |-
               pm.test("Response body matches", function() {
                   pm.expect(responseJson).to.be.an("object");

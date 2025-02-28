@@ -80,8 +80,8 @@
 											"    pm.expect(responseJson).to.include(\"GITHUB_PUBLIC\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -121,8 +121,8 @@
 											"    pm.expect(responseJson.message).to.eql(\"OK\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -224,8 +224,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"String should match pattern \\'^\\\\d+(?:\\\\.\\\\d+){2}$\\'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -281,8 +281,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Invalid document type, only TOML file is supported\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -338,8 +338,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Invalid document type, only TOML file is supported\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -395,8 +395,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule pack not found.\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -445,8 +445,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule pack is active.\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -495,8 +495,8 @@
 											"    pm.expect(responseJson[\"audited\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -555,8 +555,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -610,8 +610,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -666,8 +666,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -722,8 +722,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"String should match pattern \\'^\\\\d+(?:\\\\.\\\\d+){2}$\\'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -782,8 +782,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -838,8 +838,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid boolean, unable to interpret input\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -898,8 +898,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -961,8 +961,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1016,8 +1016,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"No rule pack found with version 1.0.9\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1063,8 +1063,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"String should match pattern \\'^\\\\d+(?:\\\\.\\\\d+){2}$\\'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1151,8 +1151,8 @@
 											"    pm.expect(responseJson).to.eql([\"Cli\",\"Warn\"] );",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1193,8 +1193,8 @@
 											"    pm.expect(responseJson).to.eql([\"Warn\"] );",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1241,8 +1241,8 @@
 											"    pm.expect(responseJson).to.eql([\"Cli\",\"Warn\"] );",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1292,8 +1292,8 @@
 											"    pm.expect(responseJson.length).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1339,8 +1339,8 @@
 											"    pm.expect(responseJson.length).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1386,8 +1386,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1435,8 +1435,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Field required\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1477,8 +1477,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Rule not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1528,8 +1528,8 @@
 											"    pm.expect(responseJson[\"regex\"]).to.eql(\"ya29\\\\\\\\.[0-9A-Za-z\\\\\\\\-_]++\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1591,8 +1591,8 @@
 											"    pm.expect(responseJson[\"organization\"]).to.include(\"test-org\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1647,8 +1647,8 @@
 											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Value error, You cannot specify both the scope and exceptions to the scan, only one setting is supported.\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1705,8 +1705,8 @@
 											"    pm.expect(responseJson[\"organization\"]).to.include(\"test-org\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1752,8 +1752,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"VCS Instance not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1833,8 +1833,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1908,8 +1908,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -1963,8 +1963,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2029,8 +2029,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2087,8 +2087,8 @@
 											"",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2153,8 +2153,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2220,8 +2220,8 @@
 											"    pm.expect(responseJson[\"organization\"]).to.include(\"test-org\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2276,8 +2276,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"VCS instance not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2339,8 +2339,8 @@
 											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Value error, You cannot specify both the scope and exceptions to the scan, only one setting is supported.\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2395,8 +2395,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"VCS instance not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2443,8 +2443,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2501,8 +2501,8 @@
 											"    pm.expect(responseJson[\"vcs_instance\"]).to.eql(pm.environment.get(\"vcs_instance_id\"));",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2551,8 +2551,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid URL, relative URL without a base\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2600,8 +2600,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Internal server error. Contact your system administrator\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2654,8 +2654,8 @@
 											"    pm.expect(responseJson[\"vcs_instance\"]).to.eql(pm.environment.get(\"vcs_instance_id\"));",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2701,8 +2701,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Repository not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2749,8 +2749,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2827,8 +2827,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2885,8 +2885,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -2944,8 +2944,8 @@
 											"    pm.expect(responseJson.data[0][\"vcs_instance\"]).to.eql(pm.environment.get(\"vcs_instance_id\"));",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3006,8 +3006,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3063,8 +3063,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3142,8 +3142,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3197,8 +3197,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3259,8 +3259,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3326,8 +3326,8 @@
 											"    pm.expect(responseJson[\"repository_url\"]).to.eql(\"https://dev.azure.com/test-org/test-project/_git/test-repository\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3382,8 +3382,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Repository not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3441,8 +3441,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3502,8 +3502,8 @@
 											"    pm.expect(responseJson).to.include(\"test-project\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3553,8 +3553,8 @@
 											"    pm.expect(responseJson).to.include(\"ado-project2\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3606,8 +3606,8 @@
 											"    pm.expect(responseJson).to.include(\"test-project\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3656,8 +3656,8 @@
 											"    pm.expect(responseJson).to.include(\"test-project\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3707,8 +3707,8 @@
 											"    pm.expect(responseJson).to.be.an(\"array\").that.is.empty;;",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3763,8 +3763,8 @@
 											"    pm.expect(responseJson).to.include(\"test-project\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3816,8 +3816,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3870,8 +3870,8 @@
 											"    pm.expect(responseJson).to.include(\"test-project\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3931,8 +3931,8 @@
 											"    pm.expect(responseJson).to.include(\"test-repository\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -3980,8 +3980,8 @@
 											"    ",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4032,8 +4032,8 @@
 											"    pm.expect(responseJson).to.include(\"test-repository\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4085,8 +4085,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'AZURE_DEVOPS', 'BITBUCKET' or 'GITHUB_PUBLIC'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4139,8 +4139,8 @@
 											"    pm.expect(responseJson).to.include(\"test-repository\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4190,8 +4190,8 @@
 											"    pm.expect(responseJson).to.be.an(\"array\").that.is.empty;;",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4244,8 +4244,8 @@
 											"    pm.expect(responseJson).to.include(\"test-repository\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4312,8 +4312,8 @@
 											"    pm.expect(responseJson[\"total_findings_count\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4428,8 +4428,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4479,8 +4479,8 @@
 											"});",
 											"",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4528,8 +4528,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4580,8 +4580,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4631,8 +4631,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4680,8 +4680,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4728,8 +4728,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Repository not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4776,8 +4776,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4835,8 +4835,8 @@
 											"    pm.expect(responseJson[\"repository_id\"]).to.eql(pm.environment.get(\"repository_id\"));",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4901,8 +4901,8 @@
 											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Input should be a valid string\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -4956,8 +4956,8 @@
 											"    pm.expect(responseJson[\"id_\"]).to.eql(pm.environment.get(\"scan_id\"));",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5003,8 +5003,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Scan not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5051,8 +5051,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5158,8 +5158,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5212,8 +5212,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5269,8 +5269,8 @@
 											"    pm.expect(responseJson[\"repository_id\"]).to.eql(pm.environment.get(\"repository_id\"));",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5325,8 +5325,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Scan not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5388,8 +5388,8 @@
 											"    pm.expect(responseJson[\"detail\"][2][\"msg\"]).to.eql(\"Input should be a valid string\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5448,8 +5448,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5509,8 +5509,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5568,8 +5568,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5630,8 +5630,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5695,8 +5695,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5761,8 +5761,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5827,8 +5827,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5888,8 +5888,8 @@
 											"});",
 											"",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -5947,8 +5947,8 @@
 											"",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6018,8 +6018,8 @@
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6078,8 +6078,8 @@
 											"    ",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6135,8 +6135,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6205,8 +6205,8 @@
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6268,8 +6268,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6331,8 +6331,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6405,8 +6405,8 @@
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6466,8 +6466,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE' or 'OUTDATED'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6539,8 +6539,8 @@
 											"    pm.expect(responseJson[\"data\"][0][\"scan_ids\"]).to.eql(null);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6604,8 +6604,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE' or 'OUTDATED'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6670,8 +6670,8 @@
 											"    pm.expect(responseJson).to.include(\"private-key\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6718,8 +6718,8 @@
 											"    pm.expect(responseJson.length).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6767,8 +6767,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6810,8 +6810,8 @@
 											"});",
 											"",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6858,8 +6858,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Scan not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6906,8 +6906,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -6958,8 +6958,8 @@
 											"    pm.expect(pm.response.text()).to.include(\"1\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7008,8 +7008,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7115,8 +7115,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7194,8 +7194,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7298,8 +7298,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7356,8 +7356,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7417,8 +7417,8 @@
 											"    pm.expect(responseJson[\"scan_ids\"]).to.be.an(\"array\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7465,8 +7465,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7512,8 +7512,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Finding not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7575,8 +7575,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7628,8 +7628,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7682,8 +7682,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7733,8 +7733,8 @@
 											"    pm.expect(pm.response.text()).to.include(1);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7774,8 +7774,8 @@
 											"    pm.expect(pm.response.text()).to.include(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7823,8 +7823,8 @@
 											"    pm.expect(responseJson).to.include(\"OUTDATED\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7875,8 +7875,8 @@
 											"    ",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -7930,8 +7930,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8010,8 +8010,8 @@
 											"    ",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8065,8 +8065,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8130,8 +8130,8 @@
 											"    ",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8185,8 +8185,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8237,8 +8237,8 @@
 											"    pm.expect(pm.response.text()).to.include(\"1\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8288,8 +8288,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Some findings where not found.\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8342,8 +8342,8 @@
 											"    pm.expect(responseJson[\"detail\"][1][\"msg\"]).to.eql(\"Input should be 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE' or 'OUTDATED'\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8393,8 +8393,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Finding not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8441,8 +8441,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8500,8 +8500,8 @@
 											"    pm.expect(responseJson[\"scan_ids\"].length).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8557,8 +8557,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid datetime or date, invalid date separator, expected `-`\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8614,8 +8614,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8670,8 +8670,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Finding not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8734,8 +8734,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8795,8 +8795,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8854,8 +8854,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -8937,8 +8937,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9015,8 +9015,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9097,8 +9097,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9179,8 +9179,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9261,8 +9261,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9343,8 +9343,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9425,8 +9425,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9506,8 +9506,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9589,8 +9589,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9683,8 +9683,8 @@
 											"    pm.expect(responseJson[\"skip\"]).to.eql(0);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9771,8 +9771,8 @@
 											"    pm.expect(responseJson[\"id_\"]).to.eql(1);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9818,8 +9818,8 @@
 											"    pm.expect(responseJson[\"detail\"]).to.eql(\"Finding not found\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9866,8 +9866,8 @@
 											"    pm.expect(responseJson[\"detail\"][0][\"msg\"]).to.eql(\"Input should be a valid integer, unable to parse string as an integer\");",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9919,8 +9919,8 @@
 											"    pm.expect(responseJson).to.eql([\"GitHub Personal Access Token\",\"github-oauth\",\"github-pat\",\"private-key\"] );",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -9960,8 +9960,8 @@
 											"    pm.expect(responseJson).to.eql([\"github-oauth\",\"github-pat\",\"private-key\"] );",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10063,8 +10063,8 @@
 											"",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10161,8 +10161,8 @@
 											"",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10265,8 +10265,8 @@
 											"",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10373,8 +10373,8 @@
 											"",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10425,8 +10425,8 @@
 											"",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10745,8 +10745,8 @@
 											"    pm.expect(pm.environment.get(\"finding_id\")).to.eql(undefined);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10801,8 +10801,8 @@
 											"    pm.expect(pm.environment.get(\"end_date_time\")).to.eql(undefined);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10853,8 +10853,8 @@
 											"    pm.expect(pm.environment.get(\"repository_id\")).to.eql(undefined);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
@@ -10905,8 +10905,8 @@
 											"    pm.expect(pm.environment.get(\"vcs_instance_id\")).to.eql(undefined);",
 											"});",
 											"",
-											"pm.test(\"Response time is less than 300ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(300);",
+											"pm.test(\"Response time is less than 600ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(600);",
 											"});"
 										]
 									}
