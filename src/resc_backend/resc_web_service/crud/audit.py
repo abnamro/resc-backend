@@ -418,6 +418,7 @@ def get_audits(
     query = query.join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
     query = query.join(DBrepository, DBfinding.repository_id == DBrepository.id_)
     query = query.join(DBVcsInstance, DBrepository.vcs_instance == DBVcsInstance.id_)
+    query = query.where(DBaudit.auditor != AUDIT_AUTOMATED_AUDITOR)
     if auditor:
         query = query.where(DBaudit.auditor == auditor)
     if from_date:
@@ -455,7 +456,9 @@ def get_total_audits_count(
         status (list[FindingStatus] | None): optional restrictions on the statuses
         is_latest (bool | None): only consider latest.
     """
-    query = select(func.count(DBaudit.id_)).join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
+    query = select(func.count(DBaudit.id_))
+    query = query.join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
+    query = query.where(DBaudit.auditor != AUDIT_AUTOMATED_AUDITOR)
     if auditor:
         query = query.where(DBaudit.auditor == auditor)
     if from_date:
