@@ -26,12 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
       # Lint
-      - uses: chartboost/ruff-action@v1
+      - run: ruff check --fix
       # Format check
-      - uses: chartboost/ruff-action@v1
-        with:
-          args: 'format --check'
+      - run: ruff format
 
   python-basic-validation:
     name: Python Basic Validation
@@ -45,22 +44,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install uv with Python ${{ matrix.python-version }}
-      uses: astral-sh/setup-uv@v5
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Install test dependencies
-      run: uv pip install -r requirements.txt
-
-    - name: Install test dependencies
-      run: uv pip install -r test-requirements.txt
+      run: |
+        pip install -r test-requirements.txt
 
     - name: Test with pytest
       run: |
-        uv run coverage run -m pytest
-        uv run coverage report -m
-        uv run coverage xml --data-file=.coverage          
+        tox -e pytest
 
     # This step will only execute if PR is created internally.
     - name: SonarCloud Scan
@@ -115,24 +110,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install uv with Python ${{ matrix.python-version }}
-        uses: astral-sh/setup-uv@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Building python package
         run: |
-          uv build
+          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pip
+          pip install build wheel
+          python setup.py sdist bdist_wheel
 
-      - name: Publish
+      - name: Publish python package to PyPI
         if: ${{ needs.python-basic-validation.outputs.branch_name == 'main' }}
-        run: uv publish -t ${{ secrets.PYPI_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.__PYPI_TOKEN__ }}
+          packages_dir: ./dist
+          skip_existing: true
 
       - id: getversion
         name: Get package version
         run: | 
-          uv pip install -e .
-          backend_version=$(uv pip show resc-backend | grep Version | awk '{ print $2 }')
+          backend_version=$(python ./setup.py --version)
           echo "backend_version=$backend_version" >> $GITHUB_OUTPUT
 
   dockerize:
