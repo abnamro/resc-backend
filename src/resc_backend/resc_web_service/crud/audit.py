@@ -364,6 +364,40 @@ def revert_last_audit(db_connection: Session, finding_ids: list[int], status: Fi
     fix_last_audit(db_connection, finding_ids)
 
 
+def _audit_list_filtering(
+    query: Query,
+    auditor: str | None,
+    from_date: datetime | None,
+    to_date: datetime | None,
+    status: list[FindingStatus] | None,
+    is_latest: bool | None,
+) -> Query:
+    """
+    Limit the query with the following conditions:
+
+    Args:
+        db_connection (Session): Database session
+        auditor (str | None) : optional restriction on the auditor
+        from_date (datetime | None): optional restriciton on the dates
+        to_date (datetime | None): optional restriciton on the dates
+        status (list[FindingStatus] | None): optional restrictions on the statuses
+        is_latest (bool | None): only consider latest.
+    """
+
+    query = query.where(DBaudit.auditor != AUDIT_AUTOMATED_AUDITOR)
+    if auditor:
+        query = query.where(DBaudit.auditor == auditor)
+    if from_date:
+        query = query.where(DBaudit.timestamp > from_date)
+    if to_date:
+        query = query.where(DBaudit.timestamp < to_date)
+    if status and len(status) > 0:
+        query = query.where(DBaudit.status.in_(status))
+    if is_latest:
+        query = query.where(DBaudit.is_latest == True)  # noqa: E712
+    return query
+
+
 def get_audits(
     db_connection: Session,
     skip: int,
@@ -418,17 +452,7 @@ def get_audits(
     query = query.join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
     query = query.join(DBrepository, DBfinding.repository_id == DBrepository.id_)
     query = query.join(DBVcsInstance, DBrepository.vcs_instance == DBVcsInstance.id_)
-    query = query.where(DBaudit.auditor != AUDIT_AUTOMATED_AUDITOR)
-    if auditor:
-        query = query.where(DBaudit.auditor == auditor)
-    if from_date:
-        query = query.where(DBaudit.timestamp > from_date)
-    if to_date:
-        query = query.where(DBaudit.timestamp < to_date)
-    if status and len(status) > 0:
-        query = query.where(DBaudit.status.in_(status))
-    if is_latest:
-        query = query.where(DBaudit.is_latest == True)  # noqa: E712
+    query = _audit_list_filtering(query, auditor, from_date, to_date, status, is_latest)
 
     query = query.order_by(DBaudit.timestamp.desc())
     query = query.offset(skip).limit(limit_val)
@@ -458,18 +482,7 @@ def get_total_audits_count(
     """
     query = select(func.count(DBaudit.id_))
     query = query.join(DBfinding, DBfinding.id_ == DBaudit.finding_id)
-    query = query.where(DBaudit.auditor != AUDIT_AUTOMATED_AUDITOR)
-    if auditor:
-        query = query.where(DBaudit.auditor == auditor)
-    if from_date:
-        query = query.where(DBaudit.timestamp > from_date)
-    if to_date:
-        query = query.where(DBaudit.timestamp < to_date)
-    if status and len(status) > 0:
-        query = query.where(DBaudit.status.in_(status))
-    if is_latest:
-        query = query.where(DBaudit.is_latest == True)  # noqa: E712
+    query = _audit_list_filtering(query, auditor, from_date, to_date, status, is_latest)
 
-    # .where(DBaudit.finding_id == finding_id)
     total_count = db_connection.execute(query).scalars().one()
     return total_count
