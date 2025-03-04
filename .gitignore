@@ -5,6 +5,9 @@ src/resc_backend.egg-info
 build
 **/__pycache__/
 .coverage
+.pytest_cache
+.ruff_cache
+
 .tox/
 venv
 .venv
@@ -13,6 +16,10 @@ venv
 self_signed_cert_generation/client
 self_signed_cert_generation/server
 self_signed_cert_generation/testca
+*.old
+rootfs/*
+!rootfs/.gitkeep
+!rootfs/README.md
 
 # Mac
 .DS_Store

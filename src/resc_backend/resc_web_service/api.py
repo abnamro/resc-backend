@@ -31,6 +31,7 @@ from resc_backend.resc_web_service.dependencies import (
     requires_no_auth,
 )
 from resc_backend.resc_web_service.endpoints import (
+    audits,
     common,
     detailed_findings,
     findings,
@@ -152,6 +153,7 @@ app.include_router(common.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(rules.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(rule_packs.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
+app.include_router(audits.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(detailed_findings.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(repositories.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)
 app.include_router(scans.router, prefix=RWS_VERSION_PREFIX, dependencies=AUTH)

@@ -35,7 +35,7 @@ async def test_jwt_validation_with_audience(_verify_signature, _get_signing_key)
     }
     # Access token
     payload = {"aud": "fake-audience", "iss": "https://fake-sso-url.com", "roles": "OPERATOR", "username": "fake-user"}
-    access_token = jwt.encode(payload=payload, algorithm=None, key=None)
+    access_token = jwt.encode(payload=payload, algorithm=None, key="")
     # Function parameters
     request = Request({"user": "fake-user", "type": "http"})
     credentials = HTTPAuthorizationCredentials(scheme="Bearer", credentials=access_token)
@@ -61,7 +61,7 @@ async def test_jwt_validation_without_audience(_verify_signature, _get_signing_k
     }
     # Access token
     payload = {"iss": "https://fake-sso-url.com", "roles": "OPERATOR", "username": "fake-user"}
-    access_token = jwt.encode(payload=payload, algorithm=None, key=None)
+    access_token = jwt.encode(payload=payload, algorithm=None, key="")
     # Function parameters
     request = Request({"user": "fake-user", "type": "http"})
     credentials = HTTPAuthorizationCredentials(scheme="Bearer", credentials=access_token)

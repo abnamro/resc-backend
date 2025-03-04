@@ -206,7 +206,7 @@ def check_db_initialized():
                 not_found_tables.append(table_name)
 
         if len(not_found_tables) > 0:
-            raise RuntimeError(f"Unable to determine existence of required table(s) " f"{', '.join(not_found_tables)}")
+            raise RuntimeError(f"Unable to determine existence of required table(s) {', '.join(not_found_tables)}")
     except Exception as ex:
         logger.error(f"Database is NOT connected or initialized | {ex} | Retrying...")
         raise
@@ -226,7 +226,6 @@ async def log_request_middleware(request: Request, call_next):
     except ValueError:
         status_phrase = ""
     request_logger.info(
-        f"{host}:{port} <= "
-        f'"{request.method} {url}" {response.status_code} {status_phrase} {formatted_process_time}ms'
+        f'{host}:{port} <= "{request.method} {url}" {response.status_code} {status_phrase} {formatted_process_time}ms'
     )
     return response

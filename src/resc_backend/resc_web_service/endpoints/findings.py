@@ -215,7 +215,7 @@ async def delete_finding(finding_id: int, db_connection: Session = Depends(get_d
 
 
 @router.get(
-    f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}" "/{rule_name}",
+    f"{RWS_ROUTE_TOTAL_COUNT_BY_RULE}/{{rule_name}}",
     summary="Get total findings count by rule",
     status_code=status.HTTP_200_OK,
     responses={
@@ -237,7 +237,7 @@ def get_total_findings_count_by_rule(rule_name: str, db_connection: Session = De
 
 
 @router.get(
-    f"{RWS_ROUTE_BY_RULE}" "/{rule_name}",
+    f"{RWS_ROUTE_BY_RULE}/{{rule_name}}",
     response_model=PaginationModel[finding_schema.FindingRead],
     summary="Get findings by rule",
     status_code=status.HTTP_200_OK,
@@ -334,7 +334,7 @@ async def audit_findings(
 
 
 @router.get(
-    "/{finding_id}" f"{RWS_ROUTE_AUDIT}",
+    f"/{{finding_id}}{RWS_ROUTE_AUDIT}",
     response_model=PaginationModel[audit_schema.AuditRead],
     summary="Get audit(s) for finding",
     status_code=status.HTTP_200_OK,
@@ -391,7 +391,7 @@ def get_supported_statuses() -> list[str]:
 
 
 @router.get(
-    f"{RWS_ROUTE_COUNT_BY_TIME}/" "{time_type}",
+    f"{RWS_ROUTE_COUNT_BY_TIME}/{{time_type}}",
     response_model=PaginationModel[DateCountModel],
     summary="Get all the findings by time period",
     status_code=status.HTTP_200_OK,

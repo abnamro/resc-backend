@@ -223,7 +223,7 @@ def delete_scan(scan_id: int, db_connection: Session = Depends(get_db_connection
 
 
 @router.post(
-    "/{scan_id}" f"{RWS_ROUTE_FINDINGS}",
+    f"/{{scan_id}}{RWS_ROUTE_FINDINGS}",
     response_model=int,
     summary="Create scan findings",
     status_code=status.HTTP_201_CREATED,
@@ -266,13 +266,12 @@ async def create_scan_findings(
     db_scan: DBscan = scan_crud.get_scan(db_connection, scan_id=scan_id)
     if db_scan is None:
         raise HTTPException(status_code=404, detail="Scan not found")
-    # return db_scan
 
     # 1. Fetch rules with scan_as_dir
     rules_scan_as_dir: list[str] = rule_crud.get_scan_as_dir_rules_by_scan_id(
         db_connection=db_connection, scan_id=scan_id
     )
-    logger.debug(f"rules as directory: {", ".join(rules_scan_as_dir)}")
+    logger.debug(f"rules as directory: {', '.join(rules_scan_as_dir)}")
 
     # 2. split findings into 2 category: scan_as_dir and normal.
     findings_as_repo = []
@@ -330,7 +329,7 @@ async def create_scan_findings(
 
 
 @router.get(
-    "/{scan_id}" f"{RWS_ROUTE_FINDINGS}",
+    f"/{{scan_id}}{RWS_ROUTE_FINDINGS}",
     response_model=PaginationModel[finding_schema.FindingRead],
     summary="Get scan findings associated with a scan ID",
     status_code=status.HTTP_200_OK,

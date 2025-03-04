@@ -29,7 +29,7 @@ RESC_NEWMAN_IMAGE="${newman_image:-"postman/newman:6.1.1-alpine"}"
 RESC_BACKEND_CONTAINER="resc-api-test"
 RESC_DATABASE_CONTAINER="resc-database-test"
 RESC_NEWMAN_CONTAINER="resc-newman-test"
-RESC_API_PORT=8001
+RESC_API_PORT=8000
 MSSQL_ODBC_DRIVER="ODBC Driver 18 for SQL Server"
 
 # Print image versions to be used for testing
@@ -74,10 +74,18 @@ then
 fi
 
 # Running RESC API container
+# echo "*** Running $RESC_BACKEND_CONTAINER Container ***"
+# docker run -d --env-file test.env -e MSSQL_ODBC_DRIVER="$MSSQL_ODBC_DRIVER" -e MSSQL_DB_HOST="$RESC_DATABASE_HOST_IP" \
+# -e MSSQL_PASSWORD="$RESC_DATABASE_PASSWORD" --name $RESC_BACKEND_CONTAINER -p $RESC_API_PORT:$RESC_API_PORT "$RESC_BACKEND_IMAGE" \
+# /bin/sh -c "uv run alembic upgrade head && uv run python3 ./test_data/insert_test_data.py && uv run python3 ./test_data/envdata.py && env && uv run uvicorn resc_backend.resc_web_service.api:app --workers 1 --host 0.0.0.0 --port $RESC_API_PORT"
+# echo "*** Running $RESC_BACKEND_CONTAINER Container ***"
+# docker run -d --env-file test.env -e MSSQL_ODBC_DRIVER="$MSSQL_ODBC_DRIVER" -e MSSQL_DB_HOST="$RESC_DATABASE_HOST_IP" \
+# -e MSSQL_PASSWORD="$RESC_DATABASE_PASSWORD" --name $RESC_BACKEND_CONTAINER -p $RESC_API_PORT:$RESC_API_PORT "$RESC_BACKEND_IMAGE" \
+# /bin/sh -c "alembic upgrade head && python3 ./test_data/insert_test_data.py && python3 ./test_data/envdata.py && env && uvicorn resc_backend.resc_web_service.api:app --workers 1 --host 0.0.0.0 --port $RESC_API_PORT"
 echo "*** Running $RESC_BACKEND_CONTAINER Container ***"
 docker run -d --env-file test.env -e MSSQL_ODBC_DRIVER="$MSSQL_ODBC_DRIVER" -e MSSQL_DB_HOST="$RESC_DATABASE_HOST_IP" \
 -e MSSQL_PASSWORD="$RESC_DATABASE_PASSWORD" --name $RESC_BACKEND_CONTAINER -p $RESC_API_PORT:$RESC_API_PORT "$RESC_BACKEND_IMAGE" \
-/bin/sh -c "alembic upgrade head && python ./test_data/insert_test_data.py && uvicorn resc_backend.resc_web_service.api:app --workers 1 --host 0.0.0.0 --port $RESC_API_PORT"
+/bin/sh -c "alembic upgrade head && python3 ./test_data/insert_test_data.py && python3 ./test_data/envdata.py && env && uvicorn resc_backend.resc_web_service.api:app --workers 1 --host 0.0.0.0 --port $RESC_API_PORT"
 
 sleep 15
 echo "*** Printing Logs Of $RESC_BACKEND_CONTAINER Container ***"

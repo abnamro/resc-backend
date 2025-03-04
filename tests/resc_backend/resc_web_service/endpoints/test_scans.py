@@ -397,7 +397,7 @@ class TestScans(unittest.TestCase):
     def test_get_scan_findings(self, get_total_findings_count, get_scan_findings):
         get_scan_findings.return_value = self.enriched_findings
         get_total_findings_count.return_value = 5
-        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/1{RWS_ROUTE_FINDINGS}")
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/1{RWS_ROUTE_FINDINGS}")
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["data"][0]["id_"] == self.enriched_findings[0].id_
@@ -413,7 +413,7 @@ class TestScans(unittest.TestCase):
     def test_get_scan_findings_non_existing(self, get_total_findings_count, get_scan_findings):
         get_scan_findings.return_value = []
         get_total_findings_count.return_value = 0
-        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/9999{RWS_ROUTE_FINDINGS}")
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/9999{RWS_ROUTE_FINDINGS}")
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["data"] == []
@@ -422,7 +422,7 @@ class TestScans(unittest.TestCase):
         assert data["skip"] == 0
 
     def test_get_scan_findings_invalid_id(self):
-        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}/invalid{RWS_ROUTE_FINDINGS}")
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}/invalid{RWS_ROUTE_FINDINGS}")
         assert response.status_code == 422, response.text
         data = response.json()
         assert data["detail"][0]["loc"] == ["path", "scan_id"]
@@ -433,7 +433,7 @@ class TestScans(unittest.TestCase):
     def test_get_distinct_rules_from_scans(self, get_distinct_rules_from_scans):
         get_distinct_rules_from_scans.return_value = self.db_rules
         response = self.client.get(
-            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}" f"{RWS_ROUTE_DETECTED_RULES}/?scan_id=1&scan_id=2"
+            f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}{RWS_ROUTE_DETECTED_RULES}/?scan_id=1&scan_id=2"
         )
         assert response.status_code == 200, response.text
         data = response.json()
@@ -466,7 +466,7 @@ class TestScans(unittest.TestCase):
     def test_get_scans_findings_non_existing(self, get_total_findings_count, get_scans_findings):
         get_scans_findings.return_value = []
         get_total_findings_count.return_value = 0
-        response = self.client.get(f"{RWS_VERSION_PREFIX}" f"{RWS_ROUTE_SCANS}{RWS_ROUTE_FINDINGS}/")
+        response = self.client.get(f"{RWS_VERSION_PREFIX}{RWS_ROUTE_SCANS}{RWS_ROUTE_FINDINGS}/")
         assert response.status_code == 200, response.text
         data = response.json()
         assert data["data"] == []
