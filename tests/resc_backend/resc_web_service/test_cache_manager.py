@@ -44,15 +44,13 @@ def test_initialize_cache_with_cache_disabled(mock_cache_init):
     mock_cache_init.assert_called_once_with(backend=ANY, enable=False)
 
 
-@patch("fastapi_cache.FastAPICache.get_prefix")
 @patch("logging.Logger.debug")
-def test_request_key_builder(mock_debug_log, mock_get_prefix):
-    mock_get_prefix.return_value = CACHE_PREFIX
+def test_request_key_builder(mock_debug_log):
     mock_request = MagicMock(spec=Request)
     mock_request.method = "GET"
     mock_request.url.path = "http://example.com/path"
     mock_request.query_params.items.return_value = ["param", "value"]
-    expected_cache_key = f"{CACHE_PREFIX}:test-namespace:get:http://example.com/path:['param', 'value']"
+    expected_cache_key = "test-namespace:get:http://example.com/path:['param', 'value']"
     expected_debug_msg = f"Cache created with key: {expected_cache_key}"
     response = Response()
     cache_key = CacheManager.request_key_builder(
@@ -67,16 +65,14 @@ def test_request_key_builder(mock_debug_log, mock_get_prefix):
     mock_debug_log.assert_called_once_with(expected_debug_msg)
 
 
-@patch("fastapi_cache.FastAPICache.get_prefix")
 @patch("logging.Logger.debug")
-def test_personalized_key_builder(mock_debug_log, mock_get_prefix):
-    mock_get_prefix.return_value = CACHE_PREFIX
+def test_personalized_key_builder(mock_debug_log):
     mock_request = MagicMock(spec=Request)
     mock_request.method = "GET"
     mock_request.url.path = "http://example.com/path"
     mock_request.user = "test-user"
     mock_request.query_params.items.return_value = ["param", "value"]
-    expected_cache_key = f"{CACHE_PREFIX}:test-namespace:test-user:get:http://example.com/path:['param', 'value']"
+    expected_cache_key = "test-namespace:test-user:get:http://example.com/path:['param', 'value']"
     expected_debug_msg = f"Cache created with key: {expected_cache_key}"
     response = Response()
     cache_key = CacheManager.personalized_key_builder(
