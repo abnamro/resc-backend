@@ -77,7 +77,6 @@ class CacheManager:
 
         cache_key = ":".join(
             [
-                FastAPICache.get_prefix(),
                 namespace,
                 request.method.lower(),
                 request.url.path,
@@ -115,7 +114,6 @@ class CacheManager:
         """
         cache_key = ":".join(
             [
-                CACHE_PREFIX,
                 namespace,
                 request.user,
                 request.method.lower(),
