@@ -252,16 +252,26 @@ def create_repository(db_connection: Session, repository: repository_schema.Repo
     return db_repository
 
 
+def update_repository_name(
+    db_connection: Session, db_select_repository: DBrepository, repository: repository_schema.RepositoryCreate
+):
+    db_select_repository.repository_name = repository.repository_name
+    db_select_repository.repository_url = repository.str(repository.repository_url)
+    db_connection.commit()
+    db_connection.refresh(db_select_repository)
+    return db_select_repository
+
+
 def create_repository_if_not_exists(db_connection: Session, repository: repository_schema.RepositoryCreate):
     # Query the database to see if the repository object exists based on the unique constraint parameters
     query: Query = db_connection.query(DBrepository)
     query = query.where(DBrepository.project_key == repository.project_key)
     query = query.where(DBrepository.repository_id == repository.repository_id)
     query = query.where(DBrepository.vcs_instance == repository.vcs_instance)
-    db_select_repository = query.first()
+    db_select_repository: DBrepository | None = query.first()
 
     if db_select_repository is not None:
-        return db_select_repository
+        return update_repository_name(db_connection, db_select_repository, repository)
 
     # Create non-existing repository object
     return create_repository(db_connection, repository)
