@@ -11,7 +11,7 @@ pydantic==2.10.6
 pyjwt[crypto]==2.10.1
 python-multipart==0.0.20
 redis==5.2.1
-requests==2.32.3
+requests==2.32.4
 setuptools==75.8.0
 sqlalchemy==2.0.38
 tenacity==9.0.0
