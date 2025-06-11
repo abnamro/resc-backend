@@ -189,8 +189,7 @@ jobs:
 
       - name: Determine if image needs to be published
         run: |
-          echo "Branch name: ${{ needs.python-basic-validation.outputs.branch_name }}"
-          if [[ ${{ needs.python-basic-validation.outputs.branch_name }} == 'main' ]]; then
+          if [[ "${{ needs.python-basic-validation.outputs.branch_name }}" == 'main' ]]; then
               echo "PUBLISH_IMAGE=true" >> "$GITHUB_ENV"
               echo "Going to publish image to registry"
           else
