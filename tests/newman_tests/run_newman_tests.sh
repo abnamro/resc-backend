@@ -136,5 +136,5 @@ trap onExit EXIT;
 
 echo "*** Running Newman Tests From $RESC_NEWMAN_CONTAINER Container ***"
 docker run --name $RESC_NEWMAN_CONTAINER -v "$PWD":/etc/newman -t "$RESC_NEWMAN_IMAGE" \
-run --color on ./RESC_web_service.postman_collection.json  --verbose --env-var "baseUrl=http://$RESC_API_HOST_IP:$RESC_API_PORT"
+run --color on ./RESC_web_service.postman_collection.json  --verbose --env-var "baseUrl=http://$RESC_API_HOST_IP:$RESC_API_PORT" --timeout-request 60000
 
