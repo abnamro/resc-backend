@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 Model = TypeVar("Model", bound=BaseModel)
 
 
-class FindingCountModel(BaseModel, Generic[Model]):
+class FindingCountModel(BaseModel, Generic[Model]): # noqa: UP046
     """
         Generic encapsulation class for findings count end points to standardize output of the API
         example creation, FindingCountModel[FindingRead](data=db_findings, true_positive=true_positive,
