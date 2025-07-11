@@ -256,7 +256,7 @@ def update_repository_name(
     db_connection: Session, db_select_repository: DBrepository, repository: repository_schema.RepositoryCreate
 ):
     db_select_repository.repository_name = repository.repository_name
-    db_select_repository.repository_url = repository.str(repository.repository_url)
+    db_select_repository.repository_url = str(repository.repository_url)
     db_connection.commit()
     db_connection.refresh(db_select_repository)
     return db_select_repository
