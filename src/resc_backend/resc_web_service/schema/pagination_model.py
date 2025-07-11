@@ -11,7 +11,7 @@ from resc_backend.constants import MAX_RECORDS_PER_PAGE_LIMIT
 Model = TypeVar("Model", bound=BaseModel)
 
 
-class PaginationModel(BaseModel, Generic[Model]):
+class PaginationModel(BaseModel, Generic[Model]): # noqa: UP046
     """
         Generic encapsulation class for paginated endpoints to standardize output of the API
         example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
