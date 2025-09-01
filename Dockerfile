@@ -1,7 +1,7 @@
 ARG SOURCE_REGISTRY=""
 ARG TAG=""
 
-FROM ${SOURCE_REGISTRY}python:3.12-alpine3.20
+FROM ${SOURCE_REGISTRY}python:3.13-alpine3.20
 # Switch to full alpine when https://github.com/astral-sh/uv/issues/6890 is resolved
 # FROM ${SOURCE_REGISTRY}alpine:3.21
 
@@ -55,8 +55,8 @@ USER $RUN_AS_USER
 ENV PATH=$PATH:/home/apiuser/.local/bin
 
 # Install python for alpine when #6890 is resolved.
-# RUN uv python install 3.12
-# RUN uv venv --python 3.12 \
+# RUN uv python install 3.13
+# RUN uv venv --python 3.13 \
 #     && uv add -r requirements.txt \
 #     && uv add pyodbc==5.1.0 \
 #     && uv pip install -e .
