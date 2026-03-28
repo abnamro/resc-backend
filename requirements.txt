@@ -3,7 +3,7 @@ alembic==1.14.1
 amqp==5.3.1
 azure-identity==1.20.0
 celery==5.4.0
-cryptography==44.0.1
+cryptography==46.0.6
 fastapi==0.115.8
 fastapi-cache2==0.2.2
 packaging==24.2
