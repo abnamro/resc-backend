@@ -9,7 +9,7 @@ fastapi-cache2==0.2.2
 packaging==24.2
 pydantic==2.10.6
 pyjwt[crypto]==2.10.1
-python-multipart==0.0.20
+python-multipart==0.0.22
 redis==5.2.1
 requests==2.32.3
 setuptools==78.1.1
